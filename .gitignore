@@ -1,0 +1,28 @@
+# Thu vien da cai
+node_modules/
+
+# Ket qua build va kiem thu
+.next/
+dist/
+out/
+coverage/
+*.tsbuildinfo
+
+# Cau hinh rieng cua tung may
+.env
+.env.*
+
+# Van dua file cau hinh mau len Git
+!.env.example
+
+# File log
+*.log
+
+
+# Bo qua cau hinh rieng
+/backend/.env
+/frontend/.env.local
+
+# Giu cau hinh mau
+!/backend/.env.example
+!/frontend/.env.example
