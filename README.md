@@ -175,3 +175,32 @@ và package-lock.json. Các thành viên khác dùng npm ci
 | Cổng đang được sử dụng | Dừng server cũ trước khi chạy lại |
 | Failed to fetch | Kiểm tra backend đang chạy, URL API và cấu hình CORS |
 | Thiếu NEXT_PUBLIC_API_URL | Kiểm tra frontend/.env.local rồi khởi động lại frontend |
+
+
+
+
+
+
+## Task 3: Giao diện menu đồ uống
+
+- Trang menu: http://localhost:3000
+- Lấy danh sách từ API GET /products của backend.
+- Hiển thị ảnh, tên và giá tiền VND.
+- Bố cục tự điều chỉnh 1, 2 hoặc 3 cột theo chiều rộng màn hình.
+- Có trạng thái đang tải, menu rỗng và thông báo lỗi kèm nút thử lại.
+
+### Các file chính
+
+- frontend/src/app/page.tsx: giao diện menu.
+- frontend/src/app/lib/products.ts: gọi API và kiểm tra cấu trúc dữ liệu.
+- frontend/src/app/types/product.ts: định nghĩa kiểu Product.
+- frontend/public/images/: ảnh đồ uống.
+
+### Kiểm tra đã thực hiện
+
+- Hiển thị danh sách đồ uống và ảnh.
+- Co giãn giao diện theo chiều rộng màn hình.
+- Hiển thị thông báo khi API trả danh sách rỗng.
+- Hiển thị lỗi khi gọi đường dẫn API không tồn tại.
+- Hiển thị trạng thái đang tải.
+- Build frontend thành công.
