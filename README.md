@@ -204,3 +204,8 @@ và package-lock.json. Các thành viên khác dùng npm ci
 - Hiển thị lỗi khi gọi đường dẫn API không tồn tại.
 - Hiển thị trạng thái đang tải.
 - Build frontend thành công.
+
+
+
+
+task 4
