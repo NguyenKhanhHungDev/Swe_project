@@ -246,3 +246,100 @@ Trước khi đề nghị merge, cần bảo đảm lint, test và build đều 
 | Cổng đang được sử dụng | Dừng tiến trình ứng dụng cũ trước khi chạy lại |
 | Test sai chuỗi phản hồi | Đối chiếu kết quả API với giá trị mong đợi trong test |
 | `npm ci` báo manifest và lockfile không khớp | Người thay đổi thư viện cập nhật lockfile bằng `npm install` tại đúng thư mục và commit cả hai file |
+
+
+
+
+
+## 12. PostgreSQL cho môi trường phát triển
+
+Yêu cầu: đã cài Docker và Docker Compose, Docker đang chạy.
+
+Hiện tại PostgreSQL chạy trong Docker; frontend và backend chạy
+trên máy bằng npm. Backend chưa tích hợp Prisma hoặc truy vấn database.
+
+### Chuẩn bị cấu hình
+
+Tại thư mục gốc của dự án, tạo các file cấu hình nếu chưa có:
+
+```bash
+if [ ! -f .env ]; then
+  cp .env.example .env
+fi
+
+if [ ! -f backend/.env ]; then
+  cp backend/.env.example backend/.env
+fi
+```
+
+Nếu đã có `backend/.env`, bổ sung `DATABASE_URL` theo
+`backend/.env.example`.
+
+Cấu hình mặc định:
+- Database: brewlite
+- User: brewlite
+- Cổng kết nối từ máy: 5433
+- Cổng PostgreSQL trong container: 5432
+
+User, mật khẩu, tên database và cổng trong `DATABASE_URL`
+phải khớp cấu hình `.env` ở gốc.
+
+### Khởi động database
+
+```bash
+docker compose config --quiet
+docker compose up -d --wait db
+docker compose ps
+```
+
+Dịch vụ `db` phải có trạng thái `healthy`.
+
+### Kiểm tra SQL
+
+```bash
+docker compose exec db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT current_database(), current_user;"'
+```
+
+### Chạy ứng dụng
+
+Sau khi cài dependency theo hướng dẫn phía trên:
+
+```bash
+docker compose up -d --wait db && npm run dev
+```
+
+- Frontend: http://localhost:3000
+- Backend: http://localhost:3001
+- Database: localhost:5433
+
+### Dừng và xem log
+
+Nhấn Ctrl+C ở terminal chạy npm để dừng frontend/backend.
+
+Dừng database:
+
+```bash
+docker compose stop db
+```
+
+Xem log database:
+
+```bash
+docker compose logs --tail=100 db
+```
+
+Dữ liệu được lưu trong Docker volume.
+Không dùng `docker compose down -v` để dừng thông thường,
+vì tùy chọn `-v` xóa volume dữ liệu.
+
+### Lưu ý cấu hình
+
+- Không commit `.env` hoặc `backend/.env`.
+- Mật khẩu trong file mẫu chỉ dùng cho phát triển local.
+- Nếu cổng 5433 bị chiếm, đổi `POSTGRES_PORT` trong `.env`
+  và cập nhật cổng tương ứng trong `backend/.env`.
+- Các máy dùng database riêng; dữ liệu không tự đồng bộ qua Git.
+- Thay đổi user, mật khẩu hoặc tên database trong `.env`
+  không tự cập nhật database đã khởi tạo trong volume.
+- Compose hiện chỉ chạy PostgreSQL. Bước 21 sẽ bổ sung
+  frontend/backend để đáp ứng yêu cầu bàn giao ba dịch vụ.
