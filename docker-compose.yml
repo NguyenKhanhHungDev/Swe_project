@@ -1,0 +1,24 @@
+name: brewlite
+
+services:
+  db:                       # Database service
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB:?Missing POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER:?Missing POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Missing POSTGRES_PASSWORD}"
+    ports:             #cho backend chay tren may chu ket noi database
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data           #luu du lieu database vao volume postgres_data de tranh mat du lieu khi xoa container
+    healthcheck:                    #kiem tra xem database da san sang chua truoc khi backend ket noi
+      test:
+        - CMD-SHELL
+        - 'pg_isready -h 127.0.0.1 -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"'
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  postgres_data:
