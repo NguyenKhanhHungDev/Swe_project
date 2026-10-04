@@ -28,6 +28,8 @@ Môi trường phát triển thống nhất: Node.js 24.x và npm 11.x.
 - Lệnh chạy đồng thời frontend và backend.
 - Unit test và E2E test cơ bản cho API lời chào.
 - Cấu hình lint và build cho hai ứng dụng.
+- PostgreSQL chạy bằng Docker Compose, có volume và healthcheck
+- Đóng gói frontend/backend bằng Docker và triển khai hệ thống
 
 Chưa triển khai:
 
@@ -37,7 +39,8 @@ Chưa triển khai:
 - Tài khoản và xác thực.
 - Đơn hàng, tồn kho và trạng thái đơn.
 - Thanh toán mô phỏng, lịch sử đơn và điểm thưởng.
-- Docker và triển khai hệ thống.
+- Đóng gói frontend/backend bằng Docker và triển khai hệ thống
+
 
 Các bài test hiện tại chỉ kiểm tra bộ khung, chưa kiểm tra nghiệp vụ.
 
@@ -47,12 +50,15 @@ Các bài test hiện tại chỉ kiểm tra bộ khung, chưa kiểm tra nghi�
 | --- | --- |
 | `frontend/` | Ứng dụng Next.js |
 | `backend/` | API NestJS |
+| `.env.example` | Cấu hình mẫu cho PostgreSQL chạy bằng Docker Compose |
+| `docker-compose.yml` | Chạy PostgreSQL cho môi trường phát triển |
 | `frontend/.env.example` | Cấu hình mẫu frontend |
 | `backend/.env.example` | Cấu hình mẫu backend |
 | `package.json` | Lệnh chạy và build toàn bộ dự án |
 | `package-lock.json` | Khóa phiên bản thư viện tại thư mục gốc |
 | `.gitignore` | Quy tắc bỏ qua file khi dùng Git |
 | `README.md` | Hướng dẫn cài đặt, chạy và kiểm tra |
+
 
 Mỗi ứng dụng có `package.json` và `package-lock.json` riêng.
 Thư viện tại gốc phục vụ việc chạy chung hai ứng dụng.
@@ -102,14 +108,24 @@ Các lệnh này không ghi đè file cấu hình đã tồn tại.
 
 ## 6. Biến môi trường
 
-File `backend/.env`:
+File `.env` tại thư mục gốc, dùng cho Docker Compose:
+
+```dotenv
+POSTGRES_DB=brewlite
+POSTGRES_USER=brewlite
+POSTGRES_PASSWORD=brewlite_local_dev
+POSTGRES_PORT=5433
+```
+
+File `backend/.env`, dùng cho NestJS:
 
 ```dotenv
 PORT=3001
 FRONTEND_URL=http://localhost:3000
+DATABASE_URL=postgresql://brewlite:brewlite_local_dev@localhost:5433/brewlite?schema=public
 ```
 
-File `frontend/.env.local`:
+File `frontend/.env.local`, dùng cho Next.js:
 
 ```dotenv
 NEXT_PUBLIC_API_URL=http://localhost:3001
@@ -119,18 +135,36 @@ NEXT_PUBLIC_API_URL=http://localhost:3001
 
 | Biến | Công dụng |
 | --- | --- |
+| `POSTGRES_DB` | Tên database được tạo khi PostgreSQL khởi tạo lần đầu |
+| `POSTGRES_USER` | Tài khoản PostgreSQL được tạo khi khởi tạo lần đầu |
+| `POSTGRES_PASSWORD` | Mật khẩu cho tài khoản PostgreSQL |
+| `POSTGRES_PORT` | Cổng trên máy dùng để kết nối vào PostgreSQL trong Docker |
 | `PORT` | Cổng chạy backend |
 | `FRONTEND_URL` | Origin frontend được phép gọi API qua CORS |
+| `DATABASE_URL` | Chuỗi kết nối database dành cho backend |
 | `NEXT_PUBLIC_API_URL` | Địa chỉ backend mà trình duyệt gọi |
 
-Khởi động lại ứng dụng sau khi thay đổi cấu hình.
+Hiện frontend/backend chạy trên máy, PostgreSQL chạy trong Docker.
+Backend kết nối đến `localhost:5433`; PostgreSQL bên trong container
+vẫn dùng cổng `5432`.
 
-Không commit `.env` hoặc `.env.local`.
-Chỉ commit `.env.example` với giá trị mẫu không chứa bí mật.
+User, mật khẩu, tên database và cổng trong `DATABASE_URL`
+phải khớp cấu hình `.env` ở gốc.
+Backend hiện mới chuẩn bị `DATABASE_URL`, chưa tích hợp Prisma
+hoặc truy vấn database.
+
+Mật khẩu ở trên chỉ là giá trị mẫu cho phát triển local.
+Thay đổi user, mật khẩu hoặc tên database trong `.env` không tự
+cập nhật database đã được khởi tạo trong volume.
+
+Khởi động lại ứng dụng sau khi thay đổi cấu hình.
+Nếu đổi cổng database, chạy lại `docker compose up -d --wait db`.
+
+Không commit `.env`, `backend/.env` hoặc `frontend/.env.local`.
+Chỉ commit `.env.example` với giá trị mẫu không chứa bí mật thật.
 
 Biến có tiền tố `NEXT_PUBLIC_` được đưa ra phía trình duyệt,
-không dùng để chứa mật khẩu hoặc khóa bí mật.
-
+không dùng để chứa mật khẩu, `DATABASE_URL` hoặc khóa bí mật.
 ## 7. Chạy dự án
 
 Từ thư mục gốc:
