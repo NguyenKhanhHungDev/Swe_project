@@ -28,21 +28,27 @@ Trạng thái phải được cập nhật theo thực tế.
 
 ## 3. Danh sách 24 bước
 
-Phân công theo `docs/TEAM_ASSIGNMENTS.md`, cập nhật ngày 10/10/2026.
-Hưng chủ trì tổng thể các bước 1–6, 8, 22, Scrum và bàn giao: điều phối,
-review và tổng hợp; các chủ module trực tiếp thực hiện và cung cấp minh chứng.
+Phân công theo `docs/TEAM_ASSIGNMENTS.md`.
+Hưng trực tiếp làm bước 1, 2, 5; chủ trì, review và tổng hợp toàn bộ bước 1–6.
+Cả năm thành viên chia đều việc trực tiếp làm bước 3, 4, 6. Hưng tiếp tục chủ trì
+bước 8, 22, Scrum và bàn giao; các chủ module cung cấp minh chứng phần mình.
 Bảng phân công không xác nhận tiến độ hoặc thay đổi trạng thái nghiệm thu.
+Sản phẩm được nêu ở từng bước là đầu ra dự kiến; tiêu chí hoàn thành và minh chứng
+phải được đối chiếu với yêu cầu, review và kết quả thực tế trước khi cập nhật
+trạng thái. Minh chứng cần có cho 10 Task được liệt kê tại
+`docs/REQUIREMENTS_TRACEABILITY.md`; tài liệu gốc của bước 1–6 cần được nhóm
+cung cấp hoặc liên kết để kiểm chứng.
 
 ### Giai đoạn 1: Phân tích yêu cầu
 
 | Bước | Công việc | Sản phẩm | Phân công |
 |---|---|---|---|
-| 1 | Project Scope | Tài liệu phạm vi dự án | Hưng chủ trì; các chủ module cung cấp phạm vi |
-| 2 | Requirements / SRS | Tài liệu yêu cầu hệ thống | Hưng chủ trì; các chủ module viết yêu cầu và cung cấp nguồn/minh chứng |
-| 3 | User Stories | Danh sách User Stories | Hưng chủ trì; Huy thực hiện User Stories theo module; mỗi chủ module viết/review phần mình |
-| 4 | Acceptance Criteria | Tiêu chí nghiệm thu | Hưng chủ trì; Huy thực hiện Acceptance Criteria theo module; mỗi chủ module cung cấp tiêu chí/minh chứng |
-| 5 | Business Rules | Quy tắc nghiệp vụ | Hưng chủ trì; các chủ module tài liệu hóa quy tắc đã thống nhất |
-| 6 | Use Case | Sơ đồ và đặc tả Use Case | Hưng chủ trì; Khoa thực hiện Use Case; các chủ module cung cấp luồng/review |
+| 1 | Project Scope | Tài liệu phạm vi dự án | Hưng trực tiếp làm, chủ trì và tổng hợp; các thành viên cung cấp phạm vi module |
+| 2 | Requirements / SRS | Tài liệu yêu cầu hệ thống | Hưng trực tiếp làm, chủ trì và tổng hợp; các thành viên cung cấp yêu cầu module và nguồn/minh chứng |
+| 3 | User Stories | Danh sách User Stories | Hưng, Khoa, Huy, Phát, Thắng chia đều việc trực tiếp làm; Hưng chủ trì, review và tổng hợp |
+| 4 | Acceptance Criteria | Tiêu chí nghiệm thu | Hưng, Khoa, Huy, Phát, Thắng chia đều việc trực tiếp làm; Hưng chủ trì, review và tổng hợp |
+| 5 | Business Rules | Quy tắc nghiệp vụ | Hưng trực tiếp làm, chủ trì và tổng hợp; các thành viên cung cấp quy tắc đã thống nhất |
+| 6 | Use Case Diagram và Use Case Description | Sơ đồ và đặc tả Use Case | Hưng, Khoa, Huy, Phát, Thắng chia đều việc trực tiếp làm cả hai phần; Hưng chủ trì, review và tổng hợp |
 
 ### Giai đoạn 2: Chuẩn bị và thiết kế
 
@@ -90,11 +96,11 @@ Bảng phân công không xác nhận tiến độ hoặc thay đổi trạng th
 
 ## 4. Trạng thái tham khảo
 
-Theo trao đổi trước đây và tài liệu kiến trúc
-cập nhật 05/10/2026:
+Theo ghi nhận trước đây trong lộ trình và tài liệu kiến trúc;
+các mục sau chưa được kiểm chứng lại trong lần đồng bộ tài liệu này:
 
-- Bước 1-6: Đã được nhóm chuẩn bị trước đó;
-  cần đối chiếu minh chứng chính thức.
+- Bước 1–6: Có ghi nhận nhóm đã chuẩn bị trước đó;
+  tài liệu gốc và minh chứng chưa có trong repository, cần đối chiếu.
 - Bước 7: Có khung dự án và cấu hình môi trường.
 - Bước 8: Có docs/ARCHITECTURE.md;
   tài liệu được ghi là bản thiết kế để review.

@@ -1,6 +1,6 @@
 # BrewLite — Phân công nhóm (bản chốt để review)
 
-**Ngày cập nhật:** 10/10/2026
+**Ngày cập nhật:** 11/10/2026
 **Nhóm:** Hưng, Khoa, Huy, Phát, Thắng
 **Nguồn yêu cầu:** Đề BrewLite môn Công nghệ Phần mềm (10 Task) và quy trình triển khai nội bộ (24 bước).
 **Nguyên tắc:** Đủ 10 Task bắt buộc, đủ 24 bước, có Scrum và minh chứng; không coi mức đóng góp của mỗi người bằng nhau chỉ vì số đầu việc giống nhau.
@@ -9,13 +9,13 @@
 
 | Thành viên | Phạm vi code chính | Thiết kế / công việc bổ trợ | Trách nhiệm kiểm chứng |
 |---|---|---|---|
-| **Hưng — Leader** | Products (menu, chi tiết, size/topping, API); PrismaService và kết nối DB; Docker/Compose | **Toàn bộ Preliminary ERD và Detailed ERD**; điều phối API Specification; chuẩn hóa UI và tích hợp; **tổng hợp báo cáo và tài liệu bàn giao cuối**; chủ trì tổng thể các bước 1–6, 8, 22 và Scrum | Test sản phẩm, định giá lựa chọn; chạy tích hợp hệ thống và kiểm soát PR |
-| **Khoa** | Auth, Users, JWT, RBAC **CUSTOMER/STAFF**, **Inventory** | **Use Case**; thiết kế luồng xác thực/phân quyền và tồn kho; Activity/Sequence các nghiệp vụ được giao | Kiểm thử đăng ký/đăng nhập, bảo vệ API, quyền sở hữu và tồn kho đồng thời |
-| **Huy** | Cart (state ở client), Promotions, Loyalty | UI giỏ hàng, khuyến mãi, điểm; **User Stories/Acceptance Criteria theo module**; Activity/Sequence nghiệp vụ tương ứng; **tổng hợp kết quả kiểm thử từ các chủ module và Scrum Burndown** | Test giỏ hàng, voucher, cộng/đảo điểm đúng một lần |
+| **Hưng — Leader** | Products (menu, chi tiết, size/topping, API); PrismaService và kết nối DB; Docker/Compose | **Toàn bộ Preliminary ERD và Detailed ERD**; trực tiếp làm Project Scope, SRS và Business Rules; điều phối API Specification, chuẩn hóa API/UI và tích hợp; **tổng hợp báo cáo và tài liệu bàn giao cuối**; chủ trì, review và tổng hợp các bước 1–6, chủ trì các bước 8, 22 và Scrum | Test sản phẩm, định giá lựa chọn; chạy tích hợp hệ thống và kiểm soát PR |
+| **Khoa** | Auth, Users, JWT, RBAC **CUSTOMER/STAFF**, **Inventory** | Thiết kế luồng xác thực/phân quyền và tồn kho; Activity/Sequence các nghiệp vụ được giao | Kiểm thử đăng ký/đăng nhập, bảo vệ API, quyền sở hữu và tồn kho đồng thời |
+| **Huy** | Cart (state ở client), Promotions, Loyalty | UI giỏ hàng, khuyến mãi, điểm; Activity/Sequence nghiệp vụ tương ứng; **tổng hợp kết quả kiểm thử từ các chủ module và Scrum Burndown** | Test giỏ hàng, voucher, cộng/đảo điểm đúng một lần |
 | **Phát** | Orders, hủy đơn, lịch sử/chi tiết đơn, Order State Machine; thực hiện và điều phối Prisma schema, migration, seed | Điều phối **Figma/User Flow**, cùng các chủ module hoàn thiện màn hình; **Activity/Sequence nghiệp vụ Orders** | Test tạo/hủy đơn, chuyển trạng thái, thời hạn giữ hàng, chống tạo đơn trùng |
 | **Thắng** | Checkout, Payments giả lập, kết quả thanh toán, idempotency và hoàn tiền giả lập | UI checkout/xác nhận; **Deployment Diagram và hướng dẫn triển khai**; phụ trách E2E cùng các chủ module | Test thanh toán thành công/thất bại, chống thanh toán trùng, E2E checkout và luồng liên module |
 
-**Chủ trì và thực hiện:** Hưng chủ trì các bước 1–6, 8, 22, Scrum và bàn giao: điều phối, rà soát và tổng hợp; không tự thực hiện toàn bộ. Các chủ module trực tiếp làm phần được giao và cung cấp tài liệu, test, minh chứng. Khoa thực hiện Use Case; Huy thực hiện User Stories/Acceptance Criteria theo module và Scrum Burndown; Thắng thực hiện Deployment Diagram, hướng dẫn triển khai và E2E.
+**Chủ trì và thực hiện:** Hưng trực tiếp làm Project Scope (bước 1), SRS (bước 2) và Business Rules (bước 5); chủ trì, review và tổng hợp toàn bộ bước 1–6. Hưng, Khoa, Huy, Phát, Thắng chia đều việc trực tiếp làm User Stories (bước 3), Acceptance Criteria (bước 4), Use Case Diagram và Use Case Description (bước 6). Hưng tiếp tục chủ trì các bước 8, 22, Scrum và bàn giao; các chủ module trực tiếp làm phần được giao, cung cấp tài liệu, test và minh chứng. Huy phụ trách Scrum Burndown; Thắng thực hiện Deployment Diagram, hướng dẫn triển khai và E2E.
 
 > **Phân quyền:** Khoa xây dựng cơ chế dùng chung (JWT, guards, roles). Mỗi chủ module vẫn phải thực thi kiểm tra quyền, quyền sở hữu tài nguyên và điều kiện nghiệp vụ ở API của mình. API xem menu có thể công khai. Không thêm vai trò ADMIN khi chưa có yêu cầu được phê duyệt.
 
@@ -34,12 +34,12 @@ Nếu Figma đã được Phát thực hiện trước, **không làm lại**; n
 
 | Sản phẩm | Chủ trì | Phối hợp |
 |---|---|---|
-| Scope (bước 1) | Hưng | Mỗi chủ module cung cấp phạm vi liên quan |
-| Requirements / SRS (bước 2) | Hưng | Mỗi chủ module trực tiếp viết yêu cầu và cung cấp nguồn/minh chứng |
-| User Stories (bước 3) | Hưng | Huy thực hiện theo module; các chủ module trực tiếp viết và đối chiếu phần mình |
-| Acceptance Criteria (bước 4) | Hưng | Huy thực hiện theo module; các chủ module cung cấp tiêu chí và minh chứng tương ứng |
-| Business Rules (bước 5) | Hưng | Mỗi chủ module tài liệu hóa quy tắc đã thống nhất; không tự thêm nghiệp vụ |
-| Use Case (bước 6) | Hưng | Khoa thực hiện sơ đồ/đặc tả; các chủ module cung cấp luồng và review |
+| Scope (bước 1) | Hưng trực tiếp làm, chủ trì và tổng hợp | Các thành viên cung cấp phạm vi module liên quan |
+| Requirements / SRS (bước 2) | Hưng trực tiếp làm, chủ trì và tổng hợp | Các thành viên cung cấp yêu cầu module và nguồn/minh chứng |
+| User Stories (bước 3) | Hưng chủ trì, review và tổng hợp | Hưng, Khoa, Huy, Phát, Thắng chia đều việc trực tiếp làm User Stories |
+| Acceptance Criteria (bước 4) | Hưng chủ trì, review và tổng hợp | Hưng, Khoa, Huy, Phát, Thắng chia đều việc trực tiếp làm Acceptance Criteria |
+| Business Rules (bước 5) | Hưng trực tiếp làm, chủ trì và tổng hợp | Các thành viên cung cấp quy tắc đã thống nhất; không tự thêm nghiệp vụ |
+| Use Case Diagram và Use Case Description (bước 6) | Hưng chủ trì, review và tổng hợp | Hưng, Khoa, Huy, Phát, Thắng chia đều việc trực tiếp làm cả sơ đồ và đặc tả |
 | Project Setup (bước 7) | Hưng | Các thành viên kiểm tra môi trường module mình và cung cấp minh chứng |
 | Architecture (bước 8) | Hưng | Các chủ module trực tiếp viết trách nhiệm, tương tác và tham gia review |
 | Preliminary ERD (bước 9) | Hưng | Cả nhóm cung cấp thực thể và quy tắc nghiệp vụ |
