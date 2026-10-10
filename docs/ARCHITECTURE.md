@@ -109,6 +109,8 @@ không đưa vào mã frontend hoặc biến NEXT_PUBLIC_.
 
 ## 4. Các module và trách nhiệm
 
+Phân công được đồng bộ ngày 10/10/2026 theo `docs/TEAM_ASSIGNMENTS.md`. Hưng chủ trì tổng thể các bước 1–6, 8, 22, Scrum và bàn giao; các chủ module trực tiếp thực hiện phần được giao và cung cấp minh chứng. Cập nhật phân công không thay đổi thiết kế kỹ thuật hoặc trạng thái triển khai.
+
 ### 4.1. Backend
 
 Các module được tổ chức theo nghiệp vụ, đặt tại
@@ -123,10 +125,10 @@ của repository.
 | loyalty | Đọc điểm, ghi nhận cộng điểm và đảo điểm | Huy |
 | promotions | Kiểm tra mã khuyến mãi và tính mức giảm | Huy |
 | orders | Tạo, đọc, hủy đơn và kiểm soát chuyển trạng thái | Phát |
-| inventory | Giữ hàng, hoàn hàng và kiểm soát tồn kho đồng thời | Phát |
+| inventory | Giữ hàng, hoàn hàng và kiểm soát tồn kho đồng thời | Khoa |
 | payments | Thanh toán giả lập, lưu giao dịch và chống thanh toán trùng | Thắng |
 | prisma | Cung cấp PrismaService dùng chung để truy cập database | Hưng |
-| order-cancellation | Điều phối hủy đơn đã thanh toán, phối hợp hoàn tiền, hoàn kho và đảo điểm | Phát, phối hợp Thắng và Huy |
+| order-cancellation | Điều phối hủy đơn đã thanh toán, phối hợp hoàn tiền, hoàn kho và đảo điểm | Phát, phối hợp Thắng, Khoa và Huy |
 
 `common/` chứa các thành phần dùng chung như filter,
 interceptor và decorator. Thay đổi thành phần dùng chung
@@ -144,24 +146,24 @@ Giao diện và xử lý theo nghiệp vụ được đặt tại
 | auth | Giao diện đăng ký, đăng nhập và đăng xuất | Khoa |
 | cart | State giỏ, thêm/sửa/xóa và lưu giỏ trên trình duyệt | Huy |
 | promotions | Nhập/bỏ mã và hiển thị kết quả kiểm tra khuyến mãi | Huy |
-| orders | Giao diện lịch sử và chi tiết đơn | Khoa, phối hợp Phát |
+| orders | Giao diện lịch sử và chi tiết đơn | Phát |
 | payments | Giao diện checkout và xác nhận thanh toán | Thắng, phối hợp Huy và Phát |
 | loyalty | Hiển thị điểm thưởng của người dùng | Huy |
 
-Hưng thống nhất phong cách giao diện, các thành phần dùng chung
-và review phác thảo.
+Phát điều phối Figma/User Flow, quản lý file thiết kế, chuẩn hóa design system
+và rà soát tính nhất quán giữa các màn hình. Hưng chuẩn hóa UI,
+các thành phần dùng chung và điều phối tích hợp.
 
-Mỗi thành viên tự phác thảo và triển khai giao diện thuộc phần
-được phân công, theo phong cách nhóm đã thống nhất.
+Mỗi thành viên review, bổ sung thiết kế và triển khai giao diện module mình.
+Nếu Figma đã được Phát thực hiện, không làm lại; dùng thiết kế đã có để hoàn thiện.
 
 Huy sở hữu state giỏ hàng. Các phần khác sử dụng thao tác
 do phần cart cung cấp, không xây dựng thêm một giỏ hàng riêng.
 
-Phát sở hữu API đơn hàng, bao gồm lịch sử và chi tiết đơn.
-Khoa sử dụng các API này để xây dựng giao diện.
+Phát sở hữu API và giao diện đơn hàng, bao gồm lịch sử và chi tiết đơn.
 
 Thắng điều phối checkout và trang xác nhận thanh toán.
-Khoa phụ trách trang lịch sử/chi tiết để tránh cùng sửa một file.
+Phát phụ trách trang lịch sử/chi tiết để tránh cùng sửa một file.
 
 ### 4.3. Ranh giới xử lý trong backend
 
@@ -198,26 +200,30 @@ luồng đã được xử lý nguyên tử.
 
 | Người | Công việc chung | Kiểm thử phụ trách |
 | --- | --- | --- |
-| Hưng | Setup, PrismaService, Docker, thống nhất UI và điều phối tích hợp | Menu, chi tiết sản phẩm, tùy chọn và tính giá |
-| Khoa | JWT, xác thực và quy tắc phân quyền dùng chung | Tài khoản, xác thực, quyền truy cập và giao diện lịch sử đơn |
-| Huy | Điều phối và tổng hợp tài liệu | Giỏ hàng, khuyến mãi, cộng/đảo điểm đúng một lần |
-| Phát | Điều phối schema, migration và seed | Tạo/hủy đơn, quyền sở hữu đơn, máy trạng thái và tồn kho đồng thời |
-| Thắng | Phối hợp tích hợp checkout và thanh toán | Thanh toán thành công/thất bại, chống trùng, hoàn tiền giả lập và xác nhận |
+| Hưng | Chủ trì tổng thể; setup, Products, hai ERD, PrismaService, Docker, chuẩn hóa UI, điều phối API/tích hợp và tổng hợp báo cáo | Menu, chi tiết sản phẩm, tùy chọn, tính giá; điều phối kiểm thử tích hợp và kiểm soát PR |
+| Khoa | Auth, Users, JWT/RBAC, Inventory và Use Case | Tài khoản, xác thực, quyền truy cập, quyền sở hữu và tồn kho đồng thời |
+| Huy | Cart, Promotions, Loyalty; User Stories/Acceptance Criteria theo module; tổng hợp test và Scrum Burndown | Giỏ hàng, khuyến mãi, cộng/đảo điểm đúng một lần |
+| Phát | Orders, State Machine; schema/migration/seed; điều phối Figma; Activity/Sequence Orders | Tạo/hủy đơn, UI lịch sử/chi tiết, quyền sở hữu đơn, chuyển trạng thái, thời hạn giữ hàng, chống tạo đơn trùng; phối hợp Khoa kiểm thử Orders–Inventory |
+| Thắng | Checkout, Payments, idempotency; Deployment Diagram, hướng dẫn triển khai và E2E | Thanh toán thành công/thất bại, chống trùng, hoàn tiền giả lập, xác nhận và E2E cùng chủ module liên quan |
 
-Hưng phụ trách cấu hình kết nối và PrismaService.
-Phát điều phối schema, migration và seed.
-Hai người phối hợp khi thay đổi ảnh hưởng đến truy cập database.
+Hưng thực hiện toàn bộ Preliminary ERD và Detailed ERD, cấu hình kết nối
+và PrismaService. Phát thực hiện và điều phối tích hợp schema, migration, seed.
+Hai người phối hợp khi thay đổi ảnh hưởng đến thiết kế hoặc truy cập database.
 
-Mỗi thành viên đề xuất bảng, trường và dữ liệu mẫu cho module mình.
-Phát rà soát quan hệ và tích hợp thay đổi vào schema chung;
-không phải tự thiết kế toàn bộ dữ liệu thay các thành viên.
+Mỗi thành viên cung cấp thực thể, quy tắc, trường và dữ liệu mẫu cho module mình.
+Hưng tổng hợp thiết kế dữ liệu; Phát kiểm tra khả năng triển khai và áp dụng
+vào schema chung. Mọi khác biệt giữa ERD và schema phải được review trước migration.
 
 Mỗi người viết tài liệu API, hướng dẫn kiểm tra và test cho phần mình.
-Huy tổng hợp, kiểm tra tính đầy đủ và thống nhất của tài liệu.
+Hưng chủ trì và tổng hợp báo cáo, tài liệu bàn giao; Huy tổng hợp kết quả kiểm thử.
+Ở bước 1–6 và 8, Hưng điều phối, rà soát và tổng hợp; Khoa thực hiện Use Case,
+Huy thực hiện User Stories/Acceptance Criteria theo module, các chủ module
+trực tiếp viết phạm vi, yêu cầu, quy tắc đã thống nhất và nội dung kiến trúc phần mình.
 
-Các test tích hợp liên module do những người sở hữu module
-phối hợp thực hiện. Cả nhóm kiểm tra luồng end-to-end
-từ chọn món đến thanh toán và xem lịch sử.
+Hưng điều phối tích hợp; các chủ module trực tiếp viết và chạy test phần mình,
+Khoa kiểm thử theo phạm vi Auth/Users/RBAC/Inventory. Thắng phụ trách E2E,
+cùng các chủ module kiểm tra luồng từ chọn món đến thanh toán và xem lịch sử.
+Huy tổng hợp kết quả test; mỗi thành viên cung cấp minh chứng và sửa lỗi module mình.
 
 Người điều phối không mặc định phải sửa toàn bộ lỗi của nhóm.
 Lỗi thuộc module nào thì người phụ trách module đó xử lý.
@@ -304,7 +310,7 @@ Yêu cầu tạo đơn gửi lặp phải được nhận diện để không t�
 
 Đơn được giữ hàng trong 15 phút theo Business Rules đã chốt. Thử lại thanh toán không tự gia hạn thời điểm hết hạn của đơn.
 
-Module orders phụ trách tác vụ định kỳ kiểm tra các đơn PENDING hoặc PAYMENT_FAILED đã hết hạn, chuyển CANCELLED và phối hợp InventoryService hoàn hàng đúng một lần. Phát phụ trách luồng này.
+Module orders phụ trách tác vụ định kỳ kiểm tra các đơn PENDING hoặc PAYMENT_FAILED đã hết hạn, chuyển CANCELLED và phối hợp InventoryService hoàn hàng đúng một lần. Phát phụ trách luồng này, phối hợp Khoa thực hiện phần Inventory.
 
 API thanh toán tự kiểm tra thời hạn tại lúc xử lý, không phụ thuộc vào việc tác vụ định kỳ đã chạy hay chưa. Xử lý hết hạn, hủy đơn và thanh toán đồng thời phải được kiểm soát trên cùng trạng thái đơn để không vừa xác nhận thanh toán thành công vừa hoàn hàng do hết hạn.
 
@@ -353,7 +359,7 @@ Service này phối hợp:
 - LoyaltyService: đảo đúng số điểm từng được cộng.
 
 Phát phụ trách service điều phối; Thắng phụ trách thao tác hoàn tiền;
-Huy phụ trách đảo điểm.
+Khoa phụ trách hoàn kho; Huy phụ trách đảo điểm.
 
 Các cập nhật phải cùng transaction và chống xử lý lặp.
 Nếu một phần thất bại, không để hệ thống ở trạng thái hoàn tiền,
@@ -632,6 +638,10 @@ Prisma và truy vấn database từ backend chưa được tích hợp.
 | 13 — API Specification | Endpoint, request, response, xác thực và mã lỗi |
 | 14 — Sequence Diagram | Tương tác giữa các thành phần trong từng luồng |
 
+Hưng thực hiện hai ERD và điều phối API Specification; Phát điều phối Figma/User Flow.
+Các chủ module trực tiếp thực hiện Activity/Sequence và đặc tả API của mình;
+Phát phụ trách Activity/Sequence Orders, các bên liên quan phối hợp review.
+
 Những thiết kế này phải thống nhất với kiến trúc,
 User Story, Acceptance Criteria và Business Rules đã chốt.
 
@@ -677,31 +687,37 @@ không phải thời điểm đầu tiên nhóm bắt đầu test.
 
 ### 8.4. Đóng gói và bàn giao
 
-Bước 21 hoàn thiện Docker Compose chạy đủ:
+Bước 21 do Hưng thực hiện Docker Compose, các chủ module kiểm tra và cung cấp minh chứng chạy đủ:
 
 - Frontend Next.js.
 - Backend NestJS.
 - PostgreSQL.
 
-Bước 22 mô tả môi trường triển khai bằng Deployment Diagram.
+Bước 22 do Hưng chủ trì; Thắng trực tiếp thực hiện Deployment Diagram
+và hướng dẫn triển khai; các chủ module cung cấp cấu hình và minh chứng.
 
-Bước 23 thực hiện demo luồng end-to-end.
+Bước 23 do Hưng điều phối kịch bản và tích hợp; cả nhóm thực hiện demo
+luồng end-to-end, Thắng phụ trách E2E cùng các chủ module.
 
-Bước 24 tổng hợp tài liệu bàn giao, hướng dẫn chạy,
-thiết kế và kết quả kiểm thử.
+Bước 24 do Hưng chủ trì, tổng hợp báo cáo và tài liệu bàn giao, hướng dẫn chạy,
+thiết kế và kết quả kiểm thử. Mỗi chủ module cung cấp tài liệu và minh chứng;
+Huy tổng hợp test, Thắng cung cấp hướng dẫn triển khai.
 
 Scrum, Git, review và cập nhật tài liệu được thực hiện
-xuyên suốt quá trình, không dồn đến giai đoạn cuối.
+xuyên suốt quá trình, không dồn đến giai đoạn cuối. Hưng chủ trì Scrum,
+Huy phụ trách Scrum Burndown; mỗi thành viên cập nhật công việc và cung cấp
+minh chứng. Vai trò Product Owner/Scrum Master cụ thể được nhóm xác định
+trong tài liệu Scrum; chủ trì tổng thể không đồng nghĩa tự thực hiện mọi việc.
 
 ### 8.5. Các quyết định cần cụ thể hóa ở bước sau
 
 | Nội dung | Người điều phối | Mốc chốt |
 | --- | --- | --- |
 | Lưu JWT, thời hạn phiên và hành vi đăng xuất | Khoa | Trước triển khai auth; ghi trong API Specification |
-| Trường dữ liệu, ràng buộc chống lặp, version và lịch sử điểm | Phát phối hợp các chủ module | Detailed ERD và trước migration nghiệp vụ |
-| Tần suất tác vụ hết hạn và kiểm soát cạnh tranh với thanh toán/hủy | Phát phối hợp Thắng | Trước triển khai luồng giữ hàng và thanh toán |
-| DTO, endpoint, HTTP status và mã lỗi | Chủ module và người dùng API | API Specification |
-| Các trường hợp test liên module và dữ liệu test | Các chủ module liên quan | Chốt cùng hợp đồng; viết trong quá trình triển khai |
+| Trường dữ liệu, ràng buộc chống lặp, version và lịch sử điểm | Hưng chủ trì ERD; Phát thực hiện schema/migration; các chủ module cung cấp quy tắc | Detailed ERD và trước migration nghiệp vụ |
+| Tần suất tác vụ hết hạn và kiểm soát cạnh tranh với thanh toán/hủy | Phát phối hợp Thắng và Khoa | Trước triển khai luồng giữ hàng và thanh toán |
+| DTO, endpoint, HTTP status và mã lỗi | Hưng điều phối; chủ module và người dùng API trực tiếp đặc tả/review | API Specification |
+| Các trường hợp test liên module và dữ liệu test | Hưng điều phối tích hợp; chủ module thực hiện; Thắng phụ trách E2E; Huy tổng hợp kết quả | Chốt cùng hợp đồng; viết trong quá trình triển khai |
 
 Các mục này là chi tiết triển khai cần tiếp tục làm rõ, không phải xác nhận đã được hoàn thành. Nếu làm thay đổi quyết định kiến trúc, phải cập nhật tài liệu này cùng các tài liệu bị ảnh hưởng.
 
