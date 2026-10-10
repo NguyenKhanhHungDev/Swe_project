@@ -16,7 +16,7 @@ giao diện khách hàng và các API xử lý nghiệp vụ.
 - Backend: NestJS 11, TypeScript
 - Database: PostgreSQL 17
 - ORM: Prisma (planned, not yet integrated)
-- Development: Docker Compose
+- Development: Docker Compose hiện chỉ cấu hình PostgreSQL; frontend/backend chạy bằng npm
 - Version control: Git and GitHub
 
 ## 3. Business scope
@@ -57,21 +57,23 @@ Frontend không truy cập trực tiếp database.
 Backend chịu trách nhiệm xác thực, phân quyền,
 kiểm tra dữ liệu và tính toán nghiệp vụ chính thức.
 
-Reference: docs/ARCHITECTURE.md
+Tham khảo: [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## 5. Current implementation status
 
-Theo tài liệu kiến trúc cập nhật 05/10/2026:
+Đối chiếu mã nguồn và cấu hình trong repository:
 
-- Đã chuẩn bị khung frontend/backend.
-- Đã có cấu hình PostgreSQL bằng Docker.
-- Đã thiết lập tài liệu kiến trúc.
-- Prisma chưa được tích hợp.
-- Các chức năng nghiệp vụ chưa được xác minh
-  là đã triển khai đầy đủ.
+- Frontend có trang Hello và nút gọi API lời chào của backend.
+- Backend có `GET /` trả lời chào; `ProductsModule` hiện là module rỗng.
+- Docker Compose chỉ khai báo PostgreSQL 17 với healthcheck và volume;
+  frontend/backend chạy bằng npm, chưa được đóng gói vào Compose.
+- Prisma chưa có dependency, schema hoặc tích hợp truy vấn database.
+- Unit test và E2E test hiện có chỉ kiểm tra API lời chào;
+  các chức năng nghiệp vụ chưa được xác minh là đã triển khai đầy đủ.
 
-Đây là trạng thái theo tài liệu, không phải
-kết quả kiểm thử mới nhất.
+Đây là kết quả đối chiếu file, không phải kết quả chạy/test mới nhất
+hoặc xác nhận nghiệm thu. Trạng thái từng bước tham khảo tại
+[PROJECT_ROADMAP.md](PROJECT_ROADMAP.md); không suy ra DONE từ việc có file.
 
 Codex phải kiểm tra repository trước khi
 đưa ra kết luận về tiến độ thực tế.
@@ -86,8 +88,8 @@ Nhóm gồm 5 thành viên:
 - Phát
 - Thắng
 
-Phân công kỹ thuật tham khảo tại:
-docs/ARCHITECTURE.md
+Phân công chính thức tham khảo tại [TEAM_ASSIGNMENTS.md](TEAM_ASSIGNMENTS.md);
+trách nhiệm module và quyết định kỹ thuật tại [ARCHITECTURE.md](ARCHITECTURE.md).
 
 Mọi thay đổi phân công cần được nhóm xác nhận.
 
@@ -104,14 +106,17 @@ Mọi thay đổi phân công cần được nhóm xác nhận.
 
 ## 8. Documentation sources
 
-- README.md: Cài đặt và vận hành dự án.
-- docs/ARCHITECTURE.md: Kiến trúc và trách nhiệm.
-- AGENTS.md: Quy tắc làm việc với Codex.
-- frontend/AGENTS.md: Hướng dẫn Next.js.
+- [README.md](../README.md): Giới thiệu, cài đặt, chạy và sử dụng dự án.
+- [PROJECT_ROADMAP.md](PROJECT_ROADMAP.md): 24 bước, sản phẩm và trạng thái tham khảo.
+- [TEAM_ASSIGNMENTS.md](TEAM_ASSIGNMENTS.md): Chủ trì, người trực tiếp làm và phối hợp.
+- [REQUIREMENTS_TRACEABILITY.md](REQUIREMENTS_TRACEABILITY.md): Liên kết 10 Task với các bước và minh chứng cần có.
+- [ARCHITECTURE.md](ARCHITECTURE.md): Kiến trúc và trách nhiệm module.
+- [AGENTS.md](../AGENTS.md): Quy tắc làm việc với Codex.
+- [frontend/AGENTS.md](../frontend/AGENTS.md): Hướng dẫn Next.js.
 
-Các tài liệu SRS, User Stories, Acceptance
-Criteria và Business Rules cần được bổ sung
-hoặc liên kết khi có nguồn chính thức.
+Các tài liệu gốc Project Scope, SRS, User Stories, Acceptance Criteria,
+Business Rules, Use Case Diagram và Use Case Description chưa có trong
+repository; cần bổ sung hoặc liên kết nguồn chính thức khi nhóm cung cấp.
 
 Không tự tạo quy tắc nghiệp vụ thay thế
 tài liệu đã được nhóm phê duyệt.

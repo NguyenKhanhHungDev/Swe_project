@@ -1,15 +1,22 @@
 # Kiến trúc hệ thống BrewLite
 
-**Bước:** 8 — Architecture  
-**Ngày cập nhật:** 05/10/2026  
-**Trạng thái:** Bản thiết kế để nhóm review trước khi triển khai.  
+**Bước:** 8 — Architecture
+
+**Ngày cập nhật:** 11/10/2026
+
+**Trạng thái:** Bản thiết kế để nhóm review trước khi triển khai.
+
 **Vị trí trong repository:** `docs/ARCHITECTURE.md`
 
 ## 1. Mục tiêu và phạm vi
 
 Tài liệu chốt cách tổ chức frontend, backend và database của BrewLite, trách nhiệm từng module và cách phối hợp giữa các thành viên. Kiến trúc sử dụng Next.js, NestJS và PostgreSQL; dự kiến tích hợp Prisma.
 
-Phạm vi bám đề bài BrewLite, SRS, User Story, Acceptance Criteria và Business Rules của nhóm. Quy trình 24 bước được thực hiện đầy đủ; các yêu cầu Scrum, review và kiểm thử được duy trì xuyên suốt. Chi tiết bảng dữ liệu và hợp đồng API sẽ được cụ thể hóa ở các bước tiếp theo.
+Phạm vi bám đề bài BrewLite, SRS, User Story, Acceptance Criteria và Business Rules của nhóm. Quy trình 24 bước cần được bao phủ đầy đủ; các yêu cầu Scrum, review và kiểm thử được duy trì xuyên suốt. Chi tiết bảng dữ liệu và hợp đồng API sẽ được cụ thể hóa ở các bước tiếp theo.
+
+Các tài liệu gốc Scope, SRS, User Stories, Acceptance Criteria, Business Rules,
+Use Case Diagram và Use Case Description chưa có trong repository; cần đối chiếu
+nguồn được nhóm cung cấp trước khi coi thiết kế là yêu cầu đã duyệt.
 
 Kiến trúc phục vụ ứng dụng đặt đồ uống, chọn size/topping,
 quản lý giỏ hàng, đăng nhập, tạo đơn, thanh toán giả lập,
@@ -109,7 +116,7 @@ không đưa vào mã frontend hoặc biến NEXT_PUBLIC_.
 
 ## 4. Các module và trách nhiệm
 
-Phân công được đồng bộ ngày 10/10/2026 theo `docs/TEAM_ASSIGNMENTS.md`. Hưng chủ trì tổng thể các bước 1–6, 8, 22, Scrum và bàn giao; các chủ module trực tiếp thực hiện phần được giao và cung cấp minh chứng. Cập nhật phân công không thay đổi thiết kế kỹ thuật hoặc trạng thái triển khai.
+Phân công theo `docs/TEAM_ASSIGNMENTS.md`: Hưng trực tiếp làm bước 1, 2, 5; chủ trì, review và tổng hợp bước 1–6. Cả năm thành viên chia đều việc trực tiếp làm bước 3, 4, 6. Hưng chủ trì bước 8, 22, Scrum và bàn giao; các chủ module trực tiếp thực hiện phần được giao và cung cấp minh chứng. Cập nhật phân công không thay đổi thiết kế kỹ thuật hoặc trạng thái triển khai.
 
 ### 4.1. Backend
 
@@ -200,9 +207,9 @@ luồng đã được xử lý nguyên tử.
 
 | Người | Công việc chung | Kiểm thử phụ trách |
 | --- | --- | --- |
-| Hưng | Chủ trì tổng thể; setup, Products, hai ERD, PrismaService, Docker, chuẩn hóa UI, điều phối API/tích hợp và tổng hợp báo cáo | Menu, chi tiết sản phẩm, tùy chọn, tính giá; điều phối kiểm thử tích hợp và kiểm soát PR |
-| Khoa | Auth, Users, JWT/RBAC, Inventory và Use Case | Tài khoản, xác thực, quyền truy cập, quyền sở hữu và tồn kho đồng thời |
-| Huy | Cart, Promotions, Loyalty; User Stories/Acceptance Criteria theo module; tổng hợp test và Scrum Burndown | Giỏ hàng, khuyến mãi, cộng/đảo điểm đúng một lần |
+| Hưng | Chủ trì tổng thể; trực tiếp làm Project Scope, SRS và Business Rules; setup, Products, hai ERD, PrismaService, Docker, chuẩn hóa API/UI, điều phối tích hợp và tổng hợp báo cáo | Menu, chi tiết sản phẩm, tùy chọn, tính giá; điều phối kiểm thử tích hợp và kiểm soát PR |
+| Khoa | Auth, Users, JWT/RBAC, Inventory | Tài khoản, xác thực, quyền truy cập, quyền sở hữu và tồn kho đồng thời |
+| Huy | Cart, Promotions, Loyalty; tổng hợp test và Scrum Burndown | Giỏ hàng, khuyến mãi, cộng/đảo điểm đúng một lần |
 | Phát | Orders, State Machine; schema/migration/seed; điều phối Figma; Activity/Sequence Orders | Tạo/hủy đơn, UI lịch sử/chi tiết, quyền sở hữu đơn, chuyển trạng thái, thời hạn giữ hàng, chống tạo đơn trùng; phối hợp Khoa kiểm thử Orders–Inventory |
 | Thắng | Checkout, Payments, idempotency; Deployment Diagram, hướng dẫn triển khai và E2E | Thanh toán thành công/thất bại, chống trùng, hoàn tiền giả lập, xác nhận và E2E cùng chủ module liên quan |
 
@@ -216,9 +223,11 @@ vào schema chung. Mọi khác biệt giữa ERD và schema phải được revi
 
 Mỗi người viết tài liệu API, hướng dẫn kiểm tra và test cho phần mình.
 Hưng chủ trì và tổng hợp báo cáo, tài liệu bàn giao; Huy tổng hợp kết quả kiểm thử.
-Ở bước 1–6 và 8, Hưng điều phối, rà soát và tổng hợp; Khoa thực hiện Use Case,
-Huy thực hiện User Stories/Acceptance Criteria theo module, các chủ module
-trực tiếp viết phạm vi, yêu cầu, quy tắc đã thống nhất và nội dung kiến trúc phần mình.
+Ở bước 1–6, Hưng chủ trì, review và tổng hợp; trực tiếp làm Project Scope,
+SRS và Business Rules. Hưng, Khoa, Huy, Phát, Thắng chia đều việc trực tiếp làm
+User Stories, Acceptance Criteria, Use Case Diagram và Use Case Description.
+Ở bước 8, Hưng điều phối, rà soát và tổng hợp; các chủ module trực tiếp viết
+nội dung kiến trúc phần mình.
 
 Hưng điều phối tích hợp; các chủ module trực tiếp viết và chạy test phần mình,
 Khoa kiểm thử theo phạm vi Auth/Users/RBAC/Inventory. Thắng phụ trách E2E,
@@ -559,9 +568,9 @@ không thu thập hoặc lưu thông tin thẻ ngân hàng thật.
 
 ## 7. Môi trường phát triển hiện tại
 
-### 7.1. Các thành phần đang chạy
+### 7.1. Cách chạy theo cấu hình repository
 
-Sau bước 7 — Project Setup, môi trường phát triển gồm:
+Theo cấu hình trong repository, môi trường phát triển gồm:
 
 | Thành phần | Cách chạy | Địa chỉ trên máy |
 | --- | --- | --- |
@@ -606,10 +615,11 @@ không tự đồng bộ dữ liệu database giữa các máy.
 Schema, migration và seed sẽ được triển khai sau
 theo thiết kế dữ liệu đã thống nhất.
 
-### 7.4. Trạng thái đã kiểm tra
+### 7.4. Kết quả kiểm tra đã ghi nhận
 
 Các kiểm tra sau đã được thực hiện trên máy phát triển
-theo xác nhận của người thực hiện:
+theo xác nhận trước đây của người thực hiện; chưa chạy lại
+trong lần đồng bộ tài liệu này:
 
 - Frontend và backend khởi động được.
 - Frontend gọi được API Hello của backend.

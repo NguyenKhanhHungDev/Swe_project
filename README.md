@@ -1,169 +1,360 @@
 # BrewLite
 
-BrewLite là đồ án môn Công nghệ Phần mềm của nhóm năm sinh viên. Dự án hướng tới
-ứng dụng web đặt đồ uống để khách nhận tại quầy, với thanh toán **mô phỏng**;
-không xử lý tiền thật hoặc giao hàng.
+BrewLite là đồ án Công nghệ phần mềm của nhóm năm sinh viên. Mục tiêu là xây dựng
+ứng dụng web đặt đồ uống để khách nhận tại quầy, có thanh toán **mô phỏng**.
+Dự án không xử lý tiền thật hoặc giao hàng.
 
-README phân biệt những gì có trong mã nguồn trên nhánh hiện tại với thiết kế dự
-kiến. Tài liệu thiết kế và phân công không tự chứng minh chức năng đã chạy hoặc
-đã được nghiệm thu.
+README này hướng dẫn chạy **mã nguồn hiện có**. Thiết kế, phân công và tiến độ
+chi tiết được lưu trong [`docs/`](docs/PROJECT_CONTEXT.md); tài liệu kế hoạch
+không đồng nghĩa chức năng đã triển khai hoặc được nghiệm thu.
 
-## Trạng thái và phạm vi chức năng
+## Hiện trạng chức năng
 
-**Đã có trong mã nguồn:** bộ khung Next.js và NestJS, trang “Hello BrewLite!”,
-nút gọi backend, API `GET /` trả về `Hello from BrewLite backend!`, cấu hình CORS,
-file môi trường mẫu, script chạy chung, cấu hình lint/build, cùng unit test và
-E2E test cho API lời chào. `ProductsModule` hiện chỉ là module rỗng.
-Docker Compose đã khai báo PostgreSQL 17 với healthcheck và volume lưu dữ liệu.
-Các test hiện có chưa kiểm tra nghiệp vụ đặt hàng.
+| Mức độ | Nội dung |
+| --- | --- |
+| Đã có trong mã nguồn | Trang Next.js “Hello BrewLite!” với nút **Kiểm tra kết nối backend**; NestJS `GET /` trả `Hello from BrewLite backend!`; unit test và E2E test cho lời chào; cấu hình PostgreSQL trong Docker Compose. |
+| Mới có khung hoặc thiết kế | `ProductsModule` là module rỗng. Kiến trúc modular monolith và kết nối dữ liệu qua Prisma được mô tả trong tài liệu, nhưng Prisma chưa được tích hợp. |
+| Dự kiến | Menu, chi tiết đồ uống, size/topping, giỏ hàng, tài khoản, đơn hàng, tồn kho, khuyến mãi, điểm thưởng và thanh toán giả lập. Chưa có căn cứ từ code để hướng dẫn sử dụng các chức năng này. |
 
-**Theo kế hoạch, chưa được xác minh là đã triển khai:**
-
-- Xem menu, chi tiết đồ uống, chọn size/topping và số lượng.
-- Giỏ hàng, đăng ký/đăng nhập, phân quyền khách hàng và nhân viên.
-- Tạo, theo dõi, hủy đơn và quản lý tồn kho.
-- Khuyến mãi, điểm thưởng và thanh toán giả lập.
-- Prisma schema/migration/seed, kết nối backend với PostgreSQL.
-- Đóng gói frontend/backend bằng Docker và chạy đủ ba dịch vụ bằng Compose.
-
-Theo [lộ trình 24 bước](docs/PROJECT_ROADMAP.md), tài liệu cho bước 1–6 cần đối
-chiếu minh chứng chính thức; bước 7 có khung môi trường; bước 8 có bản thiết kế
-để review; bước 9 đang chuẩn bị. Không coi các mốc này là trạng thái nghiệm thu.
+Test hiện có chỉ kiểm tra API lời chào, chưa kiểm chứng nghiệp vụ đặt đồ uống.
+Xem [Project Roadmap](docs/PROJECT_ROADMAP.md) để theo dõi 24 bước và minh chứng.
 
 ## Công nghệ và kiến trúc
 
-| Thành phần | Hiện trạng / định hướng |
+| Thành phần | Đã xác minh từ repository |
 | --- | --- |
-| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS 4 theo `frontend/package.json` |
-| Backend | NestJS 11 và TypeScript theo `backend/package.json` |
-| Database phát triển | PostgreSQL 17 Alpine trong Docker Compose; backend chưa truy vấn database |
-| ORM | Prisma **dự kiến**, chưa có dependency, schema hoặc tích hợp trong backend |
-| Công cụ | npm, Git và GitHub; Compose hiện chỉ chạy PostgreSQL |
+| Frontend | Next.js 16.3.6, React 19.2.8, TypeScript, Tailwind CSS 4 |
+| Backend | NestJS 11, TypeScript; hiện có API lời chào và module Products rỗng |
+| Database | Docker Compose khai báo `postgres:17-alpine`, healthcheck và named volume `postgres_data` |
+| ORM | Prisma **dự kiến**; chưa có package, schema, migration hoặc kết nối backend–database |
+| Công cụ | npm với ba lockfile riêng; Git/GitHub; Docker Compose hiện chỉ có service `db` |
 
-Thiết kế đích là **modular monolith**: một ứng dụng Next.js gọi REST API/JSON
-của một backend NestJS chia module nghiệp vụ. Backend dự kiến dùng Prisma để
-truy cập PostgreSQL; frontend không truy cập database trực tiếp. Đây là mô hình
-kiến trúc được mô tả trong [ARCHITECTURE.md](docs/ARCHITECTURE.md), chưa phải
-cam kết rằng toàn bộ module/API nghiệp vụ đã tồn tại.
+Thiết kế đích là một frontend Next.js gọi REST API/JSON của backend NestJS.
+Backend chia module nghiệp vụ trong cùng một ứng dụng (**modular monolith**);
+theo thiết kế, backend sẽ dùng Prisma để truy cập PostgreSQL. Frontend không
+truy cập database trực tiếp.
+
+```mermaid
+flowchart LR
+    UI["Next.js: trang Hello và nút kiểm tra"] -->|"GET / hiện có"| API["NestJS: API lời chào"]
+    API -.->|"dự kiến: Prisma"| DB[(PostgreSQL 17)]
+```
+
+Sơ đồ phân biệt kết nối API đang có (nét liền) với truy cập database dự kiến
+(nét đứt). Hiện Compose **chỉ chạy PostgreSQL**; frontend và backend chạy bằng
+npm trên máy. Repository chưa có Dockerfile để đóng gói hai ứng dụng.
 
 ## Cấu trúc repository
 
 | Đường dẫn | Vai trò |
 | --- | --- |
-| `frontend/src/app/` | Trang và giao diện Next.js hiện có |
-| `backend/src/` | Ứng dụng NestJS, API lời chào và module Products rỗng |
+| `frontend/src/app/` | Trang Next.js và nút kiểm tra API |
+| `backend/src/` | Ứng dụng NestJS, `GET /` và module Products rỗng |
 | `backend/test/` | E2E test cho API lời chào |
 | `docs/` | Bối cảnh, kiến trúc, lộ trình, phân công và truy vết yêu cầu |
-| `docker-compose.yml` | Dịch vụ `db` PostgreSQL, healthcheck và named volume |
-| `package.json` | Script chạy đồng thời và build hai ứng dụng |
-| `.env.example` | Mẫu biến môi trường cho Compose |
-| `backend/.env.example` | Mẫu biến môi trường cho NestJS |
-| `frontend/.env.example` | Mẫu biến môi trường cho Next.js |
+| `docker-compose.yml` | PostgreSQL service `db`, healthcheck và volume dữ liệu |
+| `package.json` | Script chạy đồng thời và build frontend/backend |
+| `.env.example`, `backend/.env.example`, `frontend/.env.example` | Ba mẫu biến môi trường |
 
-Gốc repository, `backend/` và `frontend/` có `package.json` và lockfile riêng;
-cần cài dependencies ở cả ba vị trí.
+Gốc repository, `backend/` và `frontend/` có `package.json` cùng
+`package-lock.json` riêng; cần cài dependencies ở cả ba vị trí.
 
-## Quick Start
+## Công cụ cần cài
 
-Cần Git, Node.js, npm, Docker và Docker Compose. Repository chưa khóa phiên bản
-Node/npm bằng `engines` hoặc `.nvmrc`. Các lệnh dưới đây dành cho Linux/macOS
-hoặc Git Bash trên Windows và chạy từ thư mục gốc dự án.
+- [Node.js](https://nodejs.org/en/download) và npm đi kèm: khuyến nghị bản
+  **Node.js 24 LTS**. Repository chưa khóa Node/npm bằng `engines` hoặc `.nvmrc`;
+  lockfile của script chạy chung chứa `concurrently` yêu cầu Node `>=22`.
+- [Git](https://git-scm.com/downloads) để clone repository; không có phiên bản
+  Git tối thiểu được khai báo.
+- [Docker và Docker Compose](https://docs.docker.com/compose/install/) để chạy
+  PostgreSQL. Cần lệnh `docker compose` và Docker daemon/Desktop đang hoạt động;
+  repository không khóa phiên bản Docker/Compose.
+
+Sau khi cài, mở **terminal mới** và kiểm tra `node --version`, `npm --version`,
+`git --version`, `docker --version`, `docker compose version` và `docker info`.
+`docker info` chỉ xác nhận daemon có thể truy cập, không khởi động dịch vụ.
+
+## Windows 10/11 — PowerShell
+
+1. Cài Node.js từ [trang Node.js](https://nodejs.org/en/download),
+   [Git for Windows](https://git-scm.com/download/win) và
+   [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/).
+   Làm theo yêu cầu WSL 2 của Docker Desktop nếu trình cài đặt thông báo; mở
+   Docker Desktop và chờ ứng dụng sẵn sàng.
+2. Mở **PowerShell mới** và kiểm tra công cụ:
+
+Ví dụ dùng `npm.cmd` để gọi npm trực tiếp, kể cả khi PowerShell chặn script
+`npm.ps1` theo Execution Policy.
+
+```powershell
+node --version
+npm.cmd --version
+git --version
+docker --version
+docker compose version
+docker info
+```
+
+3. Clone, tạo đủ ba file môi trường nếu chưa có và cài dependencies:
+
+```powershell
+git clone https://github.com/NguyenKhanhHungDev/Swe_project.git
+Set-Location Swe_project
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+if (-not (Test-Path backend/.env)) { Copy-Item backend/.env.example backend/.env }
+if (-not (Test-Path frontend/.env.local)) { Copy-Item frontend/.env.example frontend/.env.local }
+npm.cmd ci
+npm.cmd --prefix backend ci
+npm.cmd --prefix frontend ci
+```
+
+Kiểm tra ba file môi trường theo mục [Cấu hình](#cấu-hình-môi-trường-và-postgresql)
+trước khi chạy. Mở ba cửa sổ PowerShell, mỗi cửa sổ ở thư mục `Swe_project`:
+
+```powershell
+# Terminal 1 — PostgreSQL
+docker compose config --quiet
+docker compose up -d --wait db
+docker compose ps
+```
+
+```powershell
+# Terminal 2 — backend
+npm.cmd --prefix backend run start:dev
+```
+
+```powershell
+# Terminal 3 — frontend
+npm.cmd --prefix frontend run dev -- --port 3000
+```
+
+Dừng backend và frontend bằng `Ctrl+C` tại Terminal 2/3. Sau đó, tại thư mục
+gốc dự án chạy `docker compose stop db` để dừng database mà giữ volume.
+
+## Linux — Bash
+
+Cài [Node.js 24 LTS](https://nodejs.org/en/download) và npm theo hướng dẫn
+chính thức; nếu dùng gói của bản phân phối, kiểm tra phiên bản thực tế trước khi
+chạy `npm ci`. Cài Git theo bản phân phối
+([hướng dẫn Git](https://git-scm.com/install/linux.html)). Chọn **một** lệnh
+phù hợp với máy của bạn:
+
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install git
+```
+
+```bash
+# Fedora
+sudo dnf install git
+```
+
+```bash
+# Arch/EndeavourOS
+sudo pacman -S git
+```
+
+Cài Docker Engine **và Compose plugin** theo hướng dẫn riêng cho
+[Ubuntu](https://docs.docker.com/engine/install/ubuntu/),
+[Debian](https://docs.docker.com/engine/install/debian/) hoặc
+[Fedora](https://docs.docker.com/engine/install/fedora/). Với Arch/EndeavourOS,
+tham khảo [ArchWiki Docker](https://wiki.archlinux.org/title/docker) để cài
+gói `docker` và `docker-compose`, rồi khởi động `docker.service`. Cách cài và
+quyền truy cập daemon khác nhau theo bản phân phối; kiểm tra bằng `docker info`
+và xử lý quyền theo đúng hướng dẫn Docker của hệ điều hành, không giả định daemon
+đã chạy.
+
+Mở terminal Bash mới và xác minh:
+
+```bash
+node --version
+npm --version
+git --version
+docker --version
+docker compose version
+docker info
+```
+
+Clone, tạo file môi trường khi chưa tồn tại và cài dependencies:
 
 ```bash
 git clone https://github.com/NguyenKhanhHungDev/Swe_project.git
 cd Swe_project
-```
-
-Tạo **đủ ba file** môi trường từ mẫu; lệnh không ghi đè file đã tồn tại:
-
-```bash
 [ -f .env ] || cp .env.example .env
 [ -f backend/.env ] || cp backend/.env.example backend/.env
 [ -f frontend/.env.local ] || cp frontend/.env.example frontend/.env.local
-```
-
-Kiểm tra các giá trị trong ba file cho máy của bạn, sau đó cài dependencies:
-
-```bash
 npm ci
 npm --prefix backend ci
 npm --prefix frontend ci
 ```
 
-Khởi động PostgreSQL trước, rồi chạy frontend và backend bằng npm:
+Kiểm tra [cấu hình](#cấu-hình-môi-trường-và-postgresql), rồi mở ba terminal Bash
+tại thư mục `Swe_project`:
 
 ```bash
+# Terminal 1 — PostgreSQL
 docker compose config --quiet
 docker compose up -d --wait db
 docker compose ps
-npm run dev
 ```
-
-Script `npm run dev` dùng `concurrently`: frontend mặc định tại
-<http://localhost:3000>, backend tại <http://localhost:3001>. Mở frontend và
-bấm **Kiểm tra kết nối backend**; khi thành công, giao diện hiển thị câu trả lời
-của `GET /`. Dừng hai ứng dụng bằng `Ctrl+C` trong terminal chạy npm. Backend
-hiện không cần truy vấn database để trả API lời chào.
-
-## Biến môi trường và PostgreSQL
-
-| File | Biến trong file mẫu | Cách dùng |
-| --- | --- | --- |
-| `.env` | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_PORT` | Compose khởi tạo database và mở cổng trên máy |
-| `backend/.env` | `PORT`, `FRONTEND_URL`, `DATABASE_URL` | Cổng NestJS, origin CORS và chuỗi kết nối dự kiến |
-| `frontend/.env.local` | `NEXT_PUBLIC_API_URL` | Địa chỉ backend được đưa tới trình duyệt |
-
-Theo file mẫu, Compose chỉ chạy dịch vụ `db`, ánh xạ cổng PostgreSQL trong
-container (`5432`) sang `127.0.0.1:5433` trên máy. Backend chạy trên máy nên
-`DATABASE_URL` mẫu dùng `localhost:5433`; biến này hiện được chuẩn bị nhưng
-**chưa được code sử dụng để kết nối database**. Nếu thay cổng hoặc thông tin
-khởi tạo, cập nhật cấu hình tương ứng ở cả `.env` và `backend/.env`.
-
-`postgres_data` là named volume giữ dữ liệu khi container được tạo lại. Đổi tên
-database, user hoặc mật khẩu trong `.env` không tự đổi dữ liệu đã khởi tạo trong
-volume. Dùng các lệnh sau để xem trạng thái, log và dừng database:
 
 ```bash
-docker compose ps
-docker compose logs --tail=100 db
-docker compose stop db
+# Terminal 2 — backend
+npm --prefix backend run start:dev
 ```
 
-Không dùng `docker compose down -v` để dừng thông thường vì tùy chọn `-v` xóa
-volume dữ liệu. Không commit các file môi trường riêng. Các giá trị trong
-`.env.example` chỉ dành cho phát triển local; thay bằng giá trị phù hợp với máy
-của bạn. Biến `NEXT_PUBLIC_` hiển thị ở trình duyệt, không chứa mật khẩu,
-`DATABASE_URL` hoặc bí mật khác. Khởi động lại ứng dụng sau khi đổi cấu hình.
+```bash
+# Terminal 3 — frontend
+npm --prefix frontend run dev -- --port 3000
+```
+
+Dừng Terminal 2/3 bằng `Ctrl+C`, rồi chạy `docker compose stop db` ở thư mục
+gốc để dừng PostgreSQL mà không xóa dữ liệu.
+
+## macOS — Terminal/zsh
+
+Cài [Node.js 24 LTS](https://nodejs.org/en/download),
+[Git](https://git-scm.com/download/mac) và
+[Docker Desktop for Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
+theo hướng dẫn cho máy Mac của bạn. Mở Docker Desktop và chờ daemon sẵn sàng.
+Mở Terminal/zsh mới để kiểm tra:
+
+```zsh
+node --version
+npm --version
+git --version
+docker --version
+docker compose version
+docker info
+```
+
+Clone, tạo file môi trường khi chưa tồn tại và cài dependencies:
+
+```zsh
+git clone https://github.com/NguyenKhanhHungDev/Swe_project.git
+cd Swe_project
+[ -f .env ] || cp .env.example .env
+[ -f backend/.env ] || cp backend/.env.example backend/.env
+[ -f frontend/.env.local ] || cp frontend/.env.example frontend/.env.local
+npm ci
+npm --prefix backend ci
+npm --prefix frontend ci
+```
+
+Kiểm tra [cấu hình](#cấu-hình-môi-trường-và-postgresql), rồi mở ba Terminal/zsh
+tại thư mục `Swe_project`:
+
+```zsh
+# Terminal 1 — PostgreSQL
+docker compose config --quiet
+docker compose up -d --wait db
+docker compose ps
+```
+
+```zsh
+# Terminal 2 — backend
+npm --prefix backend run start:dev
+```
+
+```zsh
+# Terminal 3 — frontend
+npm --prefix frontend run dev -- --port 3000
+```
+
+Dừng Terminal 2/3 bằng `Ctrl+C`, rồi chạy `docker compose stop db` ở thư mục
+gốc. Không dùng `docker compose down -v` cho việc dừng thông thường vì `-v`
+xóa named volume dữ liệu.
+
+## Cấu hình môi trường và PostgreSQL
+
+Ba file mẫu đều có trong repository. Các lệnh sao chép phía trên **không ghi
+đè** file môi trường đã tồn tại; không đưa giá trị bí mật vào commit hoặc issue.
+
+| File cần tạo | File mẫu | Biến cần kiểm tra |
+| --- | --- | --- |
+| `.env` | `.env.example` | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_PORT` |
+| `backend/.env` | `backend/.env.example` | `PORT`, `FRONTEND_URL`, `DATABASE_URL` |
+| `frontend/.env.local` | `frontend/.env.example` | `NEXT_PUBLIC_API_URL` |
+
+Theo file mẫu, PostgreSQL trong container dùng cổng `5432`; Compose công bố
+cổng máy `127.0.0.1:5433` (hoặc giá trị `POSTGRES_PORT` bạn đặt). Backend chạy
+trên máy nên URL database trong file mẫu hướng tới `localhost:5433`, nhưng
+**backend hiện chưa sử dụng `DATABASE_URL` để kết nối database**. Nếu đổi cổng
+database, đồng bộ `POSTGRES_PORT` và `DATABASE_URL`; nếu đổi cổng backend, đồng
+bộ `PORT` và `NEXT_PUBLIC_API_URL`. Đổi cổng frontend cần sửa đối số `--port 3000`
+trong lệnh Next.js và cập nhật `FRONTEND_URL` cho CORS.
+
+Compose chỉ khai báo service `db` cùng healthcheck và named volume
+`postgres_data`; không có frontend/backend service hoặc network riêng được
+khai báo. Docker Compose tạo network mặc định. Đổi thông tin khởi tạo trong
+`.env` không tự cập nhật database đã tồn tại trong volume. Để xem trạng thái
+và log (trên cả ba hệ điều hành):
+
+```text
+docker compose ps
+docker compose logs --tail=100 db
+```
+
+`NEXT_PUBLIC_API_URL` được đưa tới trình duyệt: không đặt mật khẩu hoặc bí mật
+vào biến `NEXT_PUBLIC_`. Khởi động lại ứng dụng sau khi sửa file môi trường.
+
+## Kiểm tra và sử dụng ứng dụng hiện có
+
+Khi ba terminal đã chạy, mở <http://localhost:3000>. Trang hiển thị
+**Hello BrewLite!**; bấm **Kiểm tra kết nối backend**. Nếu backend phản hồi,
+giao diện hiển thị `Backend phản hồi: Hello from BrewLite backend!`.
+Mở <http://localhost:3001/> để kiểm tra trực tiếp `GET /`; nội dung trả về là
+`Hello from BrewLite backend!`. Đây là route lời chào, **không phải health
+endpoint chuyên dụng**. Backend hiện trả lời route này mà không cần truy vấn
+PostgreSQL. Dùng `docker compose ps` để kiểm tra riêng database đã `healthy`.
+
+Menu, đặt hàng và thanh toán chưa có luồng chạy được để hướng dẫn người dùng.
+Không dùng kết quả trang Hello để suy ra các chức năng đó đã hoàn thành.
 
 ## Lint, test và build
 
-Chạy từ thư mục gốc sau khi cài dependencies:
+Sau khi cài dependencies, chạy từ thư mục gốc. Các lệnh này được đối chiếu với
+`package.json` nhưng **chưa được chạy trong lần cập nhật README này**.
+Trên Linux/macOS (Bash/zsh):
 
 ```bash
 npm --prefix frontend run lint
-npm --prefix backend run lint
 npm --prefix backend test -- --runInBand
 npm --prefix backend run test:e2e -- --runInBand
 npm run build
 ```
 
-`backend` lint có `--fix` và có thể sửa file; kiểm tra `git diff` sau khi chạy.
-Repository chưa có script test frontend. Test backend hiện chỉ kiểm tra API lời
-chào; kết quả đạt không đồng nghĩa nghiệp vụ đã được kiểm thử. `npm run build`
-build backend trước, sau đó frontend. Dừng server phát triển nếu build gặp lỗi
-do tiến trình cùng dùng thư mục đầu ra.
+Trên Windows PowerShell, dùng `npm.cmd` để tránh lỗi Execution Policy:
+
+```powershell
+npm.cmd --prefix frontend run lint
+npm.cmd --prefix backend test -- --runInBand
+npm.cmd --prefix backend run test:e2e -- --runInBand
+npm.cmd run build
+```
+
+Frontend chưa có script `test`. Unit test và E2E test backend hiện chỉ kiểm tra
+lời chào. Script lint backend (`npm --prefix backend run lint` trên Bash/zsh hoặc
+`npm.cmd --prefix backend run lint` trên PowerShell) có `--fix`, nên **có thể sửa
+file mã nguồn**; chỉ chạy khi muốn áp dụng sửa tự động và kiểm tra diff sau đó.
+`npm run build` build backend rồi frontend. Nếu build gặp lỗi do server phát
+triển đang dùng thư mục đầu ra, dừng server và thử lại. Không có lệnh Prisma
+migration/seed trong repository để chạy ở giai đoạn hiện tại.
 
 ## Xử lý lỗi thường gặp
 
-| Hiện tượng | Kiểm tra |
+| Hiện tượng | Cách kiểm tra |
 | --- | --- |
-| `concurrently`, `nest` hoặc `next` không tìm thấy | Chạy `npm ci` ở gốc, backend hoặc frontend tương ứng |
-| Compose báo thiếu `POSTGRES_*` | Tạo `.env` ở gốc từ `.env.example` và kiểm tra biến cần thiết |
-| Cổng `3000`, `3001` hoặc `5433` bị chiếm | Dừng tiến trình cũ; nếu đổi cổng, đồng bộ các file môi trường |
-| Frontend báo thiếu `NEXT_PUBLIC_API_URL` | Kiểm tra `frontend/.env.local` và khởi động lại frontend |
-| Nút kết nối báo `Failed to fetch` | Kiểm tra backend tại `localhost:3001`, URL API và `FRONTEND_URL` cho CORS |
-| Database chưa `healthy` | Xem `docker compose ps` và `docker compose logs --tail=100 db` |
-| `npm ci` báo lockfile không khớp | Báo người cập nhật dependency đồng bộ `package.json` và lockfile đúng thư mục |
+| `node`, `npm`/`npm.cmd`, `git` hoặc `docker` không nhận diện | Hoàn tất cài đặt, mở terminal mới và chạy lại các lệnh `--version`; dùng `npm.cmd --version` trên PowerShell, `npm --version` trên Bash/zsh. Với Docker, kiểm tra Desktop/daemon. |
+| `docker info` không kết nối được | Mở Docker Desktop (Windows/macOS) hoặc khởi động daemon theo hướng dẫn bản phân phối Linux; kiểm tra quyền truy cập Docker. |
+| Compose báo thiếu `POSTGRES_*` | Kiểm tra `.env` ở gốc đã tạo từ `.env.example` và có đủ biến được yêu cầu. |
+| Cổng `3000` đã được dùng | Dừng tiến trình chiếm cổng hoặc sửa đối số `--port 3000` trong lệnh Next.js sang cổng mới; mở frontend ở cổng đó và cập nhật `FRONTEND_URL` trong `backend/.env`. Chỉ đổi biến môi trường không đổi cổng Next.js. |
+| Cổng `3001` hoặc `5433` đã được dùng | Nếu đổi cổng backend, đồng bộ `PORT` và `NEXT_PUBLIC_API_URL`; nếu đổi cổng PostgreSQL, đồng bộ `POSTGRES_PORT` và `DATABASE_URL`. |
+| `concurrently`, `nest` hoặc `next` không tìm thấy | Cài lại dependencies ở gốc, backend và frontend bằng ba lệnh `ci` trong hướng dẫn hệ điều hành tương ứng: `npm.cmd` trên PowerShell, `npm` trên Bash/zsh. |
+| Nút kiểm tra backend báo lỗi | Mở trực tiếp `http://localhost:3001/`; kiểm tra Terminal 2, `NEXT_PUBLIC_API_URL` và CORS `FRONTEND_URL`, rồi khởi động lại frontend/backend. |
+| Database chưa `healthy` | Xem `docker compose ps` và `docker compose logs --tail=100 db`; backend Hello vẫn có thể hoạt động vì chưa truy vấn DB. |
+| `npm ci` hoặc `npm.cmd ci` báo lockfile không khớp | Đối chiếu `package.json` với lockfile cùng thư mục; nhờ người cập nhật dependency sửa cả hai file. |
 
 ## Nhóm và tài liệu
 
@@ -175,17 +366,16 @@ do tiến trình cùng dùng thư mục đầu ra.
 | Phát | Orders, schema/migration/seed và điều phối Figma |
 | Thắng | Checkout, Payments, Deployment Diagram và E2E |
 
-Chi tiết chủ trì, người trực tiếp thực hiện và phối hợp ở từng bước xem
-[TEAM_ASSIGNMENTS.md](docs/TEAM_ASSIGNMENTS.md). Bảng trên là **phân công**, không
-phải danh sách tính năng đã hoàn thành.
+Đây là **phân công**, không phải danh sách tính năng đã hoàn thành. Chi tiết
+người chủ trì và người trực tiếp thực hiện xem
+[Team Assignments](docs/TEAM_ASSIGNMENTS.md).
 
-- [PROJECT_CONTEXT.md](docs/PROJECT_CONTEXT.md): phạm vi và bối cảnh dự án.
-- [PROJECT_ROADMAP.md](docs/PROJECT_ROADMAP.md): 24 bước, trạng thái tham khảo và minh chứng cần có.
-- [REQUIREMENTS_TRACEABILITY.md](docs/REQUIREMENTS_TRACEABILITY.md): truy vết 10 Task của đề bài.
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md): kiến trúc, ranh giới module và nguyên tắc kỹ thuật.
-- [TEAM_ASSIGNMENTS.md](docs/TEAM_ASSIGNMENTS.md): phân công nhóm.
+- [Project Context](docs/PROJECT_CONTEXT.md): bối cảnh, phạm vi và hiện trạng.
+- [Project Roadmap](docs/PROJECT_ROADMAP.md): 24 bước, trạng thái tham khảo và minh chứng.
+- [Requirements Traceability](docs/REQUIREMENTS_TRACEABILITY.md): truy vết 10 Task của đề bài.
+- [Architecture](docs/ARCHITECTURE.md): kiến trúc và ranh giới module.
+- [Team Assignments](docs/TEAM_ASSIGNMENTS.md): phân công chi tiết của nhóm.
 
-SRS, User Stories, Acceptance Criteria và Business Rules cần được bổ sung hoặc
-liên kết với nguồn chính thức khi nhóm chốt. Theo dõi tiến độ bằng minh chứng và
-quy trình review trong lộ trình; README chỉ mô tả trạng thái có thể đối chiếu từ
-repository tại thời điểm cập nhật.
+Tài liệu gốc Project Scope, SRS, User Stories, Acceptance Criteria, Business
+Rules, Use Case Diagram và Use Case Description chưa có trong repository; cần
+bổ sung hoặc liên kết nguồn chính thức khi nhóm cung cấp.

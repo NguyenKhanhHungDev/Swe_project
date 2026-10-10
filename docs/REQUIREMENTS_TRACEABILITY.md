@@ -3,6 +3,10 @@
 **Nguồn chính:** Đề `BrewLite-CongNghePhanMem.pdf`, mục Product Backlog 10 Task.
 **Quy tắc:** 10 Task là **yêu cầu chấm điểm**, 24 bước là **quy trình thực hiện nội bộ**. Hai hệ thống không thay thế nhau.
 
+File đề gốc chưa có trong repository; bảng dưới đây là phần truy vết đã ghi nhận,
+cần đối chiếu lại với đề khi nhóm cung cấp. Phân công bước 1–24 xem
+[PROJECT_ROADMAP.md](PROJECT_ROADMAP.md) và [TEAM_ASSIGNMENTS.md](TEAM_ASSIGNMENTS.md).
+
 | Task | Yêu cầu tối thiểu từ đề | Chủ trì | Các bước liên quan | Minh chứng cần có |
 |---|---|---|---|---|
 | 1 | Next.js + NestJS, chạy Hello, README, Git, env example | Hưng | 7, 8, 21 | Repo, lệnh chạy, ảnh Hello, README |
@@ -23,7 +27,7 @@
 3. User Stories
 4. Acceptance Criteria
 5. Business Rules
-6. Use Case
+6. Use Case Diagram và Use Case Description
 7. Project Setup
 8. Architecture
 9. Preliminary ERD
@@ -39,7 +43,7 @@
 19. Unit Testing
 20. Integration / E2E Testing
 21. Docker Packaging
-22. Deployment Diagram
+22. Deployment Diagram và hướng dẫn triển khai
 23. Demo
 24. Final Documentation
 
