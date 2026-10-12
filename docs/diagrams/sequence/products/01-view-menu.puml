@@ -1,0 +1,50 @@
+@startuml
+hide footbox
+autonumber
+skinparam style strictuml
+skinparam monochrome true
+
+actor "Khách hàng" as KH
+boundary "Giao diện Menu" as UI
+control "ProductsController\n(NestJS)" as API
+control "ProductsService\n(Xử lý nghiệp vụ)" as SVC
+control "InventoryService\n(Xử lý tồn kho)" as INV
+entity "Database\n(Prisma)" as DB
+
+activate KH
+KH -> UI : Mở trang menu
+activate UI
+UI -> API : GET /products
+activate API
+API -> SVC : layDanhSachSanPham()
+activate SVC
+
+SVC -> DB : Lấy danh sách sản phẩm\nvà giá size S
+activate DB
+DB --> SVC : Danh sách sản phẩm
+deactivate DB
+
+alt Không có sản phẩm
+  SVC --> API : Danh sách rỗng
+  API --> UI : 200 - Danh sách rỗng
+  UI --> KH : Hiển thị menu trống
+else Có sản phẩm
+  SVC -> INV : Lấy tồn kho theo danh sách sản phẩm
+  activate INV
+  INV -> DB : Truy vấn tồn kho sản phẩm
+  activate DB
+  DB --> INV : Dữ liệu tồn kho
+  deactivate DB
+  INV --> SVC : Số lượng khả dụng
+  deactivate INV
+
+  SVC --> API : Danh sách sản phẩm kèm trạng thái mua
+  API --> UI : 200 - Danh sách sản phẩm
+  UI --> KH : Hiển thị danh sách đồ uống
+end
+
+deactivate SVC
+deactivate API
+deactivate UI
+deactivate KH
+@enduml

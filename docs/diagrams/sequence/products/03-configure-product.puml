@@ -1,0 +1,50 @@
+@startuml
+hide footbox
+autonumber
+skinparam style strictuml
+skinparam monochrome true
+
+actor "Khách hàng" as KH
+boundary "Giao diện Chi tiết sản phẩm" as UI
+control "ProductConfigurator\n(Xử lý lựa chọn)" as CFG
+control "PriceCalculator\n(Tính giá tạm tính)" as CAL
+
+activate KH
+KH -> UI : Mở phần tùy chỉnh sản phẩm
+activate UI
+UI -> CFG : KhoiTaoLuaChonMacDinh()
+activate CFG
+CFG -> CAL : tinhGia(size S, không topping,\nsoLuong = 1)
+activate CAL
+CAL --> CFG : Giá tạm tính ban đầu
+deactivate CAL
+CFG --> UI : Hiển thị lựa chọn mặc định
+
+alt Sản phẩm không thể mua
+  UI --> KH : Khóa thao tác chọn mua
+else Sản phẩm có thể mua
+  loop Khách hàng thay đổi lựa chọn
+    KH -> UI : Chọn size, topping,\nsố lượng
+    UI -> CFG : capNhatLuaChon(size, topping,\nsoLuong)
+
+    alt Lựa chọn không hợp lệ
+      CFG --> UI : Lỗi dữ liệu không hợp lệ
+      UI --> KH : Thông báo lỗi,\nyêu cầu chọn lại
+    else Lựa chọn hợp lệ
+      CFG -> CAL : tinhGia(size, topping,\nsoLuong)
+      activate CAL
+      CAL --> CFG : Giá tạm tính mới
+      deactivate CAL
+      CFG --> UI : Cập nhật lựa chọn và giá
+      UI --> KH : Hiển thị giá tạm tính mới
+    end
+  end
+
+  KH -> UI : Xác nhận lựa chọn
+  UI --> KH : Sẵn sàng thêm vào giỏ hàng
+end
+
+deactivate CFG
+deactivate UI
+deactivate KH
+@enduml
