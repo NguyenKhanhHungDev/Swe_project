@@ -1,0 +1,56 @@
+@startuml
+hide footbox
+autonumber
+skinparam style strictuml
+skinparam monochrome true
+
+actor "Khách hàng" as KH
+boundary "Giao diện Chi tiết sản phẩm" as UI
+control "ProductsController\n(NestJS)" as API
+control "ProductsService\n(Xử lý nghiệp vụ)" as SVC
+control "InventoryService\n(Xử lý tồn kho)" as INV
+entity "Database\n(Prisma)" as DB
+
+activate KH
+KH -> UI : Chọn một đồ uống
+activate UI
+UI -> API : GET /products/:id
+activate API
+API -> SVC : layChiTietSanPham(id)
+activate SVC
+
+alt ID không hợp lệ
+  SVC --> API : Lỗi dữ liệu không hợp lệ
+  API --> UI : 400 - Dữ liệu không hợp lệ
+  UI --> KH : Thông báo lỗi, yêu cầu chọn lại
+else ID hợp lệ
+  SVC -> DB : Lấy thông tin sản phẩm,\nsize và topping
+  activate DB
+  DB --> SVC : Kết quả truy vấn
+  deactivate DB
+
+  alt Không tìm thấy sản phẩm
+    SVC --> API : Không tìm thấy sản phẩm
+    API --> UI : 404 - Không tìm thấy sản phẩm
+    UI --> KH : Thông báo sản phẩm không tồn tại
+  else Tìm thấy sản phẩm
+    SVC -> INV : Lấy tồn kho của sản phẩm
+    activate INV
+    INV -> DB : Truy vấn tồn kho sản phẩm
+    activate DB
+    DB --> INV : Dữ liệu tồn kho
+    deactivate DB
+    INV --> SVC : Số lượng khả dụng
+    deactivate INV
+
+    SVC --> API : Chi tiết sản phẩm,\nsize, topping, trạng thái mua
+    API --> UI : 200 - Chi tiết sản phẩm
+    UI --> KH : Hiển thị chi tiết đồ uống
+  end
+end
+
+deactivate SVC
+deactivate API
+deactivate UI
+deactivate KH
+@enduml
