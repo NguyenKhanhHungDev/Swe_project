@@ -14,9 +14,12 @@ Tài liệu chốt cách tổ chức frontend, backend và database của BrewLi
 
 Phạm vi bám đề bài BrewLite, SRS, User Story, Acceptance Criteria và Business Rules của nhóm. Quy trình 24 bước cần được bao phủ đầy đủ; các yêu cầu Scrum, review và kiểm thử được duy trì xuyên suốt. Chi tiết bảng dữ liệu và hợp đồng API sẽ được cụ thể hóa ở các bước tiếp theo.
 
-Các tài liệu gốc Scope, SRS, User Stories, Acceptance Criteria, Business Rules,
-Use Case Diagram và Use Case Description chưa có trong repository; cần đối chiếu
-nguồn được nhóm cung cấp trước khi coi thiết kế là yêu cầu đã duyệt.
+Repository có [Scope](PROJECT_SCOPE.md), [SRS](SRS.md),
+[User Stories](USER_STORIES.md), [Acceptance Criteria](ACCEPTANCE_CRITERIA.md),
+[Business Rules](BUSINESS_RULES.md) và [Use Cases](USE_CASES.md).
+Các tài liệu đang ở trạng thái review, chưa xác nhận nghiệm thu. Phân công theo
+[TEAM_ASSIGNMENTS.md](TEAM_ASSIGNMENTS.md); các quyết định hiện hành được ghi tại
+[REQUIREMENTS_DECISIONS.md](REQUIREMENTS_DECISIONS.md).
 
 Kiến trúc phục vụ ứng dụng đặt đồ uống, chọn size/topping,
 quản lý giỏ hàng, đăng nhập, tạo đơn, thanh toán giả lập,
@@ -340,8 +343,12 @@ phải được thực hiện nhất quán trong cùng transaction.
 Backend phải ngăn một đơn được thanh toán thành công nhiều lần,
 kể cả khi các request dùng khóa khác nhau hoặc đến đồng thời.
 
-Frontend chỉ xóa giỏ của lượt mua sau khi backend xác nhận
-thanh toán thành công.
+Frontend phân biệt hai nguồn danh sách mua: “Thanh toán ngay” chỉ gồm cấu hình
+món hiện tại và không thay đổi giỏ có sẵn; thanh toán từ giỏ dùng toàn bộ giỏ.
+Chỉ luồng từ giỏ xóa giỏ của lượt mua sau xác nhận backend thành công. Luồng
+mua ngay giữ nguyên giỏ cả khi thành công hoặc thất bại. Cả hai luồng dùng
+đơn và tổng tiền đã chốt, không tự thêm món hoặc tạo đơn lại khi thử lại.
+Quyết định nhóm xem [REQUIREMENTS_DECISIONS.md](REQUIREMENTS_DECISIONS.md).
 
 Khi mất kết nối và chưa biết kết quả, frontend kiểm tra lại trạng thái;
 không tự kết luận thanh toán thất bại.

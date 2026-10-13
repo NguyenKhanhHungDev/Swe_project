@@ -446,3 +446,17 @@ hoặc kiểm thử đồng thời.
 
 Sau khi nhóm chốt mục 6 và review schema, Phát có thể ánh xạ sang Prisma schema/migration.
 Tài liệu này chưa chứng minh schema, migration hoặc database đã được triển khai/duyệt.
+
+## 8. Ánh xạ thực thể tối thiểu của đề
+
+Đối chiếu mục 12.2 của đề VER 1.0 ngày 13/10/2026. Bảng này giải thích bản thiết kế hiện có, không thay cấu trúc bảng/cột hoặc khẳng định đã được thầy chấp nhận. Các quyết định nhóm xem [REQUIREMENTS_DECISIONS.md](REQUIREMENTS_DECISIONS.md).
+
+| Thực thể / trường trong đề | Thiết kế hiện tại | Điều kiện giữ đủ ý nghĩa |
+| --- | --- | --- |
+| Product: id, name, price, imageUrl, stock | PRODUCT; giá trong PRODUCT_SIZE; tồn trong INVENTORY. | Giá menu size S và giá chọn S/M/L phải xác định được; stock là on_hand − reserved_quantity. Cần review tách bảng với yêu cầu thực thể tối thiểu, không tự coi thiếu trường là đã đáp ứng. |
+| User: id, email, passwordHash, loyaltyPoints | USER và LOYALTY_TRANSACTION. | Số điểm là tổng points_delta; tài khoản mới 0 điểm, cộng sau PAID. Đề có trường loyaltyPoints nhưng USER hiện chưa lưu trường đó; nếu cần đúng trường theo đề, nhóm phải cập nhật bản thiết kế sau review. |
+| Order: id, userId, status, total, createdAt | ORDER.id, user_id, status, total_amount_vnd, created_at. | Ánh xạ tên rõ ràng; giữ trạng thái theo sơ đồ đề, tiền nguyên VND. |
+| OrderItem: id, orderId, productId, size, qty, lineTotal | ORDER_ITEM.id, order_id, product_id, size_code, quantity, line_total_vnd. | Bảo toàn cấu hình và snapshot; không nhầm quantity số ly với số phần topping. |
+| Payment: id, orderId, idempotencyKey, amount, method | PAYMENT_ATTEMPT.id, order_id, idempotency_key, amount_vnd, method. | Một lần thử là một giao dịch mock; chống xử lý trùng, lấy tiền từ đơn. REFUND là phần chi tiết bổ sung cho hủy PAID. |
+
+Giá size đầy đủ hiện có có thể biểu diễn giá cơ bản size S cộng phụ thu bằng phép ánh xạ; chưa thay mô hình sang base price/surcharge nếu chưa chốt bản ERD chính. Tồn/điểm tách bảng cũng cần review, không chỉ đổi tên để tuyên bố đáp ứng đề. Không có migration hoặc Prisma schema được sửa trong lần cập nhật này.

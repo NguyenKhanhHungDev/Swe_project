@@ -1,5 +1,7 @@
 # BrewLite — Software Requirements Specification
 
+**Cập nhật quyết định nhóm ngày 13/10/2026:** Nội dung hiện hành tuân theo đề của thầy và các quyết định đã được nhóm xác nhận. Xem [quyết định yêu cầu](REQUIREMENTS_DECISIONS.md).
+
 **Trạng thái:** Đã trích lọc từ tài liệu người dùng cung cấp; cần nhóm review, chưa xác nhận nghiệm thu.
 
 **Nguồn:** `SRS.md` được cung cấp ngày 11/10/2026; yêu cầu phi chức năng bổ sung từ mục 2 của `Báo cáo.docx`. Nội dung UC-01–UC-18 được giữ nguyên về nghĩa.
@@ -44,14 +46,14 @@ Khách đã đăng nhập chọn đăng xuất. Hệ thống xóa thông tin phi
 Khách xem danh sách đồ uống gồm hình ảnh, tên, giá size S và tình trạng còn hàng. Món hết hàng được đánh dấu rõ. Khách có thể chọn một món để mở chi tiết. Hệ thống có thông báo khi đang tải, danh sách rỗng hoặc tải thất bại.
 
 **UC-05 — Xem chi tiết và chọn tùy chọn đồ uống**  
-Khách xem ảnh, tên, mô tả, giá, size và topping của món. Khách chọn một size, số phần từng topping và số ly. Hệ thống cập nhật giá một ly và thành tiền. Mặc định là size S, không topping và 1 ly. Món hết hàng vẫn xem được nhưng không được mua.
+Khách xem ảnh, tên, mô tả, giá, các size S/M/L và topping của món; dữ liệu demo Task 4 phải cho phép kiểm tra đủ ba size. Khách chọn một size, số phần từng topping và số ly. Hệ thống cập nhật giá một ly và thành tiền. Mặc định là size S, không topping và 1 ly. Món hết hàng vẫn xem được nhưng không được mua.
 
 ### 3.3. Giỏ hàng và khuyến mãi
 
 **UC-06 — Thêm đồ uống vào giỏ**  
 Khách chọn “Thêm vào giỏ hàng”. Hệ thống kiểm tra lựa chọn, số lượng và tồn khả dụng rồi thêm vào giỏ. Cùng món, size và cấu hình topping thì cộng số ly; khác cấu hình thì tạo dòng riêng. Thêm thành công cập nhật tổng tiền và biểu tượng số ly trong giỏ. Không đủ hàng hoặc lựa chọn sai thì thông báo, không thêm.
 
-Nút “Thanh toán ngay” dùng cùng thao tác thêm món một lần rồi chuyển đến xem lại toàn bộ giỏ. Nút này chưa tạo đơn hoặc thu tiền. Nếu thêm thất bại, khách vẫn ở màn hình hiện tại.
+Nút “Thanh toán ngay” kiểm tra và chuyển cấu hình món hiện tại sang màn hình xem lại chỉ chứa món này, không thêm hoặc thay đổi giỏ hiện có. Chưa tạo đơn hoặc thu tiền trước khi khách xác nhận. Nếu lựa chọn không hợp lệ, khách vẫn ở màn hình hiện tại. Nút “Thanh toán” trong giỏ dùng toàn bộ các dòng của giỏ.
 
 **UC-07 — Xem và điều chỉnh giỏ hàng**  
 Khách xem món, size, số phần topping, số ly, đơn giá và thành tiền. Khách được sửa số ly hoặc xóa dòng; hệ thống tính lại tổng và khuyến mãi. Muốn đổi size/topping, khách xóa dòng rồi chọn lại món. Giỏ trống không được tạo đơn. Giỏ được lưu trên trình duyệt để tải lại vẫn còn.
@@ -64,12 +66,12 @@ Khách đã đăng nhập nhập mã cho giỏ có món. Hệ thống kiểm tra
 ### 3.4. Đặt hàng và thanh toán
 
 **UC-09 — Tạo đơn hàng**  
-Khách đã đăng nhập xem lại giỏ và xác nhận tạo đơn. Hệ thống kiểm tra món, size, topping, số ly, khuyến mãi và tồn kho; tính lại tiền từ dữ liệu backend. Nếu hợp lệ, hệ thống tạo một đơn PENDING, sinh mã đơn, giữ hàng 15 phút và trả tổng tiền đã chốt. Nếu có lỗi, hệ thống không tạo đơn hoặc giữ một phần hàng mà thông báo để khách sửa.
+Khách đã đăng nhập xem lại danh sách mua và xác nhận tạo đơn. Danh sách này là món hiện tại với size/topping/số ly đã chọn khi dùng “Thanh toán ngay”, hoặc toàn bộ giỏ khi thanh toán từ giỏ. Hệ thống kiểm tra món, size, topping, số ly, khuyến mãi và tồn kho; tính lại tiền từ dữ liệu backend. Nếu hợp lệ, hệ thống tạo một đơn PENDING, sinh mã đơn, giữ hàng 15 phút và trả tổng tiền đã chốt. Nếu có lỗi, hệ thống không tạo đơn hoặc giữ một phần hàng mà thông báo để khách sửa.
 
 Giá và cấu hình món được lưu cùng đơn để lịch sử không thay đổi khi menu thay đổi. Nếu tổng tiền khác màn hình trước đó, khách phải được thấy tổng mới trước khi xác nhận thanh toán. Gửi lặp cùng yêu cầu tạo đơn không được sinh thêm đơn hoặc giữ kho thêm.
 
 **UC-10 — Thanh toán đơn hàng**  
-Chủ đơn đã đăng nhập chọn Ví hoặc Thẻ mô phỏng và xác nhận thanh toán đơn còn hạn. Hệ thống lấy số tiền từ đơn đã lưu. Thành công chuyển đơn thành PAID, lưu giao dịch và cộng điểm một lần; chỉ sau xác nhận backend mới xóa giỏ của lượt mua. Thất bại được xác nhận chuyển đơn thành PAYMENT_FAILED và giữ giỏ.
+Chủ đơn đã đăng nhập chọn Ví hoặc Thẻ mô phỏng và xác nhận thanh toán đơn còn hạn. Hệ thống lấy số tiền từ đơn đã lưu. Thành công chuyển đơn thành PAID, lưu giao dịch và cộng điểm một lần. Thanh toán từ giỏ chỉ xóa giỏ của lượt mua sau xác nhận backend; mua ngay kết thúc lượt mua món hiện tại và giữ nguyên giỏ có sẵn. Thất bại được xác nhận chuyển đơn thành PAYMENT_FAILED và giữ giỏ.
 
 Khách có thể thử lại đơn thất bại nếu còn hạn. Mất kết nối chưa biết kết quả thì kiểm tra lại, không tự coi là thất bại. Hệ thống không xử lý thanh toán thành công hai lần cho cùng đơn, kể cả khi khách bấm nhiều lần hoặc gửi các yêu cầu đồng thời.
 
@@ -118,6 +120,6 @@ Quy tắc chi tiết được tách sang [BUSINESS_RULES.md](BUSINESS_RULES.md),
 ## 6. Tài liệu liên quan và phần đang hoàn thiện
 
 - [Project Scope](PROJECT_SCOPE.md): phạm vi và đầu ra bàn giao.
-- [User Stories](USER_STORIES.md) và [Acceptance Criteria](ACCEPTANCE_CRITERIA.md): đang hoàn thiện, chưa có nội dung gốc trong hai file được cung cấp.
-- [Use Cases](USE_CASES.md): danh mục 18 UC từ mục 3; sơ đồ và đặc tả đầy đủ đang hoàn thiện.
+- [User Stories](USER_STORIES.md) và [Acceptance Criteria](ACCEPTANCE_CRITERIA.md): 15 story và các tiêu chí tương ứng; cần review, chưa nghiệm thu.
+- [Use Cases](USE_CASES.md): đặc tả 18 use case và thông tin sơ đồ hiện có; những đoạn mâu thuẫn được đánh dấu, chưa xác nhận tính đầy đủ hoặc duyệt UML.
 - [Các điểm cần rà soát](REQUIREMENTS_REVIEW.md): thiếu sót và câu hỏi cần chốt.
