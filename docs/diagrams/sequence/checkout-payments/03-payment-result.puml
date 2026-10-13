@@ -1,0 +1,35 @@
+@startuml 03-payment-result
+title Xử lý kết quả thanh toán thành công/thất bại
+
+actor "Mock Gateway / Frontend" as Gateway
+participant "PaymentController" as Ctrl
+participant "PaymentService" as PaySvc
+participant "OrderService (Phát)" as OrderSvc
+participant "LoyaltyService (Huy)" as LoyaltySvc
+database "Database" as DB
+
+Gateway -> Ctrl : GET /payments/:id/status (hoặc Webhook POST từ Mock)
+activate Ctrl
+
+Ctrl -> PaySvc : processPaymentResult(paymentId)
+activate PaySvc
+
+PaySvc -> DB : update Payment status = SUCCEEDED
+PaySvc -> OrderSvc : updateOrderStatus(orderId, PAID)
+activate OrderSvc
+OrderSvc --> PaySvc : success
+deactivate OrderSvc
+
+opt Thanh toán thành công
+    PaySvc -> LoyaltySvc : addPoints(userId, pointsDelta)
+    activate LoyaltySvc
+    LoyaltySvc --> PaySvc : success
+    deactivate LoyaltySvc
+end
+
+PaySvc --> Ctrl : result details
+deactivate PaySvc
+
+Ctrl --> Gateway : 200 OK { data: { status: "SUCCEEDED" } }
+deactivate Ctrl
+@enduml

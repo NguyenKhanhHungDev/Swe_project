@@ -1,0 +1,31 @@
+@startuml 04-idempotency
+title Xử lý yêu cầu thanh toán trùng (Idempotency)
+
+actor Frontend
+participant "PaymentController" as Ctrl
+participant "PaymentService" as PaySvc
+database "Database / Cache" as DB
+
+Frontend -> Ctrl : POST /payments (Header: Idempotency-Key = "uuid-123")
+activate Ctrl
+
+Ctrl -> PaySvc : initiatePayment(..., "uuid-123")
+activate PaySvc
+
+PaySvc -> DB : findUnique({ idempotencyKey: "uuid-123" })
+activate DB
+DB --> PaySvc : Existing Payment Record (status: PROCESSING / SUCCEEDED)
+deactivate DB
+
+PaySvc -> PaySvc : Bỏ qua bước tạo mới, dùng record cũ
+PaySvc --> Ctrl : existing payment record
+deactivate PaySvc
+
+Ctrl --> Frontend : 200 OK { data: existing payment details } (Thay vì 201 Created)
+deactivate Ctrl
+
+note right of Frontend
+ Frontend nhận diện được trùng lặp,
+ không bị trừ tiền hoặc sinh giao dịch rác.
+end note
+@enduml
