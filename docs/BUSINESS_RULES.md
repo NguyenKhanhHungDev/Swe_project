@@ -1,5 +1,7 @@
 # BrewLite — Business Rules
 
+**Cập nhật quyết định nhóm ngày 13/10/2026:** Nội dung hiện hành tuân theo đề của thầy và các quyết định đã được nhóm xác nhận. Xem [quyết định yêu cầu](REQUIREMENTS_DECISIONS.md).
+
 **Trạng thái:** Đã trích lọc từ tài liệu người dùng cung cấp; cần nhóm review, chưa xác nhận nghiệm thu.
 
 **Nguồn:** `Báo cáo.docx`, mục 5 và ảnh bảng chuyển trạng thái ngay sau mục này. Các mã BR dưới đây được gán khi tách file để dễ tham chiếu; không kế thừa mã “BR-20” trên ảnh nguồn.
@@ -16,13 +18,13 @@
 
 - **BR-05:** Backend tính lại giá và tổng tiền; không tin số tiền frontend gửi.
 
-- **BR-06:** “Thanh toán ngay” thêm lựa chọn hiện tại một lần rồi chuyển đến xem lại toàn bộ giỏ.
+- **BR-06:** “Thanh toán ngay” chỉ mua cấu hình món hiện tại (size, topping, số ly đã chọn), không thêm hoặc thay đổi giỏ hiện có. Thanh toán từ giỏ mua toàn bộ giỏ. Cả hai luồng phải xem lại và xác nhận trước khi tạo đơn/thanh toán; mua ngay thành công hoặc thất bại không xóa giỏ có sẵn.
 
 - **BR-07:** Khi đã tạo đơn chưa thanh toán, muốn sửa món phải hủy đơn cũ thành công trước.
 
 ## Khuyến mãi
 
-- **BR-08:** Mỗi đơn được áp dụng tối đa một mã hợp lệ: đang hoạt động, trong thời hạn và đáp ứng tổng tiền tối thiểu.
+- **BR-08:** Mỗi đơn được áp dụng tối đa một mã hợp lệ: đang hoạt động, trong thời hạn và đáp ứng tổng tiền tối thiểu. Bản đầu không giới hạn lượt dùng toàn hệ thống hoặc theo tài khoản.
 
 - **BR-09:** Tiền giảm được tính theo phần trăm, làm tròn xuống đến đồng và không vượt mức giảm tối đa.
 
