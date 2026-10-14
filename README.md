@@ -379,3 +379,67 @@ người chủ trì và người trực tiếp thực hiện xem
 Tài liệu gốc Project Scope, SRS, User Stories, Acceptance Criteria, Business
 Rules, Use Case Diagram và Use Case Description chưa có trong repository; cần
 bổ sung hoặc liên kết nguồn chính thức khi nhóm cung cấp.
+
+## Phần Huy — nhánh local `Huy`
+
+Phạm vi đang chuẩn bị: **Bước 13–14, Cart / Promotions / Loyalty**. Các file
+dưới đây là thiết kế để review, chưa phải chức năng Next.js/NestJS đã triển khai.
+Nhánh `Huy` được tạo từ main `66fb1be`; chưa commit/push hoặc mở PR. Nội dung
+và các file vốn có của nhóm được giữ nguyên; phần mới của Huy được bổ sung riêng.
+
+| Đầu ra | Mã nguồn | Ảnh |
+|---|---|---|
+| Đặc tả Cart, mua ngay | [cart.md](docs/api/cart.md) | — |
+| Đặc tả Promotions/Loyalty | [promotions-loyalty.md](docs/api/promotions-loyalty.md) | — |
+| Thêm món / Mua ngay | [01-add-item.puml](docs/diagrams/sequence/cart/01-add-item.puml) | [SVG](docs/diagrams/sequence/cart/01-add-item.svg) |
+| Sửa / Xóa món | [02-update-remove-item.puml](docs/diagrams/sequence/cart/02-update-remove-item.puml) | [SVG](docs/diagrams/sequence/cart/02-update-remove-item.svg) |
+| Áp dụng mã | [01-apply-voucher.puml](docs/diagrams/sequence/promotions-loyalty/01-apply-voucher.puml) | [SVG](docs/diagrams/sequence/promotions-loyalty/01-apply-voucher.svg) |
+| Kiểm tra điểm | [02-use-loyalty-points.puml](docs/diagrams/sequence/promotions-loyalty/02-use-loyalty-points.puml) | [SVG](docs/diagrams/sequence/promotions-loyalty/02-use-loyalty-points.svg) |
+
+Sơ đồ dùng PlantUML, đen trắng, có thanh kích hoạt và 4–5 cột. Chi tiết
+validation/transaction nằm trong đặc tả; không cần kéo toàn bộ giải thích lên
+sơ đồ. Sơ đồ số 4 chưa có luồng tiêu điểm vì chưa có quy tắc được nhóm chốt.
+
+### Các điểm Huy cần nhóm review
+
+| Điểm nối | Nội dung cần xác nhận |
+|---|---|
+| Hưng / Khoa / Huy | Products chỉ trả boolean khả dụng, chưa đủ kiểm tra tổng số ly với tồn. Cần contract đọc số khả dụng hoặc preview. |
+| Phát / Thắng / Huy | Thống nhất `qty`, `sizeCode`, `toppings[{toppingId,quantity}]`; Orders hiện dùng `quantity`/`toppingIds`, Checkout dùng `cartItems`/`size`. |
+| Hưng / Phát / Thắng / Huy | Huy đề xuất voucher có giới hạn lượt theo UC cũ; khác BR-08 và ERD hiện tại. Chốt loại giới hạn, thời điểm giữ/trừ/hoàn lượt và kiểm soát đồng thời trước triển khai. |
+| Hưng / Huy / các module liên quan | Chốt phạm vi tiêu điểm và lịch sử điểm. Chưa có tỷ lệ/quy tắc tiêu điểm; không tự thêm REDEEM hoặc đổi schema. |
+| Hưng / Phát / Thắng | Giá size trong Products là giá đầy đủ, không cộng lại giá S; Orders còn nhắc ADMIN/COD khác phạm vi CUSTOMER/STAFF và mock WALLET/CARD. |
+| Thắng / Huy / Phát | BUY_NOW chỉ cấu hình hiện tại, không đổi giỏ chính; PAID dọn đúng lượt mua. Retry/timeout không thêm món hoặc tạo đơn mới. |
+
+Các ghi chú trên là điểm cần review, không tự sửa hoặc nghiệm thu thay chủ module.
+Nhánh `Huy` giữ nguyên file của các bạn; khi upload hoặc ghép nhóm, kiểm tra diff
+để chỉ đưa phần được duyệt. Việc commit/push vẫn chờ Huy cho phép.
+
+### Kiểm tra phần Huy
+
+```powershell
+node scripts/check-huy-docs.mjs
+node scripts/huy-diagrams.mjs --jar ..\tools\plantuml\plantuml.jar
+git diff --check
+```
+
+JAR trong lệnh dùng công cụ local ở workspace này. Máy khác có thể đặt
+[PlantUML 1.2025.2](https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml/1.2025.2/plantuml-1.2025.2.jar)
+ở đường dẫn khác và truyền `--jar <path>`; cần Java. Mã `.puml` là nguồn chính,
+SVG được sinh lại bằng script, không sửa ảnh bằng tay.
+
+[Báo cáo kiểm tra toàn bộ yêu cầu Huy](docs/audits/huy-compliance-2026-10-14.md)
+và [kết quả audit API](docs/audits/huy-runtime-results.json) được giữ làm minh
+chứng. Lint/build khung frontend/backend và hai test Hello đã đạt; audit cho
+thấy tám route nghiệp vụ còn 404, Cart UI/store chưa có trong repo. Không dùng
+test Hello hoặc test demo Vite cũ làm chứng cứ phần Huy đã chạy thật.
+
+Để audit API lại sau khi build backend:
+
+```powershell
+npm.cmd --prefix backend run build
+node scripts/audit-huy-runtime.mjs
+```
+
+Audit trả exit code 1 khi còn route chưa triển khai. Hai đặc tả/bốn sơ đồ hiện
+đủ file để review, chưa chứng minh toàn bộ phân công hoặc các chức năng đã đạt.

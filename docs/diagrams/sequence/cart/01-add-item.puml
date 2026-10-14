@@ -1,0 +1,40 @@
+﻿@startuml
+hide footbox
+autonumber
+skinparam style strictuml
+skinparam monochrome true
+skinparam maxMessageSize 150
+
+title UC-06 - Thêm món / Thanh toán ngay
+actor "Khách hàng" as KH
+boundary "Giao diện chi tiết" as UI
+control "Cart store\n(Xử lý giỏ hàng)" as CART
+entity "localStorage\n(Trình duyệt)" as STORE
+
+activate KH
+KH -> UI : Chọn size, topping, số ly\nvà nhấn nút mua
+activate UI
+UI -> CART : addCartItem(item) /\ncreateBuyNowDraft(item)
+activate CART
+CART -> CART : Kiểm tra lựa chọn, số ly\nvà điều kiện tồn kho
+alt Không hợp lệ
+  CART --> UI : Lỗi; giữ nguyên giỏ
+  UI --> KH : Thông báo lỗi, ở lại trang
+else Chọn Thêm vào giỏ
+  CART -> CART : Gộp cấu hình trùng / tạo dòng\nTính tổng và kiểm tra lại mã
+  CART -> STORE : Lưu giỏ và mã
+  activate STORE
+  STORE --> CART : Kết quả lưu
+  deactivate STORE
+  CART --> UI : Giỏ mới / cảnh báo lỗi lưu
+  UI --> KH : Cập nhật badge và thông báo
+else Chọn Thanh toán ngay
+  CART --> UI : Danh sách chỉ có món vừa chọn
+  UI --> KH : Mở xác nhận mua ngay
+end
+deactivate CART
+deactivate UI
+deactivate KH
+note over CART, STORE : Mua ngay không thay giỏ.\nThêm giỏ/mở xác nhận chưa giữ hàng.
+note over UI, CART : Catalog từ UC-05; hợp đồng đọc số tồn\ncần chốt theo cart.md.
+@enduml
