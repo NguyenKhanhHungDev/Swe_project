@@ -1,0 +1,65 @@
+@startuml 04-cancel-order
+autonumber
+skinparam BoxPadding 10
+skinparam ParticipantPadding 10
+
+title Hủy đơn hàng và hoàn trả tài nguyên - Bước 14
+
+actor "Khách hàng / Nhân viên" as Actor
+participant "Web App\n(Next.js)" as FE
+participant "OrdersController" as Controller
+participant "OrdersService" as OrderSvc
+participant "InventoryService\n(Khoa)" as InvSvc
+participant "PaymentService\n(Thắng)" as PaySvc
+participant "LoyaltyService\n(Huy)" as LoyaltySvc
+database "Database\n(PostgreSQL/Prisma)" as DB
+
+Actor -> FE : Nhấn "Hủy đơn hàng" và điền lý do
+FE -> Controller : POST /orders/:id/cancel\nBody: { reason: "..." }
+activate Controller
+
+Controller -> OrderSvc : cancelOrder(orderId, userContext, reason)
+activate OrderSvc
+
+OrderSvc -> DB : SELECT * FROM ORDER WHERE id = :orderId FOR UPDATE
+DB --> OrderSvc : Order Record
+
+alt Khách hàng hủy nhưng trạng thái KHÔNG PHẢI PENDING hoặc PAYMENT_FAILED (BR-31)
+    OrderSvc --> Controller : 400 Bad Request (Chỉ được hủy khi chưa thanh toán)
+    Controller --> FE : 400 Bad Request
+else Đơn đã ở PREPARING, READY, hoặc COMPLETED (BR-33)
+    OrderSvc --> Controller : 400 Bad Request (Không hỗ trợ hủy đơn đang/đã hoàn thành)
+    Controller --> FE : 400 Bad Request
+else Hợp lệ để hủy (PENDING / PAYMENT_FAILED bởi Khách, hoặc PAID bởi Staff - BR-32)
+    group Database Transaction [BEGIN]
+        OrderSvc -> DB : UPDATE ORDER SET status = 'CANCELLED', cancelled_at = now()
+        
+        OrderSvc -> InvSvc : releaseReservation(orderId) (BR-18)
+        activate InvSvc
+        InvSvc -> DB : DELETE FROM INVENTORY_RESERVATION WHERE order_id = :orderId
+        InvSvc --> OrderSvc : Stock Released
+        deactivate InvSvc
+
+        opt Đơn ở trạng thái PAID bị hủy bởi Staff (BR-32)
+            OrderSvc -> PaySvc : mockRefund(orderId, totalAmountVnd)
+            activate PaySvc
+            PaySvc -> DB : INSERT INTO PAYMENT_REFUND (attempt_id, amount_vnd)
+            PaySvc --> OrderSvc : Refund OK
+            deactivate PaySvc
+
+            OrderSvc -> LoyaltySvc : reverseEarnedPoints(orderId) (BR-28, BR-32)
+            activate LoyaltySvc
+            LoyaltySvc -> DB : INSERT INTO LOYALTY_TRANSACTION (type: 'REVERSAL', points: -earned)
+            LoyaltySvc --> OrderSvc : Points Reversed
+            deactivate LoyaltySvc
+        end
+
+        OrderSvc -> DB : COMMIT
+    end
+    OrderSvc --> Controller : CancelSuccessDTO
+    Controller --> FE : 200 OK { data: { status: 'CANCELLED' } }
+end
+deactivate OrderSvc
+deactivate Controller
+FE --> Actor : Thông báo hủy đơn thành công và hoàn trả tài nguyên
+@enduml

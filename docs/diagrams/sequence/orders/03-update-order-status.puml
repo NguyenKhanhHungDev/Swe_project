@@ -1,0 +1,47 @@
+@startuml 03-update-order-status
+autonumber
+skinparam BoxPadding 10
+skinparam ParticipantPadding 10
+
+title Cập nhật trạng thái đơn hàng (Order State Machine) - Bước 14
+
+actor "Nhân viên quầy\n(Staff)" as Staff
+participant "Web App\n(Next.js)" as FE
+participant "OrdersController" as Controller
+participant "OrdersService" as OrderSvc
+database "Database\n(PostgreSQL/Prisma)" as DB
+
+Staff -> FE : Nhấn chuyển trạng thái (VD: Nhận pha chế / Pha xong)
+FE -> Controller : PATCH /orders/:id/status\nBody: { status: "PREPARING" }
+activate Controller
+
+Controller -> Controller : Kiểm tra quyền STAFF hoặc ADMIN
+alt Không đủ quyền
+    Controller --> FE : 403 Forbidden
+end
+
+Controller -> OrderSvc : updateOrderStatus(orderId, newStatus)
+activate OrderSvc
+
+OrderSvc -> DB : SELECT status FROM ORDER WHERE id = :orderId FOR UPDATE
+DB --> OrderSvc : Current Order (status = 'PAID')
+
+alt Kiểm tra vi phạm State Machine (BR-29, BR-34)\n(VD: PENDING -> PREPARING hoặc COMPLETED -> *)
+    OrderSvc --> Controller : 400 Bad Request (INVALID_STATUS_TRANSITION)
+    Controller --> FE : 400 Bad Request
+    FE --> Staff : Hiển thị thông báo chuyển trạng thái không hợp lệ
+else Chuyển trạng thái hợp lệ\n(PAID -> PREPARING, PREPARING -> READY, READY -> COMPLETED)
+    group Database Transaction
+        OrderSvc -> DB : UPDATE ORDER SET status = :newStatus, updated_at = now()\n[Nếu COMPLETED: completed_at = now()]
+        opt Khi COMPLETED
+            OrderSvc -> DB : DELETE FROM INVENTORY_RESERVATION WHERE order_id = :orderId
+        end
+        OrderSvc -> DB : COMMIT
+    end
+    OrderSvc --> Controller : UpdatedOrderDTO
+    Controller --> FE : 200 OK { data: UpdatedOrder }
+end
+deactivate OrderSvc
+deactivate Controller
+FE --> Staff : Cập nhật hiển thị đơn hàng trên màn hình điều phối
+@enduml
