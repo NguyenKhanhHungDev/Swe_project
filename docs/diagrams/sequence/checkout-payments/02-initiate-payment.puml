@@ -1,0 +1,36 @@
+@startuml 02-initiate-payment
+title Khởi tạo và thực hiện thanh toán (Mock)
+
+actor Frontend
+participant "PaymentController" as Ctrl
+participant "PaymentService" as PaySvc
+participant "OrderService (Phát)" as OrderSvc
+database "Database (Prisma)" as DB
+
+Frontend -> Ctrl : POST /payments (Header: Idempotency-Key, Body: orderId, amount, method)
+activate Ctrl
+
+Ctrl -> PaySvc : initiatePayment(orderId, amount, method, idempotencyKey)
+activate PaySvc
+
+PaySvc -> DB : findUnique(idempotencyKey)
+activate DB
+DB --> PaySvc : null (chưa tồn tại)
+deactivate DB
+
+PaySvc -> OrderSvc : getOrderById(orderId)
+OrderSvc --> PaySvc : orderData
+PaySvc -> PaySvc : Validate amount == orderData.total
+
+PaySvc -> DB : create Payment (status = PROCESSING, idempotencyKey)
+activate DB
+DB --> PaySvc : payment record
+deactivate DB
+
+PaySvc -> PaySvc : Generate mock paymentUrl
+PaySvc --> Ctrl : payment response
+deactivate PaySvc
+
+Ctrl --> Frontend : 201 Created { data: payment details }
+deactivate Ctrl
+@enduml
