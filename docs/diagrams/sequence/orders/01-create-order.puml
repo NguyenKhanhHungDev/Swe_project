@@ -1,0 +1,71 @@
+@startuml 01-create-order
+autonumber
+skinparam BoxPadding 10
+skinparam ParticipantPadding 10
+
+title Tạo đơn hàng (Place Order) - Bước 14
+
+actor "Khách hàng\n(Customer)" as User
+participant "Web App\n(Next.js)" as FE
+participant "OrdersController" as Controller
+participant "OrdersService" as OrderSvc
+participant "InventoryService\n(Khoa)" as InvSvc
+participant "PromotionsService\n(Huy)" as PromoSvc
+participant "CartService\n(Huy)" as CartSvc
+database "Database\n(PostgreSQL/Prisma)" as DB
+
+User -> FE : Nhấn "Đặt hàng"
+FE -> Controller : POST /orders\nHeader: Idempotency-Key\nBody: { items, promotionCode }
+activate Controller
+
+Controller -> OrderSvc : createOrder(userId, dto, idempotencyKey)
+activate OrderSvc
+
+OrderSvc -> DB : SELECT id, request_fingerprint FROM ORDER\nWHERE user_id = :userId AND create_idempotency_key = :key
+alt Trùng Idempotency-Key và trùng request_fingerprint (BR-20)
+    DB --> OrderSvc : Existing Order Record
+    OrderSvc --> Controller : Existing Order DTO
+    Controller --> FE : 200 OK (Trả về đơn cũ, không tạo thêm)
+else Trùng Idempotency-Key nhưng khác request_fingerprint
+    OrderSvc --> Controller : 409 Conflict (IDEMPOTENCY_CONFLICT)
+    Controller --> FE : 409 Conflict
+end
+
+group Database Transaction [BEGIN]
+    OrderSvc -> InvSvc : checkAndReserveStock(items)
+    activate InvSvc
+    InvSvc -> DB : SELECT stock_qty, version FROM PRODUCT WHERE id IN (...) FOR UPDATE
+    alt Không đủ tồn khả dụng (BR-14)
+        InvSvc --> OrderSvc : INSUFFICIENT_STOCK
+        OrderSvc -> DB : ROLLBACK
+        OrderSvc --> Controller : 400 Bad Request
+        Controller --> FE : 400 Bad Request (Hết hàng/thiếu hàng)
+    end
+    InvSvc -> DB : INSERT INTO INVENTORY_RESERVATION (order_id, product_id, qty)
+    InvSvc --> OrderSvc : Reservation OK
+    deactivate InvSvc
+
+    opt Có promotionCode (BR-11, BR-12)
+        OrderSvc -> PromoSvc : validateAndLockPromotion(promotionCode, subtotal)
+        activate PromoSvc
+        PromoSvc --> OrderSvc : discountAmount
+        deactivate PromoSvc
+    end
+
+    OrderSvc -> DB : INSERT INTO ORDER (status: 'PENDING', total_amount_vnd, expires_at: now + 15m)
+    OrderSvc -> DB : INSERT INTO ORDER_ITEM & ORDER_ITEM_TOPPING
+    OrderSvc -> CartSvc : clearUserCart(userId)
+    activate CartSvc
+    CartSvc -> DB : DELETE FROM CART_ITEM WHERE user_id = :userId
+    CartSvc --> OrderSvc : Cart cleared
+    deactivate CartSvc
+    OrderSvc -> DB : COMMIT
+end
+
+OrderSvc --> Controller : OrderCreatedResult
+deactivate OrderSvc
+
+Controller --> FE : 201 Created { data: Order }
+deactivate Controller
+FE --> User : Chuyển hướng tới màn hình Thanh toán / Xác nhận
+@enduml

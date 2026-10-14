@@ -1,0 +1,59 @@
+@startuml 02-view-orders
+autonumber
+skinparam BoxPadding 10
+skinparam ParticipantPadding 10
+
+title Xem danh sách và chi tiết đơn hàng - Bước 14
+
+actor "Người dùng / Nhân viên" as User
+participant "Web App\n(Next.js)" as FE
+participant "OrdersController" as Controller
+participant "OrdersService" as OrderSvc
+database "Database\n(PostgreSQL/Prisma)" as DB
+
+== Kịch bản A: Lấy danh sách lịch sử đơn hàng ==
+User -> FE : Truy cập danh sách đơn hàng
+FE -> Controller : GET /orders?page=1&limit=10&status=...
+activate Controller
+
+Controller -> OrderSvc : getOrders(userContext, query)
+activate OrderSvc
+
+alt Vai trò CUSTOMER (Chỉ xem đơn của mình)
+    OrderSvc -> DB : SELECT * FROM ORDER WHERE user_id = :userId\nORDER BY created_at DESC LIMIT :limit OFFSET :offset
+else Vai trò STAFF / ADMIN (Xem toàn bộ hoặc lọc theo user)
+    OrderSvc -> DB : SELECT * FROM ORDER [WHERE status = :status]\nORDER BY created_at DESC LIMIT :limit OFFSET :offset
+end
+
+DB --> OrderSvc : Danh sách đơn + Total count
+OrderSvc --> Controller : OrdersPageResult
+deactivate OrderSvc
+Controller --> FE : 200 OK { data: { items, pagination } }
+deactivate Controller
+FE --> User : Hiển thị bảng danh sách đơn hàng
+
+== Kịch bản B: Xem chi tiết một đơn hàng ==
+User -> FE : Chọn 1 đơn hàng cụ thể
+FE -> Controller : GET /orders/:id
+activate Controller
+
+Controller -> OrderSvc : getOrderDetail(orderId, userContext)
+activate OrderSvc
+
+OrderSvc -> DB : SELECT * FROM ORDER\nJOIN ORDER_ITEM ON order_id\nJOIN ORDER_ITEM_TOPPING ON order_item_id\nWHERE ORDER.id = :id
+DB --> OrderSvc : Dữ liệu đơn hàng chi tiết
+
+alt Đơn hàng không tồn tại
+    OrderSvc --> Controller : 404 Not Found
+    Controller --> FE : 404 Not Found
+else CUSTOMER xem đơn không phải của mình
+    OrderSvc --> Controller : 403 Forbidden
+    Controller --> FE : 403 Forbidden
+else Hợp lệ
+    OrderSvc --> Controller : OrderDetailDTO
+    Controller --> FE : 200 OK { data: OrderDetail }
+end
+deactivate OrderSvc
+deactivate Controller
+FE --> User : Hiển thị chi tiết món, topping, số tiền, hạn thanh toán
+@enduml
