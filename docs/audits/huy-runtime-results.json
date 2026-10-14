@@ -1,0 +1,70 @@
+{
+  "scope": "Swe_project current NestJS AppModule, no database mutation",
+  "results": [
+    {
+      "method": "GET",
+      "route": "/",
+      "purpose": "API Hello nền tảng",
+      "status": 200,
+      "outcome": "BASELINE_OK"
+    },
+    {
+      "method": "GET",
+      "route": "/products",
+      "purpose": "Catalog cần cho Cart",
+      "status": 404,
+      "outcome": "NOT_IMPLEMENTED"
+    },
+    {
+      "method": "GET",
+      "route": "/products/32cc8746-fbaf-4dc4-9d58-9caf39df1601",
+      "purpose": "Chi tiết món để chọn size/topping",
+      "status": 404,
+      "outcome": "NOT_IMPLEMENTED"
+    },
+    {
+      "method": "POST",
+      "route": "/promotions/validate",
+      "purpose": "UC-08 voucher",
+      "status": 404,
+      "outcome": "NOT_IMPLEMENTED"
+    },
+    {
+      "method": "GET",
+      "route": "/loyalty/me",
+      "purpose": "UC-14 số dư điểm",
+      "status": 404,
+      "outcome": "NOT_IMPLEMENTED"
+    },
+    {
+      "method": "GET",
+      "route": "/loyalty/me/transactions",
+      "purpose": "Lịch sử điểm đề xuất",
+      "status": 404,
+      "outcome": "NOT_IMPLEMENTED"
+    },
+    {
+      "method": "POST",
+      "route": "/orders",
+      "purpose": "Tạo đơn cho Cart/BUY_NOW",
+      "status": 404,
+      "outcome": "NOT_IMPLEMENTED"
+    },
+    {
+      "method": "POST",
+      "route": "/payments",
+      "purpose": "Payment cho lượt mua",
+      "status": 404,
+      "outcome": "NOT_IMPLEMENTED"
+    },
+    {
+      "method": "POST",
+      "route": "/auth/login",
+      "purpose": "Auth cần cho voucher/đơn/điểm",
+      "status": 404,
+      "outcome": "NOT_IMPLEMENTED"
+    }
+  ],
+  "missingRoutes": 8,
+  "ucComplianceVerified": false
+}

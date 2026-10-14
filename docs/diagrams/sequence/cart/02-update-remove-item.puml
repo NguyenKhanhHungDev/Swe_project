@@ -1,0 +1,37 @@
+﻿@startuml
+hide footbox
+autonumber
+skinparam style strictuml
+skinparam monochrome true
+skinparam maxMessageSize 150
+
+title UC-07 - Sửa / Xóa món trong giỏ
+actor "Khách hàng" as KH
+boundary "Giao diện giỏ" as UI
+control "Cart store\n(Xử lý giỏ hàng)" as CART
+entity "localStorage\n(Trình duyệt)" as STORE
+
+activate KH
+KH -> UI : Sửa số ly / Xóa món
+activate UI
+UI -> CART : updateCartItem(lineId, qty) /\nremoveCartItem(lineId)
+activate CART
+CART -> CART : Kiểm tra giỏ được phép sửa\nSửa qty: 1-99 và đủ tồn
+alt Không được phép / không hợp lệ
+  CART --> UI : Lỗi; giữ giỏ cũ
+  UI --> KH : Thông báo, giữ số ly cũ
+else Hợp lệ
+  CART -> CART : Sửa hoặc xóa dòng\nTính lại tổng và mã giảm
+  CART -> STORE : Lưu giỏ và mã mới
+  activate STORE
+  STORE --> CART : Kết quả lưu
+  deactivate STORE
+  CART --> UI : Giỏ mới / cảnh báo lỗi lưu
+  UI --> KH : Hiển thị món và tổng mới
+end
+deactivate CART
+deactivate UI
+deactivate KH
+note over UI, CART : Giỏ rỗng: bỏ mã, chặn thanh toán.\nĐơn chưa trả: hủy xác nhận trước sửa.
+note over CART : Hợp đồng kiểm tra tồn và khôi phục giỏ:\nxem cart.md.
+@enduml

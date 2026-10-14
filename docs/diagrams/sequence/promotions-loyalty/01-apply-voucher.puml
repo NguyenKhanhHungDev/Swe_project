@@ -1,0 +1,42 @@
+﻿@startuml
+hide footbox
+autonumber
+skinparam style strictuml
+skinparam monochrome true
+skinparam maxMessageSize 150
+
+title UC-08 - Áp dụng mã giảm giá
+actor "Khách hàng" as KH
+boundary "Giao diện giỏ" as UI
+control "PromotionsController" as API
+control "PromotionsService" as SVC
+entity "Database\n(Prisma)" as DB
+
+activate KH
+KH -> UI : Nhập mã, nhấn Áp dụng
+activate UI
+UI -> API : POST /promotions/validate\n{code, items} + JWT
+activate API
+API -> API : Kiểm tra JWT, quyền và DTO
+alt Token/quyền/dữ liệu sai
+  API --> UI : 401 / 403 / 400 - Lỗi
+  UI --> KH : Đăng nhập lại / sửa dữ liệu\nGiữ giỏ và mã nhập
+else Request hợp lệ
+  API -> SVC : validate(code, items)
+  activate SVC
+  SVC -> DB : Đọc sản phẩm và khuyến mãi
+  activate DB
+  DB --> SVC : Dữ liệu / lỗi đọc
+  deactivate DB
+  SVC -> SVC : Tính tiền; kiểm tra mã\nvà điều kiện áp dụng
+  SVC --> API : Tiền giảm, tổng mới / lỗi
+  deactivate SVC
+  API --> UI : 200 - Báo giá / 409 hoặc 500 - Lỗi
+  UI --> KH : Hiển thị giảm giá hoặc lý do lỗi
+end
+deactivate API
+deactivate UI
+deactivate KH
+note over UI, SVC : Mã mới lỗi: giữ mã cũ nếu còn hợp lệ.\nBỏ mã: total về subtotal hiện tại.
+note over SVC, DB : Kiểm tra còn lượt: đề xuất Huy chờ duyệt ERD.\nValidate không trừ lượt hoặc giữ kho.
+@enduml

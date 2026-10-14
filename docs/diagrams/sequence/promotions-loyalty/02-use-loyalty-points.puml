@@ -1,0 +1,40 @@
+﻿@startuml
+hide footbox
+autonumber
+skinparam style strictuml
+skinparam monochrome true
+skinparam maxMessageSize 150
+
+title UC-14 - Kiểm tra điểm thưởng
+actor "Khách hàng" as KH
+boundary "Giao diện điểm" as UI
+control "LoyaltyController" as API
+control "LoyaltyService" as SVC
+entity "Database\n(Prisma)" as DB
+
+activate KH
+KH -> UI : Xem điểm thưởng
+activate UI
+UI -> API : GET /loyalty/me + JWT
+activate API
+API -> API : Xác thực CUSTOMER\nLấy userId từ JWT
+alt Chưa xác thực / không đủ quyền
+  API --> UI : 401 / 403 - Lỗi
+  UI --> KH : Yêu cầu đăng nhập / báo lỗi
+else Được phép
+  API -> SVC : getMyPoints(userId)
+  activate SVC
+  SVC -> DB : Tính SUM(points_delta)\ncủa khách hàng
+  activate DB
+  DB --> SVC : Tổng điểm / lỗi đọc
+  deactivate DB
+  SVC --> API : loyaltyPoints / lỗi
+  deactivate SVC
+  API --> UI : 200 - Điểm hiện có / 500 - Lỗi
+  UI --> KH : Hiển thị điểm / cho thử lại
+end
+deactivate API
+deactivate UI
+deactivate KH
+note over UI, SVC : Lỗi tải không hiển thị 0 giả.\nTiêu điểm chưa có quy tắc được duyệt.
+@enduml

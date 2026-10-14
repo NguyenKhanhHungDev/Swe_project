@@ -41,9 +41,9 @@ link hỏng hoặc file giả cho phần các thành viên khác.
 | Auth | Khoa | Chưa có đặc tả riêng | Khoa bổ sung `auth.md`. |
 | Users, RBAC | Khoa | Chưa có đặc tả riêng | Khoa bổ sung `users.md`; RBAC có thể ghi cùng Auth, không suy ra endpoint RBAC. |
 | Inventory | Khoa | Chưa có đặc tả riêng | Khoa bổ sung `inventory.md`; phân biệt service nội bộ và HTTP endpoint có nguồn yêu cầu. |
-| Cart | Huy | Chưa có hợp đồng riêng | Huy bổ sung `cart.md` cho state/giao diện tích hợp; giỏ lưu trên trình duyệt, không mặc định có REST Cart CRUD. |
-| Promotions | Huy | Chưa có đặc tả riêng | Huy bổ sung `promotions.md`. |
-| Loyalty | Huy | Chưa có đặc tả riêng | Huy bổ sung `loyalty.md`. |
+| Cart | Huy | [Cart](cart.md) | REVIEW: contract state/mua ngay; giỏ browser, còn điểm nối đọc số tồn và DTO Orders cần chốt. |
+| Promotions | Huy | [Promotions & Loyalty](promotions-loyalty.md) | REVIEW: validate mã và báo giá; kiểm tra lượt là đề xuất Huy khác BR-08, cần nhóm duyệt ERD. |
+| Loyalty | Huy | [Promotions & Loyalty](promotions-loyalty.md) | REVIEW: đọc/cộng/đảo điểm; lịch sử là đề xuất tùy chọn, tiêu điểm chưa có quy tắc. |
 | Orders | Phát | Chưa có đặc tả riêng | Phát bổ sung `orders.md`. |
 | Order cancellation đã trả tiền | Phát; Thắng/Khoa/Huy phối hợp | Chưa có đặc tả riêng | Phát xác định mục tương ứng trong `orders.md` hoặc tài liệu riêng theo Architecture 5.5; chưa chốt URL. |
 | Checkout, Payments | Thắng | Chưa có đặc tả riêng | Thắng bổ sung `payments.md`, ranh giới checkout với giỏ/đơn; không suy ra Checkout REST riêng. |
@@ -58,6 +58,9 @@ trạng thái review trong bảng này. Không gán trạng thái đã làm từ
 |---|---|---|---|---|---|
 | PRD-01 | GET | `/products` | Public | 200, 400, 500 | [Products mục 3](products.md#3-prd-01--xem-menu-đồ-uống) |
 | PRD-02 | GET | `/products/:id` | Public | 200, 400, 404, 500 | [Products mục 4](products.md#4-prd-02--xem-chi-tiết-và-tùy-chọn-đồ-uống) |
+| PRO-01 | POST | `/promotions/validate` | CUSTOMER | 200, 400, 401, 403, 409, 500 | [Promotions & Loyalty](promotions-loyalty.md), mục 2; quota chờ duyệt |
+| LOY-01 | GET | `/loyalty/me` | CUSTOMER, dữ liệu của mình | 200, 400, 401, 403, 500 | [Promotions & Loyalty](promotions-loyalty.md), mục 3 |
+| LOY-02 | GET | `/loyalty/me/transactions` | CUSTOMER, dữ liệu của mình | 200, 400, 401, 403, 500 | [Promotions & Loyalty](promotions-loyalty.md), mục 4; tùy chọn chờ duyệt phạm vi |
 
 Không liệt kê endpoint dự đoán của Auth, Cart, Inventory, Orders hay Payments.
 Món hết hàng/ngừng bán trả 200 ở chi tiết và khóa mua, không giả thành 404.
@@ -90,13 +93,13 @@ hoặc integration test đã đạt. Các ô xác nhận để trống cho vòng
 
 | Điểm giao | Điều cần đối chiếu | Trạng thái tài liệu | Chủ review | Nhóm xác nhận |
 |---|---|---|---|---|
-| Products → Cart | product UUID, sizeCode, topping UUID; qty/quantity; 0–3 phần; không có sizeId | Mapping Products đã mô tả, thiếu contract Cart | Hưng/Huy | [ ] |
+| Products → Cart | product UUID, sizeCode, topping UUID; qty/quantity; 0–3 phần; không có sizeId | Có Cart contract để review; Products chưa trả số tồn để kiểm tra tổng qty | Hưng/Huy | [ ] |
 | Products → Inventory | isInStock từ on_hand-reserved_quantity; canPurchase còn xét cờ bán; đọc theo lô | Đề xuất có trong Products, thiếu giao diện service Inventory | Hưng/Khoa | [ ] |
-| Products/Cart → Orders | Giá đầy đủ size, giá topping theo món; backend kiểm tra lại, snapshot đơn | Có nguyên tắc BR-05, thiếu DTO Orders | Hưng/Huy/Phát | [ ] |
-| Promotions → Orders | Mã hợp lệ, tính lại/giữ snapshot, không tự bỏ mã khi lỗi | Chỉ dẫn BR-08–12, chưa có đặc tả hai module | Huy/Phát | [ ] |
+| Products/Cart → Orders | Giá đầy đủ size, giá topping theo món; backend kiểm tra lại, snapshot đơn | Cart đề xuất qty + toppings có quantity; Orders hiện dùng quantity/toppingIds, cần đồng bộ | Hưng/Huy/Phát | [ ] |
+| Promotions → Orders | Mã hợp lệ, tính lại/giữ snapshot, không tự bỏ mã khi lỗi | Có Promotions contract để review; quota Huy khác BR-08/ERD hiện hành, chưa coi đã duyệt | Huy/Phát | [ ] |
 | Orders → Inventory | Kiểm tra tổng ly sản phẩm qua các size, giữ kho và tạo đơn cùng transaction | Architecture/ERD có thiết kế; thiếu hợp đồng service | Phát/Khoa | [ ] |
 | Orders → Payments | Tiền từ đơn, thời hạn, ownership, idempotency và mapping PaymentStatus | D-05/D-10 chưa chốt | Phát/Thắng/Khoa | [ ] |
-| Payments → Loyalty | Cộng/đảo điểm một lần, dùng chung transaction | Chưa có đặc tả liên quan; giữ BR-28/32 | Thắng/Huy/Phát | [ ] |
+| Payments → Loyalty | Cộng/đảo điểm một lần, dùng chung transaction | Có contract nội bộ Loyalty theo ledger/BR-28/32; cần các bên review, chưa có backend | Thắng/Huy/Phát | [ ] |
 | Hủy PAID | OrderCancellationService điều phối hoàn tiền/kho/điểm, không phụ thuộc vòng | Chưa có API cancellation, không tự tạo URL | Phát/Thắng/Khoa/Huy | [ ] |
 | Auth → mọi API bảo vệ | JWT, CUSTOMER/STAFF, 401/403 và ownership | Chuẩn chung đã mô tả; lưu token/thời hạn/đăng xuất chưa chốt | Khoa và chủ module | [ ] |
 | Mọi API → frontend | data/error, null/array, integer VND, serializer BIGINT, UTC, HTTP status | Có quy chuẩn đề xuất; chưa có test consumer | Cả nhóm | [ ] |
