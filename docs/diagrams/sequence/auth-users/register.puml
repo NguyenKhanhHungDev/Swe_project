@@ -1,0 +1,35 @@
+@startuml
+autonumber
+actor "Khách hàng" as Client
+participant "API Gateway / AuthController" as Controller
+participant "AuthService" as Service
+participant "UserRepository" as Repo
+database "PostgreSQL" as DB
+
+Client -> Controller: POST /auth/register (email, password, fullName)
+activate Controller
+
+Controller -> Service: register(dto)
+activate Service
+
+Service -> Repo: findByEmail(email)
+activate Repo
+Repo -> DB: SELECT * FROM users WHERE email = ?
+DB --> Repo: null (Chưa tồn tại)
+Repo --> Service: null
+deactivate Repo
+
+Service -> Service: hashPassword(password)
+Service -> Repo: create(userData)
+activate Repo
+Repo -> DB: INSERT INTO users (...)
+DB --> Repo: User entity created
+Repo --> Service: Saved User object
+deactivate Repo
+
+Service --> Controller: Return user profile (No password)
+deactivate Service
+
+Controller --> Client: 201 Created (Success message & user info)
+deactivate Controller
+@enduml

@@ -1,0 +1,33 @@
+@startuml
+autonumber
+actor "Người dùng" as Client
+participant "AuthController" as Controller
+participant "AuthService" as Service
+participant "UserRepository" as Repo
+database "PostgreSQL" as DB
+
+Client -> Controller: POST /auth/login (email, password)
+activate Controller
+
+Controller -> Service: login(dto)
+activate Service
+
+Service -> Repo: findByEmail(email)
+activate Repo
+Repo -> DB: SELECT * FROM users WHERE email = ?
+DB --> Repo: User record
+Repo --> Service: User entity
+deactivate Repo
+
+alt User không tồn tại hoặc sai mật khẩu
+    Service --> Controller: Throw UnauthorizedException
+    Controller --> Client: 401 Unauthorized
+else Thông tin hợp lệ
+    Service -> Service: comparePassword(password, hash)
+    Service -> Service: generateTokens(userId, role)
+    Service --> Controller: Return AccessToken & User Info
+    deactivate Service
+    Controller --> Client: 200 OK (Tokens & profile)
+    deactivate Controller
+end
+@enduml

@@ -1,0 +1,42 @@
+@startuml
+autonumber
+actor "Nhân viên / Quản lý" as Staff
+participant "InventoryController" as Controller
+participant "JwtAuthGuard & RolesGuard" as Guard
+participant "InventoryService" as Service
+participant "InventoryRepository" as Repo
+database "PostgreSQL" as DB
+
+Staff -> Controller: PATCH /inventory/{id} (Bearer Token, quantity, action)
+activate Controller
+
+Controller -> Guard: CanActivate (Check Role: ADMIN/STAFF)
+activate Guard
+Guard --> Controller: Authorized
+deactivate Guard
+
+Controller -> Service: updateStock(id, dto)
+activate Service
+
+Service -> Repo: findById(id)
+activate Repo
+Repo -> DB: SELECT * FROM inventory WHERE id = ?
+DB --> Repo: Inventory record
+Repo --> Service: Item found
+deactivate Repo
+
+Service -> Service: Calculate new quantity (ADD/SUB/SET)
+
+Service -> Repo: save(updatedItem)
+activate Repo
+Repo -> DB: UPDATE inventory SET quantity = ? WHERE id = ?
+DB --> Repo: Success
+Repo --> Service: Saved item
+deactivate Repo
+
+Service --> Controller: Return updated inventory item
+deactivate Service
+
+Controller --> Staff: 200 OK (Updated stock details)
+deactivate Controller
+@enduml

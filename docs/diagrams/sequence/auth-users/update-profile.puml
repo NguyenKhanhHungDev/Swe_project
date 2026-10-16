@@ -1,0 +1,33 @@
+@startuml
+autonumber
+actor "Người dùng" as Client
+participant "UserController" as Controller
+participant "JwtAuthGuard" as Guard
+participant "UserService" as Service
+participant "UserRepository" as Repo
+database "PostgreSQL" as DB
+
+Client -> Controller: PATCH /users/me (Bearer Token, updateData)
+activate Controller
+
+Controller -> Guard: CanActivate (Verify JWT)
+activate Guard
+Guard --> Controller: Token valid (userId extracted)
+deactivate Guard
+
+Controller -> Service: updateProfile(userId, updateData)
+activate Service
+
+Service -> Repo: update(userId, updateData)
+activate Repo
+Repo -> DB: UPDATE users SET ... WHERE id = userId
+DB --> Repo: Updated record
+Repo --> Service: Updated User object
+deactivate Repo
+
+Service --> Controller: User profile updated
+deactivate Service
+
+Controller --> Client: 200 OK (Updated user data)
+deactivate Controller
+@enduml
