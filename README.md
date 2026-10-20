@@ -1,456 +1,251 @@
-# BrewLite
+# BrewLite — Hệ thống đặt đồ uống và thanh toán mô phỏng
 
-BrewLite là đồ án Công nghệ phần mềm của nhóm năm sinh viên. Mục tiêu là xây dựng
-ứng dụng web đặt đồ uống để khách nhận tại quầy, có thanh toán **mô phỏng**.
-Dự án không xử lý tiền thật hoặc giao hàng.
+> **Môn học:** Công nghệ phần mềm (Software Engineering) — Học kỳ I, năm học 2026–2027  
+> **Trường:** Đại học Sài Gòn (SGU) — Khoa Công nghệ Thông tin  
+> **Nhóm thực hiện:** 5 sinh viên  
+> **Trạng thái:** Đang phát triển — bản mô tả đối chiếu với nhánh `main` ngày 20/10/2026
 
-README này hướng dẫn chạy **mã nguồn hiện có**. Thiết kế, phân công và tiến độ
-chi tiết được lưu trong [`docs/`](docs/PROJECT_CONTEXT.md); tài liệu kế hoạch
-không đồng nghĩa chức năng đã triển khai hoặc được nghiệm thu.
+## 1. Tổng quan dự án
 
-## Hiện trạng chức năng
+### 1.1. Tầm nhìn sản phẩm (Product Vision)
 
-| Mức độ | Nội dung |
+**BrewLite** hướng đến việc giúp khách hàng chọn đồ uống, đặt đơn và thanh toán không dùng tiền mặt theo hình thức mô phỏng, từ đó giảm thời gian xếp hàng và thuận tiện hơn khi nhận đồ tại quầy.
+
+Dự án được xây dựng phục vụ **hai Assignment môn Công nghệ phần mềm**, kết hợp phân tích yêu cầu, mô hình hóa UML, thiết kế kiến trúc, phát triển ứng dụng và thực hành Agile Scrum.
+
+### 1.2. Luồng nghiệp vụ mục tiêu
+
+`Xem menu` → `Chọn size/topping` → `Giỏ hàng` → `Đăng nhập JWT` → `Đặt đơn` → `Thanh toán Ví/Thẻ mô phỏng` → `Theo dõi và nhận đồ tại quầy`
+
+> **Phạm vi:** Thanh toán chỉ là **giả lập**; hệ thống không thu hoặc chuyển tiền thật, không cung cấp dịch vụ giao hàng. Chức năng quản lý cửa hàng đầy đủ nằm ngoài phạm vi MVP.
+
+## 2. Phạm vi chức năng và tiến độ
+
+Các nhóm chức năng cần triển khai:
+
+| Nhóm | Chức năng mục tiêu |
 | --- | --- |
-| Đã có trong mã nguồn | Trang Next.js “Hello BrewLite!” với nút **Kiểm tra kết nối backend**; NestJS `GET /` trả `Hello from BrewLite backend!`; unit test và E2E test cho lời chào; cấu hình PostgreSQL trong Docker Compose. |
-| Mới có khung hoặc thiết kế | `ProductsModule` là module rỗng. Kiến trúc modular monolith và kết nối dữ liệu qua Prisma được mô tả trong tài liệu, nhưng Prisma chưa được tích hợp. |
-| Dự kiến | Menu, chi tiết đồ uống, size/topping, giỏ hàng, tài khoản, đơn hàng, tồn kho, khuyến mãi, điểm thưởng và thanh toán giả lập. Chưa có căn cứ từ code để hướng dẫn sử dụng các chức năng này. |
+| Menu & sản phẩm | Danh sách đồ uống, chi tiết sản phẩm, size và topping |
+| Giỏ hàng | Thêm món, chỉnh số lượng, xóa món, tính tổng tiền |
+| Tài khoản | Đăng ký, đăng nhập, đăng xuất và xác thực JWT |
+| Đơn hàng | Tạo đơn, xem lịch sử/chi tiết, hủy theo quyền và trạng thái |
+| Thanh toán | Ví/Thẻ mô phỏng, xử lý lặp yêu cầu và xác nhận kết quả |
+| Khuyến mãi & điểm thưởng | Áp dụng mã giảm giá, tích lũy và xem điểm |
+| Nghiệp vụ tại quầy | Cập nhật trạng thái đơn qua API có phân quyền |
+| Tồn kho | Kiểm tra, giữ/hoàn tồn kho và hạn chế đặt vượt số lượng |
 
-Test hiện có chỉ kiểm tra API lời chào, chưa kiểm chứng nghiệp vụ đặt đồ uống.
-Xem [Project Roadmap](docs/PROJECT_ROADMAP.md) để theo dõi A1 (10 task), A2 (5 nhóm task tuần tự) và minh chứng.
+**Hiện trạng mã nguồn trên `main` (20/10/2026):**
 
-Xem [bàn giao Buổi 1](docs/scrum/day1-handoff.md),
-[Working Agreement](docs/scrum/team-working-agreement.md) và
-[backlog A1/A2](docs/scrum/backlog.md). Các hồ sơ nháp đang chờ owner review;
-chưa nghiệm thu A2 Task 1–5.
-
-## Công nghệ và kiến trúc
-
-| Thành phần | Đã xác minh từ repository |
-| --- | --- |
-| Frontend | Next.js 16.3.6, React 19.2.8, TypeScript, Tailwind CSS 4 |
-| Backend | NestJS 11, TypeScript; hiện có API lời chào và module Products rỗng |
-| Database | Docker Compose khai báo `postgres:17-alpine`, healthcheck và named volume `postgres_data` |
-| ORM | Prisma **dự kiến**; chưa có package, schema, migration hoặc kết nối backend–database |
-| Công cụ | npm với ba lockfile riêng; Git/GitHub; Docker Compose hiện chỉ có service `db` |
-
-Thiết kế đích là một frontend Next.js gọi REST API/JSON của backend NestJS.
-Backend chia module nghiệp vụ trong cùng một ứng dụng (**modular monolith**);
-theo thiết kế, backend sẽ dùng Prisma để truy cập PostgreSQL. Frontend không
-truy cập database trực tiếp.
-
-```mermaid
-flowchart LR
-    UI["Next.js: trang Hello và nút kiểm tra"] -->|"GET / hiện có"| API["NestJS: API lời chào"]
-    API -.->|"dự kiến: Prisma"| DB[(PostgreSQL 17)]
-```
-
-Sơ đồ phân biệt kết nối API đang có (nét liền) với truy cập database dự kiến
-(nét đứt). Hiện Compose **chỉ chạy PostgreSQL**; frontend và backend chạy bằng
-npm trên máy. Repository chưa có Dockerfile để đóng gói hai ứng dụng.
-
-## Cấu trúc repository
-
-| Đường dẫn | Vai trò |
-| --- | --- |
-| `apps/web/src/app/` | Trang Next.js và nút kiểm tra API |
-| `apps/api/src/` | Ứng dụng NestJS, `GET /` và module Products rỗng |
-| `apps/api/test/` | E2E test cho API lời chào |
-| `docs/` | Bối cảnh, kiến trúc, lộ trình, phân công và truy vết yêu cầu |
-| `docker-compose.yml` | PostgreSQL service `db`, healthcheck và volume dữ liệu |
-| `package.json` | Script chạy đồng thời và build hai ứng dụng |
-| `.env.example`, `apps/api/.env.example`, `apps/web/.env.example` | Ba mẫu biến môi trường |
-
-Gốc repository, `apps/api/` và `apps/web/` có `package.json` cùng
-`package-lock.json` riêng; cần cài dependencies ở cả ba vị trí.
-
-## Công cụ cần cài
-
-- [Node.js](https://nodejs.org/en/download) và npm đi kèm: khuyến nghị bản
-  **Node.js 24 LTS**. Repository chưa khóa Node/npm bằng `engines` hoặc `.nvmrc`;
-  lockfile của script chạy chung chứa `concurrently` yêu cầu Node `>=22`.
-- [Git](https://git-scm.com/downloads) để clone repository; không có phiên bản
-  Git tối thiểu được khai báo.
-- [Docker và Docker Compose](https://docs.docker.com/compose/install/) để chạy
-  PostgreSQL. Cần lệnh `docker compose` và Docker daemon/Desktop đang hoạt động;
-  repository không khóa phiên bản Docker/Compose.
-
-Sau khi cài, mở **terminal mới** và kiểm tra `node --version`, `npm --version`,
-`git --version`, `docker --version`, `docker compose version` và `docker info`.
-`docker info` chỉ xác nhận daemon có thể truy cập, không khởi động dịch vụ.
-
-## Windows 10/11 — PowerShell
-
-1. Cài Node.js từ [trang Node.js](https://nodejs.org/en/download),
-   [Git for Windows](https://git-scm.com/download/win) và
-   [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/).
-   Làm theo yêu cầu WSL 2 của Docker Desktop nếu trình cài đặt thông báo; mở
-   Docker Desktop và chờ ứng dụng sẵn sàng.
-2. Mở **PowerShell mới** và kiểm tra công cụ:
-
-Ví dụ dùng `npm.cmd` để gọi npm trực tiếp, kể cả khi PowerShell chặn script
-`npm.ps1` theo Execution Policy.
-
-```powershell
-node --version
-npm.cmd --version
-git --version
-docker --version
-docker compose version
-docker info
-```
-
-3. Clone, tạo đủ ba file môi trường nếu chưa có và cài dependencies:
-
-```powershell
-git clone https://github.com/NguyenKhanhHungDev/Swe_project.git
-Set-Location Swe_project
-if (-not (Test-Path .env)) { Copy-Item .env.example .env }
-if (-not (Test-Path apps/api/.env)) { Copy-Item apps/api/.env.example apps/api/.env }
-if (-not (Test-Path apps/web/.env.local)) { Copy-Item apps/web/.env.example apps/web/.env.local }
-npm.cmd ci
-npm.cmd --prefix apps/api ci
-npm.cmd --prefix apps/web ci
-```
-
-Kiểm tra ba file môi trường theo mục [Cấu hình](#cấu-hình-môi-trường-và-postgresql)
-trước khi chạy. Mở ba cửa sổ PowerShell, mỗi cửa sổ ở thư mục `Swe_project`:
-
-```powershell
-# Terminal 1 — PostgreSQL
-docker compose config --quiet
-docker compose up -d --wait db
-docker compose ps
-```
-
-```powershell
-# Terminal 2 — backend
-npm.cmd --prefix apps/api run start:dev
-```
-
-```powershell
-# Terminal 3 — frontend
-npm.cmd --prefix apps/web run dev -- --port 3000
-```
-
-Dừng backend và frontend bằng `Ctrl+C` tại Terminal 2/3. Sau đó, tại thư mục
-gốc dự án chạy `docker compose stop db` để dừng database mà giữ volume.
-
-## Linux — Bash
-
-Cài [Node.js 24 LTS](https://nodejs.org/en/download) và npm theo hướng dẫn
-chính thức; nếu dùng gói của bản phân phối, kiểm tra phiên bản thực tế trước khi
-chạy `npm ci`. Cài Git theo bản phân phối
-([hướng dẫn Git](https://git-scm.com/install/linux.html)). Chọn **một** lệnh
-phù hợp với máy của bạn:
-
-```bash
-# Ubuntu/Debian
-sudo apt update
-sudo apt install git
-```
-
-```bash
-# Fedora
-sudo dnf install git
-```
-
-```bash
-# Arch/EndeavourOS
-sudo pacman -S git
-```
-
-Cài Docker Engine **và Compose plugin** theo hướng dẫn riêng cho
-[Ubuntu](https://docs.docker.com/engine/install/ubuntu/),
-[Debian](https://docs.docker.com/engine/install/debian/) hoặc
-[Fedora](https://docs.docker.com/engine/install/fedora/). Với Arch/EndeavourOS,
-tham khảo [ArchWiki Docker](https://wiki.archlinux.org/title/docker) để cài
-gói `docker` và `docker-compose`, rồi khởi động `docker.service`. Cách cài và
-quyền truy cập daemon khác nhau theo bản phân phối; kiểm tra bằng `docker info`
-và xử lý quyền theo đúng hướng dẫn Docker của hệ điều hành, không giả định daemon
-đã chạy.
-
-Mở terminal Bash mới và xác minh:
-
-```bash
-node --version
-npm --version
-git --version
-docker --version
-docker compose version
-docker info
-```
-
-Clone, tạo file môi trường khi chưa tồn tại và cài dependencies:
-
-```bash
-git clone https://github.com/NguyenKhanhHungDev/Swe_project.git
-cd Swe_project
-[ -f .env ] || cp .env.example .env
-[ -f apps/api/.env ] || cp apps/api/.env.example apps/api/.env
-[ -f apps/web/.env.local ] || cp apps/web/.env.example apps/web/.env.local
-npm ci
-npm --prefix apps/api ci
-npm --prefix apps/web ci
-```
-
-Kiểm tra [cấu hình](#cấu-hình-môi-trường-và-postgresql), rồi mở ba terminal Bash
-tại thư mục `Swe_project`:
-
-```bash
-# Terminal 1 — PostgreSQL
-docker compose config --quiet
-docker compose up -d --wait db
-docker compose ps
-```
-
-```bash
-# Terminal 2 — backend
-npm --prefix apps/api run start:dev
-```
-
-```bash
-# Terminal 3 — frontend
-npm --prefix apps/web run dev -- --port 3000
-```
-
-Dừng Terminal 2/3 bằng `Ctrl+C`, rồi chạy `docker compose stop db` ở thư mục
-gốc để dừng PostgreSQL mà không xóa dữ liệu.
-
-## macOS — Terminal/zsh
-
-Cài [Node.js 24 LTS](https://nodejs.org/en/download),
-[Git](https://git-scm.com/download/mac) và
-[Docker Desktop for Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
-theo hướng dẫn cho máy Mac của bạn. Mở Docker Desktop và chờ daemon sẵn sàng.
-Mở Terminal/zsh mới để kiểm tra:
-
-```zsh
-node --version
-npm --version
-git --version
-docker --version
-docker compose version
-docker info
-```
-
-Clone, tạo file môi trường khi chưa tồn tại và cài dependencies:
-
-```zsh
-git clone https://github.com/NguyenKhanhHungDev/Swe_project.git
-cd Swe_project
-[ -f .env ] || cp .env.example .env
-[ -f apps/api/.env ] || cp apps/api/.env.example apps/api/.env
-[ -f apps/web/.env.local ] || cp apps/web/.env.example apps/web/.env.local
-npm ci
-npm --prefix apps/api ci
-npm --prefix apps/web ci
-```
-
-Kiểm tra [cấu hình](#cấu-hình-môi-trường-và-postgresql), rồi mở ba Terminal/zsh
-tại thư mục `Swe_project`:
-
-```zsh
-# Terminal 1 — PostgreSQL
-docker compose config --quiet
-docker compose up -d --wait db
-docker compose ps
-```
-
-```zsh
-# Terminal 2 — backend
-npm --prefix apps/api run start:dev
-```
-
-```zsh
-# Terminal 3 — frontend
-npm --prefix apps/web run dev -- --port 3000
-```
-
-Dừng Terminal 2/3 bằng `Ctrl+C`, rồi chạy `docker compose stop db` ở thư mục
-gốc. Không dùng `docker compose down -v` cho việc dừng thông thường vì `-v`
-xóa named volume dữ liệu.
-
-## Cấu hình môi trường và PostgreSQL
-
-Ba file mẫu đều có trong repository. Các lệnh sao chép phía trên **không ghi
-đè** file môi trường đã tồn tại; không đưa giá trị bí mật vào commit hoặc issue.
-
-| File cần tạo | File mẫu | Biến cần kiểm tra |
+| Thành phần | Đã có | Chưa hoàn thành |
 | --- | --- | --- |
-| `.env` | `.env.example` | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_PORT` |
-| `apps/api/.env` | `apps/api/.env.example` | `PORT`, `FRONTEND_URL`, `DATABASE_URL` |
-| `apps/web/.env.local` | `apps/web/.env.example` | `NEXT_PUBLIC_API_URL` |
+| Frontend | Trang `Hello BrewLite!` và nút thử kết nối API | Menu, giỏ hàng, checkout và các màn hình nghiệp vụ |
+| Backend | API `GET /` trả lời chào; khung `ProductsModule` | API sản phẩm, xác thực, đơn hàng, thanh toán và các module nghiệp vụ |
+| Database | Cấu hình PostgreSQL 17 trong Docker Compose | Prisma schema/migration và kết nối ứng dụng với database |
+| Kiểm thử | Unit/E2E test cho API lời chào | Kiểm thử nghiệp vụ, tích hợp và end-to-end thực tế |
+| Tài liệu | Có bản nháp Scope, SRS, ERD, API và UML | Review, thống nhất hợp đồng và nghiệm thu theo Assignment |
 
-Theo file mẫu, PostgreSQL trong container dùng cổng `5432`; Compose công bố
-cổng máy `127.0.0.1:5433` (hoặc giá trị `POSTGRES_PORT` bạn đặt). Backend chạy
-trên máy nên URL database trong file mẫu hướng tới `localhost:5433`, nhưng
-**backend hiện chưa sử dụng `DATABASE_URL` để kết nối database**. Nếu đổi cổng
-database, đồng bộ `POSTGRES_PORT` và `DATABASE_URL`; nếu đổi cổng backend, đồng
-bộ `PORT` và `NEXT_PUBLIC_API_URL`. Đổi cổng frontend cần sửa đối số `--port 3000`
-trong lệnh Next.js và cập nhật `FRONTEND_URL` cho CORS.
+Bảng này mô tả **code đang có**, không phải toàn bộ tài liệu đã soạn. Theo dõi tiến độ và minh chứng mới nhất tại [Project Roadmap](docs/PROJECT_ROADMAP.md).
 
-Compose chỉ khai báo service `db` cùng healthcheck và named volume
-`postgres_data`; chưa có service cho apps/web hoặc apps/api hoặc network riêng được
-khai báo. Docker Compose tạo network mặc định. Đổi thông tin khởi tạo trong
-`.env` không tự cập nhật database đã tồn tại trong volume. Để xem trạng thái
-và log (trên cả ba hệ điều hành):
+## 3. Kiến trúc và công nghệ
+
+| Thành phần | Công nghệ | Trạng thái |
+| --- | --- | --- |
+| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS 4 | Đã khởi tạo |
+| Backend | NestJS 11, TypeScript, REST API/JSON | Đã khởi tạo |
+| Database | PostgreSQL 17 | Đã cấu hình Docker Compose |
+| ORM | Prisma | Dự kiến, chưa tích hợp |
+| Xác thực | JWT | Dự kiến triển khai |
+| Thanh toán | Mock Payment Service (Ví/Thẻ) | Dự kiến triển khai |
+| DevOps | Docker Compose; GitHub Actions và triển khai cloud | Compose mới có PostgreSQL; CI/CD và production chưa hoàn thành |
+| Cộng tác | Git, GitHub Issues, Pull Requests và tài liệu Scrum | Đang tổ chức theo kế hoạch nhóm |
+
+**Kiến trúc định hướng:**
 
 ```text
-docker compose ps
-docker compose logs --tail=100 db
+Người dùng
+   |
+   v
+Next.js (apps/web)
+   |
+   | HTTP/JSON
+   v
+NestJS REST API (apps/api)
+   |
+   | Prisma (dự kiến)
+   v
+PostgreSQL
 ```
 
-`NEXT_PUBLIC_API_URL` được đưa tới trình duyệt: không đặt mật khẩu hoặc bí mật
-vào biến `NEXT_PUBLIC_`. Khởi động lại ứng dụng sau khi sửa file môi trường.
+Backend được thiết kế theo kiểu **modular monolith**: chia module theo nghiệp vụ trong một ứng dụng NestJS. Frontend không truy cập database trực tiếp. Sơ đồ trên là **kiến trúc mục tiêu**, không có nghĩa kết nối Prisma/PostgreSQL đã chạy.
 
-## Kiểm tra và sử dụng ứng dụng hiện có
+Xem thêm [Architecture](docs/ARCHITECTURE.md).
 
-Khi ba terminal đã chạy, mở <http://localhost:3000>. Trang hiển thị
-**Hello BrewLite!**; bấm **Kiểm tra kết nối backend**. Nếu backend phản hồi,
-giao diện hiển thị `Backend phản hồi: Hello from BrewLite backend!`.
-Mở <http://localhost:3001/> để kiểm tra trực tiếp `GET /`; nội dung trả về là
-`Hello from BrewLite backend!`. Đây là route lời chào, **không phải health
-endpoint chuyên dụng**. Backend hiện trả lời route này mà không cần truy vấn
-PostgreSQL. Dùng `docker compose ps` để kiểm tra riêng database đã `healthy`.
+## 4. Thành viên và tổ chức Agile Scrum
 
-Menu, đặt hàng và thanh toán chưa có luồng chạy được để hướng dẫn người dùng.
-Không dùng kết quả trang Hello để suy ra các chức năng đó đã hoàn thành.
+| Thành viên | Phạm vi phụ trách chính |
+| --- | --- |
+| **Hưng** — điều phối nhóm | Kiến trúc, tài liệu, Products/Options/Pricing, traceability, tích hợp và review |
+| **Khoa** | Prisma/schema/migration, Auth/JWT, Inventory, Class Diagram và database tests |
+| **Huy** | Menu/Cart/Checkout UI, Promotion/Loyalty, Activity Diagram, E2E và báo cáo Scrum |
+| **Phát** | Checkout Use Case/Sequence, Orders/History, State Machine, quản lý backlog A1 và demo |
+| **Thắng** | Payment mock/idempotency, Docker, CI/CD, triển khai, Deployment Diagram và NFR |
 
-## Lint, test và build
+Đây là **phân công theo kế hoạch**, không phải phần việc đã nghiệm thu. Vai trò **Product Owner** và **Scrum Master** đang chờ cả nhóm xác nhận trong [Working Agreement](docs/scrum/team-working-agreement.md); không tự gán vai trò chính thức.
 
-Sau khi cài dependencies, chạy từ thư mục gốc. Các lệnh này được đối chiếu với
-`package.json` và đã chạy trong lần chuẩn hóa Buổi 1; kết quả cụ thể ở
-[biên bản kiểm chứng](docs/audits/day1-verification-2026-10-20.md).
-Trên Linux/macOS (Bash/zsh):
+Nhóm dùng Issue, Sprint Backlog, Pull Request, review và bằng chứng kiểm thử để theo dõi công việc. Quy tắc hoàn thành (Definition of Done) và người phụ trách chi tiết được quản lý ở [Team Assignments](docs/TEAM_ASSIGNMENTS.md).
+
+## 5. Kế hoạch theo hai Assignment
+
+### 5.1. Assignment 1 — Xây dựng ứng dụng BrewLite (10 task)
+
+| Nhóm việc dự kiến | Nội dung |
+| --- | --- |
+| Nền tảng & menu — Task 1–4 | Khởi tạo, API sản phẩm, giao diện menu và tùy chọn size/topping |
+| Đặt hàng — Task 5–7 | Giỏ hàng, API tạo đơn và đăng ký/đăng nhập JWT |
+| Thanh toán & hoàn thiện — Task 8–10 | Ví/Thẻ giả lập, xác nhận/lịch sử đơn, State Machine và nghiệp vụ nâng cao |
+
+Cách nhóm các task ở trên **chỉ để định hướng lập Sprint**, không xác nhận nhóm đã chốt ba Sprint hoặc hoàn thành các task.
+
+### 5.2. Assignment 2 — Requirements to Deployment
+
+| Giai đoạn | Nội dung bàn giao mục tiêu |
+| --- | --- |
+| **Task 1 — Requirements** | Context, Stakeholders, Scope, SRS, FR/NFR, ưu tiên yêu cầu, Acceptance Criteria và Checkout Use Case |
+| **Task 2 — UML** | Checkout Activity, Sequence và Domain Class Diagram |
+| **Task 3 — Architecture** | Kiến trúc hệ thống, ADR và Deployment Diagram |
+| **Task 4 — Sprint 1** | Repository/working rules, quản lý tài liệu, Menu MVP và CI |
+| **Task 5 — Sprint 2 & Delivery** | MVP end-to-end, kiểm thử tích hợp/E2E, CD, triển khai và bàn giao |
+
+**Nguyên tắc nghiệm thu:** Task 1 → Task 2 → Task 3 → Task 4 → Task 5. Tài liệu hoặc code được chuẩn bị trước không đồng nghĩa đã vượt qua bước nghiệm thu tương ứng. Trạng thái của từng task được cập nhật tại [Project Roadmap](docs/PROJECT_ROADMAP.md) và [Scrum Backlog](docs/scrum/backlog.md).
+
+## 6. Cấu trúc repository
+
+```text
+Swe_project/
+├── apps/
+│   ├── web/                   # Next.js frontend
+│   └── api/                   # NestJS backend
+├── docs/                      # Yêu cầu, UML, kiến trúc, API, Scrum, phân công
+├── scripts/                   # Các script hỗ trợ và kiểm tra tài liệu
+├── .env.example               # Biến môi trường PostgreSQL mẫu
+├── docker-compose.yml         # Hiện tại: PostgreSQL service db
+├── package.json               # Script dev và build chung
+├── start.sh                   # Script chạy frontend/backend trên Bash
+└── README.md
+```
+
+Frontend, backend và thư mục gốc hiện có `package.json`/`package-lock.json` riêng. Cấu trúc này là **cấu trúc đang có**; những thư mục dự kiến như CI/CD workflow hoặc hệ thống test tích hợp không được liệt kê như đã tồn tại.
+
+## 7. Cài đặt và chạy dự án
+
+### 7.1. Yêu cầu môi trường
+
+- Git; Node.js **24 LTS** và npm (khuyến nghị).
+- Docker Engine/Desktop và Docker Compose; Docker daemon phải hoạt động.
+- Các cổng mặc định: frontend `3000`, backend `3001`, PostgreSQL trên host `5433`.
+
+### 7.2. Clone và cấu hình
 
 ```bash
-node scripts/check-day1-docs.mjs
-node scripts/check-huy-docs.mjs
+git clone https://github.com/NguyenKhanhHungDev/Swe_project.git
+cd Swe_project
+```
+
+**Linux/macOS (Bash/zsh)** — thực hiện khi các file môi trường chưa có:
+
+```bash
+cp .env.example .env
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env.local
+```
+
+**Windows (PowerShell)** — thực hiện khi các file môi trường chưa có:
+
+```powershell
+Copy-Item .env.example .env
+Copy-Item apps/api/.env.example apps/api/.env
+Copy-Item apps/web/.env.example apps/web/.env.local
+```
+
+Các lệnh sao chép trên có thể ghi đè cấu hình hiện có; **không chạy lại khi đã tùy chỉnh `.env`**. Không commit mật khẩu hoặc file `.env` thật lên Git.
+
+### 7.3. Cài đặt và khởi chạy
+
+Chạy từ thư mục gốc:
+
+```bash
+npm ci
+npm --prefix apps/api ci
+npm --prefix apps/web ci
+```
+
+**Terminal 1 — PostgreSQL:**
+
+```bash
+docker compose up -d --wait db
+```
+
+**Terminal 2 — Frontend và backend:**
+
+```bash
+npm run dev
+```
+
+Trên PowerShell, dùng `npm.cmd` thay `npm` nếu bị chặn bởi Execution Policy.
+
+| Dịch vụ | Địa chỉ local |
+| --- | --- |
+| Frontend | http://localhost:3000 |
+| Backend API hiện có | http://localhost:3001/ |
+| PostgreSQL | `localhost:5433` |
+
+Mở frontend, chọn **Kiểm tra kết nối backend**. Backend hiện trả lời qua API lời chào; kết quả này **không kiểm tra kết nối database**.
+
+Để dừng ứng dụng, nhấn `Ctrl+C` ở Terminal 2; sau đó chạy `docker compose stop db` tại gốc repo để dừng PostgreSQL nhưng giữ dữ liệu.
+
+## 8. Kiểm thử và tiêu chí hoàn thành
+
+Các lệnh hiện có (chạy sau khi cài dependencies):
+
+```bash
 npm --prefix apps/web run lint
 npm --prefix apps/api test -- --runInBand
 npm --prefix apps/api run test:e2e -- --runInBand
 npm run build
 ```
 
-Trên Windows PowerShell, dùng `npm.cmd` để tránh lỗi Execution Policy:
+Các bài test backend hiện tại chỉ kiểm tra chức năng cơ bản của scaffold. Khi hoàn thiện từng module, nhóm cần bổ sung kiểm thử phù hợp với Acceptance Criteria, kiểm thử tích hợp và end-to-end có bằng chứng.
 
-```powershell
-node scripts/check-day1-docs.mjs
-node scripts/check-huy-docs.mjs
-npm.cmd --prefix apps/web run lint
-npm.cmd --prefix apps/api test -- --runInBand
-npm.cmd --prefix apps/api run test:e2e -- --runInBand
-npm.cmd run build
-```
+Một task chỉ được xem là hoàn thành sau khi có **code/tài liệu tương ứng, kiểm thử phù hợp, review và minh chứng nghiệm thu** — không chỉ vì đã tạo file hoặc mở Pull Request.
 
-Frontend chưa có script `test`. Unit test và E2E test backend hiện chỉ kiểm tra
-lời chào. Script lint backend (`npm --prefix apps/api run lint` trên Bash/zsh hoặc
-`npm.cmd --prefix apps/api run lint` trên PowerShell) có `--fix`, nên **có thể sửa
-file mã nguồn**; chỉ chạy khi muốn áp dụng sửa tự động và kiểm tra diff sau đó.
-`npm run build` build backend rồi frontend. Nếu build gặp lỗi do server phát
-triển đang dùng thư mục đầu ra, dừng server và thử lại. Không có lệnh Prisma
-migration/seed trong repository để chạy ở giai đoạn hiện tại.
+## 9. Triển khai và bàn giao
 
-## Xử lý lỗi thường gặp
-
-| Hiện tượng | Cách kiểm tra |
+| Hạng mục | Trạng thái ngày 20/10/2026 |
 | --- | --- |
-| `node`, `npm`/`npm.cmd`, `git` hoặc `docker` không nhận diện | Hoàn tất cài đặt, mở terminal mới và chạy lại các lệnh `--version`; dùng `npm.cmd --version` trên PowerShell, `npm --version` trên Bash/zsh. Với Docker, kiểm tra Desktop/daemon. |
-| `docker info` không kết nối được | Mở Docker Desktop (Windows/macOS) hoặc khởi động daemon theo hướng dẫn bản phân phối Linux; kiểm tra quyền truy cập Docker. |
-| Compose báo thiếu `POSTGRES_*` | Kiểm tra `.env` ở gốc đã tạo từ `.env.example` và có đủ biến được yêu cầu. |
-| Cổng `3000` đã được dùng | Dừng tiến trình chiếm cổng hoặc sửa đối số `--port 3000` trong lệnh Next.js sang cổng mới; mở frontend ở cổng đó và cập nhật `FRONTEND_URL` trong `apps/api/.env`. Chỉ đổi biến môi trường không đổi cổng Next.js. |
-| Cổng `3001` hoặc `5433` đã được dùng | Nếu đổi cổng backend, đồng bộ `PORT` và `NEXT_PUBLIC_API_URL`; nếu đổi cổng PostgreSQL, đồng bộ `POSTGRES_PORT` và `DATABASE_URL`. |
-| `concurrently`, `nest` hoặc `next` không tìm thấy | Cài lại dependencies ở gốc, backend và frontend bằng ba lệnh `ci` trong hướng dẫn hệ điều hành tương ứng: `npm.cmd` trên PowerShell, `npm` trên Bash/zsh. |
-| Nút kiểm tra backend báo lỗi | Mở trực tiếp `http://localhost:3001/`; kiểm tra Terminal 2, `NEXT_PUBLIC_API_URL` và CORS `FRONTEND_URL`, rồi khởi động lại apps/web và apps/api. |
-| Database chưa `healthy` | Xem `docker compose ps` và `docker compose logs --tail=100 db`; backend Hello vẫn có thể hoạt động vì chưa truy vấn DB. |
-| `npm ci` hoặc `npm.cmd ci` báo lockfile không khớp | Đối chiếu `package.json` với lockfile cùng thư mục; nhờ người cập nhật dependency sửa cả hai file. |
+| Repository | [GitHub — Swe_project](https://github.com/NguyenKhanhHungDev/Swe_project) |
+| Product Backlog | [Backlog trong repository](docs/scrum/backlog.md); Issue Board thật cần xác minh/cập nhật |
+| Frontend production HTTPS | Chưa có URL đã xác minh |
+| Backend production / Health endpoint | Chưa có URL/health endpoint đã xác minh |
+| CI/CD | Chưa có pipeline triển khai hoàn chỉnh |
+| Video demo và release bàn giao | Chưa có liên kết đã xác minh |
 
-## Nhóm và tài liệu
+Khi hoàn thành các giai đoạn triển khai, nhóm cập nhật **đường dẫn thật**, kết quả CI/CD, hướng dẫn vận hành và demo tại đây. Không sử dụng tên miền `example.com` làm liên kết nghiệm thu.
 
-| Thành viên | Phạm vi phụ trách theo kế hoạch |
+## 10. Tài liệu dự án
+
+| Tài liệu | Nội dung |
 | --- | --- |
-| Hưng (leader) | Tài liệu/kiến trúc, Products/Options/Pricing, traceability, tích hợp/PR/bàn giao |
-| Khoa | Prisma/schema/migration, Auth/JWT, Inventory/concurrency, Class và DB tests |
-| Huy | Menu/Cart/Checkout UI, Promotion/Loyalty, Activity Checkout, Playwright E2E, Daily/Burndown |
-| Phát | PO đề xuất (Pending), Checkout Use Case/Sequence, Orders/History/State Machine, A1 backlog/demo |
-| Thắng | Payment/idempotency, Docker/CI/CD/hosting, Deployment, health/NFR/rollback |
+| [Project Context](docs/PROJECT_CONTEXT.md) | Bối cảnh, phạm vi và hiện trạng |
+| [Project Scope](docs/PROJECT_SCOPE.md) | Phạm vi chức năng và giới hạn |
+| [SRS](docs/SRS.md) | Đặc tả yêu cầu phần mềm |
+| [User Stories](docs/USER_STORIES.md) · [Acceptance Criteria](docs/ACCEPTANCE_CRITERIA.md) | Câu chuyện người dùng và điều kiện nghiệm thu |
+| [Business Rules](docs/BUSINESS_RULES.md) · [Use Cases](docs/USE_CASES.md) | Quy tắc và ca sử dụng |
+| [Architecture](docs/ARCHITECTURE.md) | Thiết kế kiến trúc |
+| [Project Roadmap](docs/PROJECT_ROADMAP.md) | Kế hoạch và trạng thái A1/A2 |
+| [Requirements Traceability](docs/REQUIREMENTS_TRACEABILITY.md) | Liên kết Requirements → Design → Code → Test |
+| [Team Assignments](docs/TEAM_ASSIGNMENTS.md) | Phân công và phối hợp |
+| [Scrum Backlog](docs/scrum/backlog.md) · [Working Agreement](docs/scrum/team-working-agreement.md) | Quản lý công việc và quy tắc cộng tác |
 
-Đây là **phân công**, không phải danh sách tính năng đã hoàn thành. Chi tiết
-người chủ trì và người trực tiếp thực hiện xem
-[Team Assignments](docs/TEAM_ASSIGNMENTS.md).
+---
 
-- [Project Context](docs/PROJECT_CONTEXT.md): bối cảnh, phạm vi và hiện trạng.
-- [Project Roadmap](docs/PROJECT_ROADMAP.md): A1/A2, gate nghiệm thu và minh chứng.
-- [Requirements Traceability](docs/REQUIREMENTS_TRACEABILITY.md): truy vết A1/A2 qua Requirements → Design → Code → Test.
-- [Architecture](docs/ARCHITECTURE.md): kiến trúc và ranh giới module.
-- [Team Assignments](docs/TEAM_ASSIGNMENTS.md): phân công chi tiết của nhóm.
-
-Repository đã có [Scope](docs/PROJECT_SCOPE.md), [SRS](docs/SRS.md),
-[User Stories](docs/USER_STORIES.md), [AC](docs/ACCEPTANCE_CRITERIA.md),
-[BR](docs/BUSINESS_RULES.md) và [Use Cases](docs/USE_CASES.md).
-Các tài liệu còn cần review và xử lý xung đột; chưa có bằng chứng nghiệm thu.
-
-## Tài liệu thiết kế phần Huy đã tích hợp
-
-Các file Cart/Promotions/Loyalty dưới đây đã có trên main được kiểm kê ở
-`1cc2bb1`; đây là thiết kế để review, chưa phải chức năng Next.js/NestJS đã
-triển khai. Theo dõi công việc hiện hành bằng A1/A2; thông tin nhánh và các
-lần kiểm tra trước được lưu trong audit lịch sử.
-
-| Đầu ra | Mã nguồn | Ảnh |
-|---|---|---|
-| Đặc tả Cart, mua ngay | [cart.md](docs/api/cart.md) | — |
-| Đặc tả Promotions/Loyalty | [promotions-loyalty.md](docs/api/promotions-loyalty.md) | — |
-| Thêm món / Mua ngay | [01-add-item.puml](docs/diagrams/sequence/cart/01-add-item.puml) | [SVG](docs/diagrams/sequence/cart/01-add-item.svg) |
-| Sửa / Xóa món | [02-update-remove-item.puml](docs/diagrams/sequence/cart/02-update-remove-item.puml) | [SVG](docs/diagrams/sequence/cart/02-update-remove-item.svg) |
-| Áp dụng mã | [01-apply-voucher.puml](docs/diagrams/sequence/promotions-loyalty/01-apply-voucher.puml) | [SVG](docs/diagrams/sequence/promotions-loyalty/01-apply-voucher.svg) |
-| Kiểm tra điểm | [02-use-loyalty-points.puml](docs/diagrams/sequence/promotions-loyalty/02-use-loyalty-points.puml) | [SVG](docs/diagrams/sequence/promotions-loyalty/02-use-loyalty-points.svg) |
-
-Sơ đồ dùng PlantUML, đen trắng, có thanh kích hoạt và 4–5 cột. Chi tiết
-validation/transaction nằm trong đặc tả; không cần kéo toàn bộ giải thích lên
-sơ đồ. Sơ đồ số 4 chưa có luồng tiêu điểm vì chưa có quy tắc được nhóm chốt.
-
-### Các điểm Huy cần nhóm review
-
-| Điểm nối | Nội dung cần xác nhận |
-|---|---|
-| Hưng / Khoa / Huy | Products chỉ trả boolean khả dụng, chưa đủ kiểm tra tổng số ly với tồn. Cần contract đọc số khả dụng hoặc preview. |
-| Phát / Thắng / Huy | Thống nhất `qty`, `sizeCode`, `toppings[{toppingId,quantity}]`; Orders hiện dùng `quantity`/`toppingIds`, Checkout dùng `cartItems`/`size`. |
-| Hưng / Phát / Thắng / Huy | Huy đề xuất voucher có giới hạn lượt theo UC cũ; khác BR-08 và ERD hiện tại. Chốt loại giới hạn, thời điểm giữ/trừ/hoàn lượt và kiểm soát đồng thời trước triển khai. |
-| Hưng / Huy / các module liên quan | Chốt phạm vi tiêu điểm và lịch sử điểm. Chưa có tỷ lệ/quy tắc tiêu điểm; không tự thêm REDEEM hoặc đổi schema. |
-| Hưng / Phát / Thắng | Giá size trong Products là giá đầy đủ, không cộng lại giá S; Orders còn nhắc ADMIN/COD khác phạm vi CUSTOMER/STAFF và mock WALLET/CARD. |
-| Thắng / Huy / Phát | BUY_NOW chỉ cấu hình hiện tại, không đổi giỏ chính; PAID dọn đúng lượt mua. Retry/timeout không thêm món hoặc tạo đơn mới. |
-
-Các ghi chú trên là điểm cần review, không tự sửa hoặc nghiệm thu thay chủ module.
-Khi tích hợp thay đổi tiếp theo, kiểm tra diff và yêu cầu owner review các
-điểm nối; không suy ra phê duyệt từ việc tài liệu cũ đã merge.
-
-### Kiểm tra phần Huy
-
-```powershell
-node scripts/check-huy-docs.mjs
-node scripts/huy-diagrams.mjs --jar ..\tools\plantuml\plantuml.jar
-git diff --check
-```
-
-JAR trong lệnh dùng công cụ local ở workspace này. Máy khác có thể đặt
-[PlantUML 1.2025.2](https://repo.maven.apache.org/maven2/net/sourceforge/plantuml/plantuml/1.2025.2/plantuml-1.2025.2.jar)
-ở đường dẫn khác và truyền `--jar <path>`; cần Java. Mã `.puml` là nguồn chính,
-SVG được sinh lại bằng script, không sửa ảnh bằng tay.
-
-[Báo cáo kiểm tra toàn bộ yêu cầu Huy](docs/audits/huy-compliance-2026-10-14.md)
-và [kết quả audit API](docs/audits/huy-runtime-results.json) được giữ làm minh
-chứng. Lint/build của hai ứng dụng và hai test Hello đã đạt trong lần audit đó; audit cho
-thấy tám route nghiệp vụ còn 404, Cart UI/store chưa có trong repo. Không dùng
-test Hello hoặc test demo Vite cũ làm chứng cứ phần Huy đã chạy thật.
-
-Để audit API lại sau khi build backend:
-
-```powershell
-npm.cmd --prefix apps/api run build
-node scripts/audit-huy-runtime.mjs
-```
-
-Audit trả exit code 1 khi còn route chưa triển khai. Hai đặc tả/bốn sơ đồ hiện
-đủ file để review, chưa chứng minh toàn bộ phân công hoặc các chức năng đã đạt.
+**BrewLite — Đồ án Công nghệ phần mềm, Đại học Sài Gòn · Năm học 2026–2027**
