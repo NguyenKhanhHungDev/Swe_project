@@ -7,7 +7,7 @@ chưa được xác nhận đã triển khai. Prisma và kết nối PostgreSQL 
 
 Để chuẩn bị cả ba file môi trường, chạy PostgreSQL bằng Docker Compose và khởi
 động hai ứng dụng, xem [hướng dẫn theo hệ điều hành ở README gốc](../README.md).
-Từ thư mục `backend/`, có thể chạy riêng API:
+Từ thư mục `apps/api/`, có thể chạy riêng API:
 
 ```bash
 npm ci

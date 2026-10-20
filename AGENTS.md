@@ -63,7 +63,7 @@ explanation or analysis only.
 ## 5. Frontend
 
 Before changing Next.js code, read and follow
-frontend/AGENTS.md and relevant Next.js documentation
+apps/web/AGENTS.md and relevant Next.js documentation
 available in the installed package.
 
 ## 6. Backend and database

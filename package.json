@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently --kill-others --names BACKEND,FRONTEND \"npm --prefix backend run start:dev\" \"npm --prefix frontend run dev -- --port 3000\"",
-    "build": "npm --prefix backend run build && npm --prefix frontend run build"
+    "dev": "concurrently --kill-others --names BACKEND,FRONTEND \"npm --prefix apps/api run start:dev\" \"npm --prefix apps/web run dev -- --port 3000\"",
+    "build": "npm --prefix apps/api run build && npm --prefix apps/web run build"
   },
   "devDependencies": {
     "concurrently": "^10.0.5"

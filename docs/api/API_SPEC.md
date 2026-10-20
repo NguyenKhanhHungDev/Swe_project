@@ -14,8 +14,8 @@ Controller nhận DTO, service xử lý nghiệp vụ, guard bảo vệ route c�
 Các module gọi service qua dependency injection, không gọi HTTP nội bộ hoặc
 controller của nhau. Frontend không truy cập database.
 
-Đã kiểm tra `backend/src/main.ts`, `app.module.ts`, `products/products.module.ts`,
-`backend/package.json`, `frontend/package.json` và `frontend/src/app/page.tsx`:
+Đã kiểm tra `apps/api/src/main.ts`, `app.module.ts`, `products/products.module.ts`,
+`apps/api/package.json`, `apps/web/package.json` và `apps/web/src/app/page.tsx`:
 
 - ProductsModule rỗng, chưa có API Products, DTO/service nghiệp vụ hoặc Prisma dependency.
 - Frontend là trang Hello gọi API lời chào; chưa có menu/chi tiết nghiệp vụ.
@@ -137,4 +137,4 @@ diện đọc tồn với Khoa. Quyết định món ngừng bán đã được 
 Toàn hệ thống **chưa đủ điều kiện chốt Bước 14**: thiếu API module khác, mapping
 trạng thái thanh toán, chi tiết idempotency và xác nhận các điểm giao ở mục 5.
 Các chủ module tiếp tục Bước 13 theo phân công; không tự vẽ Sequence Diagram,
-triển khai frontend/backend, sửa Prisma, migration hoặc Docker trong lượt này.
+triển khai apps/web/backend, sửa Prisma, migration hoặc Docker trong lượt này.
