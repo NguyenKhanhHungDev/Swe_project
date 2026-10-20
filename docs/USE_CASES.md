@@ -1,8 +1,11 @@
 # BrewLite — Use Cases
 
+> **DRAFT — Pending owner review (20/10/2026).** Nguồn thiết kế được giữ để review, chưa nghiệm thu hoặc triển khai. Các đoạn thời hạn 15 phút/expiresAt/hết hạn bên dưới đang xung đột với yêu cầu hiện tại không triển khai timer; không dùng chúng để tạo timer/cron. Chờ Phát/Khoa/Thắng chốt và sửa đồng bộ theo [PD-05](scrum/team-working-agreement.md#pending-decisions). Các khác biệt DTO, giá, quyền và transaction xem cùng bảng Pending Decisions.
+
+
 **Cập nhật quyết định nhóm ngày 13/10/2026:** Nội dung hiện hành tuân theo đề của thầy và các quyết định đã được nhóm xác nhận. Xem [quyết định yêu cầu](REQUIREMENTS_DECISIONS.md).
 
-**Bước:** 6. **Ngày cập nhật:** 13/10/2026. **Trạng thái:** Bản đặc tả để review, chưa nghiệm thu.
+**Mốc tài liệu cũ (không dùng làm chuẩn nghiệm thu):** 6. **Ngày cập nhật:** 13/10/2026. **Trạng thái:** Bản đặc tả để review, chưa nghiệm thu.
 
 [SRS](SRS.md) quy định danh mục UC-01–UC-18 với hai tác nhân Khách hàng và Nhân viên quầy. Sơ đồ Use Case hiện có chưa được xác minh đầy đủ các quan hệ UML.
 

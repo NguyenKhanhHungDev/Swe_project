@@ -1,6 +1,9 @@
 # BrewLite — Detailed ERD
 
-**Bước:** 12 — Detailed ERD
+> **DRAFT — Pending owner review (20/10/2026).** Nguồn thiết kế được giữ để review, chưa nghiệm thu hoặc triển khai. Các đoạn thời hạn 15 phút/expiresAt/hết hạn bên dưới đang xung đột với yêu cầu hiện tại không triển khai timer; không dùng chúng để tạo timer/cron. Chờ Phát/Khoa/Thắng chốt và sửa đồng bộ theo [PD-05](scrum/team-working-agreement.md#pending-decisions). Các khác biệt DTO, giá, quyền và transaction xem cùng bảng Pending Decisions.
+
+
+**Mốc tài liệu cũ (không dùng làm chuẩn nghiệm thu):** 12 — Detailed ERD
 
 **Trạng thái:** Bản thiết kế chi tiết để nhóm review; chưa được duyệt và chưa phải Prisma schema hay migration.
 

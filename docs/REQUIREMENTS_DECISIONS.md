@@ -1,4 +1,4 @@
-# BrewLite — Quyết định yêu cầu bước 1–12
+# BrewLite — Quyết định yêu cầu và lịch sử nguồn
 
 **Ngày:** 13/10/2026. **Nguồn xác nhận:** Hưng xác nhận trong phiên làm việc: mua ngay chỉ mua món hiện tại; thanh toán trong giỏ mua toàn bộ giỏ; đồng ý các đề xuất còn lại của lần review đề. Đây là xác nhận quyết định tài liệu, không phải nghiệm thu chức năng.
 
@@ -8,9 +8,11 @@
 2. Quyết định nhóm đã được xác nhận để cụ thể hóa đề, không thay hoặc giảm yêu cầu bắt buộc.
 3. Tài liệu Drive/repository: đối chiếu với hai nguồn trên; ngày sửa file không tự quyết định ưu tiên.
 
-PDF đã đọc từ file người dùng cung cấp và [bản đề trên Drive](https://drive.google.com/file/d/13IZRr_uYsv4FTWTJdQ7KHQNGBuvc5_dK/view). 24 bước là quy trình nội bộ, không thay 10 Task. Mục 12 của đề là mục văn bản, không phải bước 12 của nhóm.
+Ghi nhận lịch sử: PDF đã đọc từ file người dùng cung cấp và [bản đề trên Drive](https://drive.google.com/file/d/13IZRr_uYsv4FTWTJdQ7KHQNGBuvc5_dK/view). Quản lý hiện hành theo A1/A2 tại [Roadmap](PROJECT_ROADMAP.md); quy trình cũ chỉ lưu lịch sử. Mục 12 của đề là mục văn bản, không phải bước 12 của nhóm.
 
-## Các quyết định đã chốt
+## Quyết định ghi nhận ngày 13/10/2026 (lịch sử)
+
+Cập nhật 20/10: phân công hiện hành thay bằng [TEAM_ASSIGNMENTS](TEAM_ASSIGNMENTS.md). Yêu cầu mới nói không triển khai timer, trái quy tắc 15 phút bên dưới: PD-05 đang chờ Phát/Khoa/Thắng xác nhận và sửa đồng bộ. Không dùng hàng timer/phân công cũ làm yêu cầu triển khai. Xem [Pending Decisions](scrum/team-working-agreement.md#pending-decisions).
 
 | Nội dung | Quy tắc hiện hành | Căn cứ |
 | --- | --- | --- |
@@ -25,7 +27,7 @@ PDF đã đọc từ file người dùng cung cấp và [bản đề trên Drive
 | Size | Màn hình và dữ liệu demo cho phép chọn đủ S/M/L và kiểm chứng giá theo tùy chọn. | Task 4 của đề. |
 | Phân công | Giữ bản [TEAM_ASSIGNMENTS.md](TEAM_ASSIGNMENTS.md) ngày 11/10: Khoa Inventory, Phát Orders/UI lịch sử, Huy Loyalty/Promotions. | Đề xuất được Hưng đồng ý; khác biệt Drive không tự thay chủ module. |
 
-Backend phải giữ đủ bốn yêu cầu Task 10: state machine, idempotency, transaction + optimistic locking, khuyến mãi/điểm. Giao diện nhân viên đầy đủ là mở rộng; backend vẫn phải hỗ trợ chuyển trạng thái bắt buộc. Compose đủ ba dịch vụ là yêu cầu cuối của Task 9; bước setup hiện chỉ DB không phải bằng chứng hoàn thành Task 9.
+Backend phải giữ đủ bốn yêu cầu Task 10: state machine, idempotency, transaction + optimistic locking, khuyến mãi/điểm. Giao diện nhân viên đầy đủ là mở rộng; backend vẫn phải hỗ trợ chuyển trạng thái bắt buộc. Compose đủ ba dịch vụ là yêu cầu cuối của Task 9; setup hiện chỉ DB không phải bằng chứng hoàn thành Task 9.
 
 ## Những phần chưa thể kết luận
 

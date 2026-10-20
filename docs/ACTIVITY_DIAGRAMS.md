@@ -1,6 +1,6 @@
 # BrewLite — Kiểm kê Activity Diagrams
 
-**Bước:** 11. **Ngày:** 13/10/2026. **Trạng thái:** Có nguồn để review; chưa xác nhận tất cả hoàn thành.
+**Mốc kiểm kê lịch sử:** Activity (nguồn cũ). **Ngày:** 13/10/2026. **Trạng thái:** Có nguồn để review; chưa xác nhận tất cả hoàn thành.
 
 Đã liệt kê bốn thư mục Khoa, Huy, Phát, Thắng trong [SWE/activity](https://drive.google.com/drive/folders/15Wypw9A_DUkmlPTTVbjjpfZ4KOXmeqiJ). Repository ban đầu không có Activity; các file Sequence thuộc bước 14 được loại khỏi kiểm tra. Mốc kiểm kê ban đầu chỉ ghi nhận sơ đồ đã có. Lần cập nhật được Hưng yêu cầu sau đó đã sửa năm file nguồn hiện có; không tạo sơ đồ mới.
 
@@ -21,6 +21,8 @@
 | [activity_2_thanhtoan (3).puml](https://drive.google.com/file/d/10-Vwhz35mAX-ToEtKz2mZFVhJW1QnWvC/view?usp=drivesdk) | `2026-10-10T15:15:18.896Z` | Hết hạn chuyển EXPIRED thay vì CANCELLED; chưa phân biệt replay khóa cũ với lần thanh toán mới; thiếu quyền, điểm và nhánh mất kết nối. |
 
 Phân công hiện hành theo [TEAM_ASSIGNMENTS.md](TEAM_ASSIGNMENTS.md): mỗi chủ module thực hiện; Phát phụ trách Orders, Hưng đối chiếu tổng thể. Tác giả/thư mục nguồn không tự thay đổi chủ module. Chưa thấy thư mục Activity Products của Hưng trong phạm vi đã liệt kê; không suy ra chưa làm ở nơi khác. Các luồng đăng xuất, điểm và xử lý quầy chưa có đủ sơ đồ được xác minh trong tập này. Xem [audit](audits/drive-sync-steps-01-12.md).
+
+Trục quản lý hiện hành: [A1/A2](PROJECT_ROADMAP.md); Huy phụ trách Activity Checkout theo [phân công](TEAM_ASSIGNMENTS.md). Các nội dung timer/hết hạn trong nguồn lịch sử bên dưới thuộc [PD-05](scrum/team-working-agreement.md#pending-decisions), không dùng để tạo timer.
 
 ## Quy tắc đối chiếu sau xác nhận nhóm
 
