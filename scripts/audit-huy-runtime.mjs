@@ -4,10 +4,10 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const requireBackend = createRequire(path.join(root, "backend", "package.json"));
-const modulePath = path.join(root, "backend", "dist", "app.module.js");
+const requireBackend = createRequire(path.join(root, "apps", "api", "package.json"));
+const modulePath = path.join(root, "apps", "api", "dist", "app.module.js");
 if (!existsSync(modulePath)) {
-  console.error("Chạy npm.cmd --prefix backend run build trước khi audit runtime.");
+  console.error("Chạy npm --prefix apps/api run build trước khi audit runtime.");
   process.exit(1);
 }
 requireBackend("reflect-metadata");

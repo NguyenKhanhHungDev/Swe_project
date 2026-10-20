@@ -14,7 +14,7 @@ mục 5–6, [SRS](../SRS.md), [Business Rules](../BUSINESS_RULES.md) và
   Tham số đường dẫn viết `:id` trong tài liệu, truyền ID thực khi gọi.
 - Hai route Products là `/products` và `/products/:id`, tương đối với backend origin.
   Local mặc định là `http://localhost:3001`; không ghi cứng origin trong frontend.
-- `backend/src/main.ts` chưa có global prefix hoặc versioning; Architecture chưa
+- `apps/api/src/main.ts` chưa có global prefix hoặc versioning; Architecture chưa
   chốt `/api` hay `/v1`. Bản này giữ đường dẫn không prefix, không tự thêm `/api/v1`.
   Nếu nhóm đổi prefix/version, phải cập nhật đồng bộ spec, client và test trước triển khai.
 - Không thêm endpoint chỉ vì tồn tại bảng database. Thao tác nghiệp vụ đặc biệt do

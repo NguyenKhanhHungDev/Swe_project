@@ -16,7 +16,7 @@ giao diện khách hàng và các API xử lý nghiệp vụ.
 - Backend: NestJS 11, TypeScript
 - Database: PostgreSQL 17
 - ORM: Prisma (planned, not yet integrated)
-- Development: Docker Compose hiện chỉ cấu hình PostgreSQL; frontend/backend chạy bằng npm
+- Development: Docker Compose hiện chỉ cấu hình PostgreSQL; apps/web/backend chạy bằng npm
 - Version control: Git and GitHub
 
 ## 3. Business scope
@@ -66,7 +66,7 @@ Tham khảo: [ARCHITECTURE.md](ARCHITECTURE.md).
 - Frontend có trang Hello và nút gọi API lời chào của backend.
 - Backend có `GET /` trả lời chào; `ProductsModule` hiện là module rỗng.
 - Docker Compose chỉ khai báo PostgreSQL 17 với healthcheck và volume;
-  frontend/backend chạy bằng npm, chưa được đóng gói vào Compose.
+  apps/web/backend chạy bằng npm, chưa được đóng gói vào Compose.
 - Prisma chưa có dependency, schema hoặc tích hợp truy vấn database.
 - Unit test và E2E test hiện có chỉ kiểm tra API lời chào;
   các chức năng nghiệp vụ chưa được xác minh là đã triển khai đầy đủ.
@@ -112,7 +112,7 @@ Mọi thay đổi phân công cần được nhóm xác nhận.
 - [REQUIREMENTS_TRACEABILITY.md](REQUIREMENTS_TRACEABILITY.md): Liên kết 10 Task với các bước và minh chứng cần có.
 - [ARCHITECTURE.md](ARCHITECTURE.md): Kiến trúc và trách nhiệm module.
 - [AGENTS.md](../AGENTS.md): Quy tắc làm việc với Codex.
-- [frontend/AGENTS.md](../frontend/AGENTS.md): Hướng dẫn Next.js.
+- [apps/web/AGENTS.md](../apps/web/AGENTS.md): Hướng dẫn Next.js.
 
 Các tài liệu gốc Project Scope, SRS, User Stories, Acceptance Criteria,
 Business Rules, Use Case Diagram và Use Case Description chưa có trong

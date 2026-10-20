@@ -20,9 +20,9 @@ coverage/
 
 
 # Bo qua cau hinh rieng
-/backend/.env
-/frontend/.env.local
+/apps/api/.env
+/apps/web/.env.local
 
 # Giu cau hinh mau
-!/backend/.env.example
-!/frontend/.env.example
+!/apps/api/.env.example
+!/apps/web/.env.example

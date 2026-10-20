@@ -7,7 +7,7 @@ chưa được xác nhận đã triển khai.
 
 Để chạy **toàn bộ dự án**, gồm PostgreSQL trong Docker Compose và hai ứng dụng
 chạy bằng npm, xem [hướng dẫn theo hệ điều hành ở README gốc](../README.md).
-Từ thư mục `frontend/`, có thể chạy riêng giao diện sau khi cài dependencies:
+Từ thư mục `apps/web/`, có thể chạy riêng giao diện sau khi cài dependencies:
 
 ```bash
 npm ci
@@ -25,7 +25,7 @@ npm run lint
 npm run build
 ```
 
-Hiện `frontend/package.json` chưa có script test. Phân công giao diện theo module
+Hiện `apps/web/package.json` chưa có script test. Phân công giao diện theo module
 xem [TEAM_ASSIGNMENTS.md](../docs/TEAM_ASSIGNMENTS.md), tiến độ xem
 [PROJECT_ROADMAP.md](../docs/PROJECT_ROADMAP.md). Trước khi sửa mã Next.js,
 đọc [AGENTS.md](AGENTS.md) của thư mục này.

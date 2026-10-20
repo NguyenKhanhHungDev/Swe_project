@@ -48,15 +48,15 @@ npm trên máy. Repository chưa có Dockerfile để đóng gói hai ứng dụ
 
 | Đường dẫn | Vai trò |
 | --- | --- |
-| `frontend/src/app/` | Trang Next.js và nút kiểm tra API |
-| `backend/src/` | Ứng dụng NestJS, `GET /` và module Products rỗng |
-| `backend/test/` | E2E test cho API lời chào |
+| `apps/web/src/app/` | Trang Next.js và nút kiểm tra API |
+| `apps/api/src/` | Ứng dụng NestJS, `GET /` và module Products rỗng |
+| `apps/api/test/` | E2E test cho API lời chào |
 | `docs/` | Bối cảnh, kiến trúc, lộ trình, phân công và truy vết yêu cầu |
 | `docker-compose.yml` | PostgreSQL service `db`, healthcheck và volume dữ liệu |
-| `package.json` | Script chạy đồng thời và build frontend/backend |
-| `.env.example`, `backend/.env.example`, `frontend/.env.example` | Ba mẫu biến môi trường |
+| `package.json` | Script chạy đồng thời và build apps/web/backend |
+| `.env.example`, `apps/api/.env.example`, `apps/web/.env.example` | Ba mẫu biến môi trường |
 
-Gốc repository, `backend/` và `frontend/` có `package.json` cùng
+Gốc repository, `apps/api/` và `apps/web/` có `package.json` cùng
 `package-lock.json` riêng; cần cài dependencies ở cả ba vị trí.
 
 ## Công cụ cần cài
@@ -101,11 +101,11 @@ docker info
 git clone https://github.com/NguyenKhanhHungDev/Swe_project.git
 Set-Location Swe_project
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
-if (-not (Test-Path backend/.env)) { Copy-Item backend/.env.example backend/.env }
-if (-not (Test-Path frontend/.env.local)) { Copy-Item frontend/.env.example frontend/.env.local }
+if (-not (Test-Path apps/api/.env)) { Copy-Item apps/api/.env.example apps/api/.env }
+if (-not (Test-Path apps/web/.env.local)) { Copy-Item apps/web/.env.example apps/web/.env.local }
 npm.cmd ci
-npm.cmd --prefix backend ci
-npm.cmd --prefix frontend ci
+npm.cmd --prefix apps/api ci
+npm.cmd --prefix apps/web ci
 ```
 
 Kiểm tra ba file môi trường theo mục [Cấu hình](#cấu-hình-môi-trường-và-postgresql)
@@ -120,12 +120,12 @@ docker compose ps
 
 ```powershell
 # Terminal 2 — backend
-npm.cmd --prefix backend run start:dev
+npm.cmd --prefix apps/api run start:dev
 ```
 
 ```powershell
 # Terminal 3 — frontend
-npm.cmd --prefix frontend run dev -- --port 3000
+npm.cmd --prefix apps/web run dev -- --port 3000
 ```
 
 Dừng backend và frontend bằng `Ctrl+C` tại Terminal 2/3. Sau đó, tại thư mục
@@ -182,11 +182,11 @@ Clone, tạo file môi trường khi chưa tồn tại và cài dependencies:
 git clone https://github.com/NguyenKhanhHungDev/Swe_project.git
 cd Swe_project
 [ -f .env ] || cp .env.example .env
-[ -f backend/.env ] || cp backend/.env.example backend/.env
-[ -f frontend/.env.local ] || cp frontend/.env.example frontend/.env.local
+[ -f apps/api/.env ] || cp apps/api/.env.example apps/api/.env
+[ -f apps/web/.env.local ] || cp apps/web/.env.example apps/web/.env.local
 npm ci
-npm --prefix backend ci
-npm --prefix frontend ci
+npm --prefix apps/api ci
+npm --prefix apps/web ci
 ```
 
 Kiểm tra [cấu hình](#cấu-hình-môi-trường-và-postgresql), rồi mở ba terminal Bash
@@ -201,12 +201,12 @@ docker compose ps
 
 ```bash
 # Terminal 2 — backend
-npm --prefix backend run start:dev
+npm --prefix apps/api run start:dev
 ```
 
 ```bash
 # Terminal 3 — frontend
-npm --prefix frontend run dev -- --port 3000
+npm --prefix apps/web run dev -- --port 3000
 ```
 
 Dừng Terminal 2/3 bằng `Ctrl+C`, rồi chạy `docker compose stop db` ở thư mục
@@ -235,11 +235,11 @@ Clone, tạo file môi trường khi chưa tồn tại và cài dependencies:
 git clone https://github.com/NguyenKhanhHungDev/Swe_project.git
 cd Swe_project
 [ -f .env ] || cp .env.example .env
-[ -f backend/.env ] || cp backend/.env.example backend/.env
-[ -f frontend/.env.local ] || cp frontend/.env.example frontend/.env.local
+[ -f apps/api/.env ] || cp apps/api/.env.example apps/api/.env
+[ -f apps/web/.env.local ] || cp apps/web/.env.example apps/web/.env.local
 npm ci
-npm --prefix backend ci
-npm --prefix frontend ci
+npm --prefix apps/api ci
+npm --prefix apps/web ci
 ```
 
 Kiểm tra [cấu hình](#cấu-hình-môi-trường-và-postgresql), rồi mở ba Terminal/zsh
@@ -254,12 +254,12 @@ docker compose ps
 
 ```zsh
 # Terminal 2 — backend
-npm --prefix backend run start:dev
+npm --prefix apps/api run start:dev
 ```
 
 ```zsh
 # Terminal 3 — frontend
-npm --prefix frontend run dev -- --port 3000
+npm --prefix apps/web run dev -- --port 3000
 ```
 
 Dừng Terminal 2/3 bằng `Ctrl+C`, rồi chạy `docker compose stop db` ở thư mục
@@ -274,8 +274,8 @@ Ba file mẫu đều có trong repository. Các lệnh sao chép phía trên **k
 | File cần tạo | File mẫu | Biến cần kiểm tra |
 | --- | --- | --- |
 | `.env` | `.env.example` | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_PORT` |
-| `backend/.env` | `backend/.env.example` | `PORT`, `FRONTEND_URL`, `DATABASE_URL` |
-| `frontend/.env.local` | `frontend/.env.example` | `NEXT_PUBLIC_API_URL` |
+| `apps/api/.env` | `apps/api/.env.example` | `PORT`, `FRONTEND_URL`, `DATABASE_URL` |
+| `apps/web/.env.local` | `apps/web/.env.example` | `NEXT_PUBLIC_API_URL` |
 
 Theo file mẫu, PostgreSQL trong container dùng cổng `5432`; Compose công bố
 cổng máy `127.0.0.1:5433` (hoặc giá trị `POSTGRES_PORT` bạn đặt). Backend chạy
@@ -286,7 +286,7 @@ bộ `PORT` và `NEXT_PUBLIC_API_URL`. Đổi cổng frontend cần sửa đối
 trong lệnh Next.js và cập nhật `FRONTEND_URL` cho CORS.
 
 Compose chỉ khai báo service `db` cùng healthcheck và named volume
-`postgres_data`; không có frontend/backend service hoặc network riêng được
+`postgres_data`; không có apps/web/backend service hoặc network riêng được
 khai báo. Docker Compose tạo network mặc định. Đổi thông tin khởi tạo trong
 `.env` không tự cập nhật database đã tồn tại trong volume. Để xem trạng thái
 và log (trên cả ba hệ điều hành):
@@ -319,24 +319,24 @@ Sau khi cài dependencies, chạy từ thư mục gốc. Các lệnh này đư�
 Trên Linux/macOS (Bash/zsh):
 
 ```bash
-npm --prefix frontend run lint
-npm --prefix backend test -- --runInBand
-npm --prefix backend run test:e2e -- --runInBand
+npm --prefix apps/web run lint
+npm --prefix apps/api test -- --runInBand
+npm --prefix apps/api run test:e2e -- --runInBand
 npm run build
 ```
 
 Trên Windows PowerShell, dùng `npm.cmd` để tránh lỗi Execution Policy:
 
 ```powershell
-npm.cmd --prefix frontend run lint
-npm.cmd --prefix backend test -- --runInBand
-npm.cmd --prefix backend run test:e2e -- --runInBand
+npm.cmd --prefix apps/web run lint
+npm.cmd --prefix apps/api test -- --runInBand
+npm.cmd --prefix apps/api run test:e2e -- --runInBand
 npm.cmd run build
 ```
 
 Frontend chưa có script `test`. Unit test và E2E test backend hiện chỉ kiểm tra
-lời chào. Script lint backend (`npm --prefix backend run lint` trên Bash/zsh hoặc
-`npm.cmd --prefix backend run lint` trên PowerShell) có `--fix`, nên **có thể sửa
+lời chào. Script lint backend (`npm --prefix apps/api run lint` trên Bash/zsh hoặc
+`npm.cmd --prefix apps/api run lint` trên PowerShell) có `--fix`, nên **có thể sửa
 file mã nguồn**; chỉ chạy khi muốn áp dụng sửa tự động và kiểm tra diff sau đó.
 `npm run build` build backend rồi frontend. Nếu build gặp lỗi do server phát
 triển đang dùng thư mục đầu ra, dừng server và thử lại. Không có lệnh Prisma
@@ -349,10 +349,10 @@ migration/seed trong repository để chạy ở giai đoạn hiện tại.
 | `node`, `npm`/`npm.cmd`, `git` hoặc `docker` không nhận diện | Hoàn tất cài đặt, mở terminal mới và chạy lại các lệnh `--version`; dùng `npm.cmd --version` trên PowerShell, `npm --version` trên Bash/zsh. Với Docker, kiểm tra Desktop/daemon. |
 | `docker info` không kết nối được | Mở Docker Desktop (Windows/macOS) hoặc khởi động daemon theo hướng dẫn bản phân phối Linux; kiểm tra quyền truy cập Docker. |
 | Compose báo thiếu `POSTGRES_*` | Kiểm tra `.env` ở gốc đã tạo từ `.env.example` và có đủ biến được yêu cầu. |
-| Cổng `3000` đã được dùng | Dừng tiến trình chiếm cổng hoặc sửa đối số `--port 3000` trong lệnh Next.js sang cổng mới; mở frontend ở cổng đó và cập nhật `FRONTEND_URL` trong `backend/.env`. Chỉ đổi biến môi trường không đổi cổng Next.js. |
+| Cổng `3000` đã được dùng | Dừng tiến trình chiếm cổng hoặc sửa đối số `--port 3000` trong lệnh Next.js sang cổng mới; mở frontend ở cổng đó và cập nhật `FRONTEND_URL` trong `apps/api/.env`. Chỉ đổi biến môi trường không đổi cổng Next.js. |
 | Cổng `3001` hoặc `5433` đã được dùng | Nếu đổi cổng backend, đồng bộ `PORT` và `NEXT_PUBLIC_API_URL`; nếu đổi cổng PostgreSQL, đồng bộ `POSTGRES_PORT` và `DATABASE_URL`. |
 | `concurrently`, `nest` hoặc `next` không tìm thấy | Cài lại dependencies ở gốc, backend và frontend bằng ba lệnh `ci` trong hướng dẫn hệ điều hành tương ứng: `npm.cmd` trên PowerShell, `npm` trên Bash/zsh. |
-| Nút kiểm tra backend báo lỗi | Mở trực tiếp `http://localhost:3001/`; kiểm tra Terminal 2, `NEXT_PUBLIC_API_URL` và CORS `FRONTEND_URL`, rồi khởi động lại frontend/backend. |
+| Nút kiểm tra backend báo lỗi | Mở trực tiếp `http://localhost:3001/`; kiểm tra Terminal 2, `NEXT_PUBLIC_API_URL` và CORS `FRONTEND_URL`, rồi khởi động lại apps/web/backend. |
 | Database chưa `healthy` | Xem `docker compose ps` và `docker compose logs --tail=100 db`; backend Hello vẫn có thể hoạt động vì chưa truy vấn DB. |
 | `npm ci` hoặc `npm.cmd ci` báo lockfile không khớp | Đối chiếu `package.json` với lockfile cùng thư mục; nhờ người cập nhật dependency sửa cả hai file. |
 
@@ -430,14 +430,14 @@ SVG được sinh lại bằng script, không sửa ảnh bằng tay.
 
 [Báo cáo kiểm tra toàn bộ yêu cầu Huy](docs/audits/huy-compliance-2026-10-14.md)
 và [kết quả audit API](docs/audits/huy-runtime-results.json) được giữ làm minh
-chứng. Lint/build khung frontend/backend và hai test Hello đã đạt; audit cho
+chứng. Lint/build khung apps/web/backend và hai test Hello đã đạt; audit cho
 thấy tám route nghiệp vụ còn 404, Cart UI/store chưa có trong repo. Không dùng
 test Hello hoặc test demo Vite cũ làm chứng cứ phần Huy đã chạy thật.
 
 Để audit API lại sau khi build backend:
 
 ```powershell
-npm.cmd --prefix backend run build
+npm.cmd --prefix apps/api run build
 node scripts/audit-huy-runtime.mjs
 ```
 

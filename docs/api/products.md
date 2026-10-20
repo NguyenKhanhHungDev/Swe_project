@@ -3,7 +3,7 @@
 **Bước 13 · Phụ trách: Hưng · Ngày: 11/10/2026 · Trạng thái: REVIEW.**
 
 Đặc tả menu và chi tiết sản phẩm, dùng [quy chuẩn API chung](API_CONVENTIONS.md).
-Đây là thiết kế để review; `backend/src/products/products.module.ts` hiện rỗng,
+Đây là thiết kế để review; `apps/api/src/products/products.module.ts` hiện rỗng,
 chưa có controller/service/DTO Products hoặc Prisma tích hợp. JSON dưới đây là
 dữ liệu minh họa, không phải kết quả gọi API hay dữ liệu seed đã được kiểm chứng.
 

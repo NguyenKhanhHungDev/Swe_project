@@ -40,7 +40,7 @@ Backend được chia thành các module theo nghiệp vụ và chạy
 trong cùng một ứng dụng. Cách tổ chức này gọi là modular monolith.
 
 Mã nguồn frontend và backend được quản lý trong cùng repository,
-lần lượt tại thư mục `frontend/` và `backend/`.
+lần lượt tại thư mục `apps/web/` và `apps/api/`.
 
 | Thành phần | Công nghệ | Trách nhiệm |
 | --- | --- | --- |
@@ -124,7 +124,7 @@ Phân công theo `docs/TEAM_ASSIGNMENTS.md`: Hưng trực tiếp làm bước 1,
 ### 4.1. Backend
 
 Các module được tổ chức theo nghiệp vụ, đặt tại
-`backend/src/<module>/`, thống nhất với cấu trúc hiện tại
+`apps/api/src/<module>/`, thống nhất với cấu trúc hiện tại
 của repository.
 
 | Module | Trách nhiệm | Phụ trách |
@@ -146,9 +146,9 @@ phải trao đổi với các thành viên bị ảnh hưởng.
 
 ### 4.2. Frontend
 
-Route được đặt tại `frontend/src/app/`.
+Route được đặt tại `apps/web/src/app/`.
 Giao diện và xử lý theo nghiệp vụ được đặt tại
-`frontend/src/features/`.
+`apps/web/src/features/`.
 
 | Phần chức năng | Trách nhiệm | Phụ trách |
 | --- | --- | --- |
@@ -247,7 +247,7 @@ Lỗi thuộc module nào thì người phụ trách module đó xử lý.
 Frontend gọi REST API của backend để đọc dữ liệu và thực hiện
 các thao tác nghiệp vụ. Dữ liệu nghiệp vụ trao đổi bằng JSON.
 
-Các hàm gọi API được đặt tại `frontend/src/lib/api/`,
+Các hàm gọi API được đặt tại `apps/web/src/lib/api/`,
 chia theo module. Không viết lặp logic gọi API trong nhiều màn hình.
 
 Ví dụ cấu trúc response nghiệp vụ thành công:
@@ -595,8 +595,8 @@ Frontend và backend hiện chưa được đóng gói thành container.
 | File | Mục đích |
 | --- | --- |
 | .env ở gốc | Cấu hình PostgreSQL cho Docker Compose |
-| backend/.env | Cổng backend, origin frontend và DATABASE_URL |
-| frontend/.env.local | Địa chỉ API mà frontend sử dụng |
+| apps/api/.env | Cổng backend, origin frontend và DATABASE_URL |
+| apps/web/.env.local | Địa chỉ API mà frontend sử dụng |
 | Các file .env.example | Mẫu cấu hình được lưu trong Git |
 | docker-compose.yml | Khởi động PostgreSQL, volume và healthcheck |
 
