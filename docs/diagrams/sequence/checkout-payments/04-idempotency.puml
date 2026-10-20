@@ -1,4 +1,9 @@
 @startuml 04-idempotency
+
+' DRAFT — Pending owner review. Day 1 audit 2026-10-20.
+' See docs/diagrams/README.md and PD-05–09 in team-working-agreement.
+' Legacy timer/roles/DTO/transaction flows below are not approved contracts.
+
 title Xử lý yêu cầu thanh toán trùng (Idempotency)
 
 actor Frontend

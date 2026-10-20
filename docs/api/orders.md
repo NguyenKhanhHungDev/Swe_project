@@ -1,8 +1,14 @@
 # BrewLite — Orders API Specification
 
-**Bước 13 · Phụ trách: Phát · Ngày: 14/10/2026 · Trạng thái: REVIEW.**
+**DRAFT — Pending owner review.** Owner: Phát. Nguồn cũ 14/10; rà Buổi 1 ngày 20/10/2026.
 
 Tài liệu đặc tả API phân hệ Đơn hàng (Orders), tuân thủ [Quy chuẩn API chung](API_CONVENTIONS.md), [Business Rules](../BUSINESS_RULES.md) (BR-02, BR-04, BR-07, BR-11, BR-12, BR-13, BR-14, BR-18, BR-20, BR-28 đến BR-34), [Detailed ERD](../ERD_DETAILED.md) (mục 3.5, 3.6, 3.7) và [Architecture](../ARCHITECTURE.md).
+
+## Điểm phải chốt trước triển khai
+
+Bảng và JSON bên dưới được giữ từ bản owner cũ, chưa phải contract được duyệt. A1 bắt buộc GET /orders/me, chỉ mock WALLET/CARD; ADMIN/COD không có căn cứ phạm vi. Không dùng GET /orders thay lịch sử của đề nếu chưa sửa có review. quantity/toppingIds đang khác qty/toppings.quantity của Cart; thiếu số phần topping. Header chống lặp và fingerprint phải chốt với Khoa/Thắng. Nội dung JSON bị thiếu dấu đóng fence đã được sửa, chưa đổi DTO thay owner.
+
+Không mặc định timer 15 phút. Xem [State/Checkout checklist](../requirements/order-state-transitions.md), [Inventory contract](inventory-contract.md), [Payment contract](payment-contract.md) và [PD-05–09](../scrum/team-working-agreement.md#pending-decisions). Chưa có API Orders triển khai.
 
 ---
 
@@ -49,3 +55,5 @@ Tài liệu đặc tả API phân hệ Đơn hàng (Orders), tuân thủ [Quy ch
     }
   ]
 }
+
+```

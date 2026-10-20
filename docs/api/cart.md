@@ -114,7 +114,7 @@ ProductDetail hiện chỉ trả isInStock/canPurchase, **không trả số tồ
 Boolean không đủ chứng minh tổng qty cùng productId ≤ tồn. Không bịa `stock:20`
 hoặc tự thêm field vào response của Hưng. Để đáp ứng UC-06/07 cần Hưng/Khoa/Thắng
 chốt một trong các giao diện đọc số khả dụng hoặc preview kiểm tra qty; chưa có
-endpoint nào như vậy được coi đã duyệt. Ghi điểm nối trong [README phần Huy](../../README.md#phần-huy--nhánh-local-huy).
+endpoint nào như vậy được coi đã duyệt. Ghi điểm nối trong [README phần Huy](../../README.md#tài-liệu-thiết-kế-phần-huy-đã-tích-hợp).
 
 Quy tắc mong muốn theo UC: cộng tổng số ly cùng productId trên **mọi dòng** trước
 thêm/sửa; lỗi không ghi một phần. Tồn đọc được cũng không giữ hàng. Backend luôn

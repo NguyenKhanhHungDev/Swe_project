@@ -17,7 +17,12 @@ không đồng nghĩa chức năng đã triển khai hoặc được nghiệm th
 | Dự kiến | Menu, chi tiết đồ uống, size/topping, giỏ hàng, tài khoản, đơn hàng, tồn kho, khuyến mãi, điểm thưởng và thanh toán giả lập. Chưa có căn cứ từ code để hướng dẫn sử dụng các chức năng này. |
 
 Test hiện có chỉ kiểm tra API lời chào, chưa kiểm chứng nghiệp vụ đặt đồ uống.
-Xem [Project Roadmap](docs/PROJECT_ROADMAP.md) để theo dõi 24 bước và minh chứng.
+Xem [Project Roadmap](docs/PROJECT_ROADMAP.md) để theo dõi A1 (10 task), A2 (5 nhóm task tuần tự) và minh chứng.
+
+Xem [bàn giao Buổi 1](docs/scrum/day1-handoff.md),
+[Working Agreement](docs/scrum/team-working-agreement.md) và
+[backlog A1/A2](docs/scrum/backlog.md). Các hồ sơ nháp đang chờ owner review;
+chưa nghiệm thu A2 Task 1–5.
 
 ## Công nghệ và kiến trúc
 
@@ -53,7 +58,7 @@ npm trên máy. Repository chưa có Dockerfile để đóng gói hai ứng dụ
 | `apps/api/test/` | E2E test cho API lời chào |
 | `docs/` | Bối cảnh, kiến trúc, lộ trình, phân công và truy vết yêu cầu |
 | `docker-compose.yml` | PostgreSQL service `db`, healthcheck và volume dữ liệu |
-| `package.json` | Script chạy đồng thời và build apps/web/backend |
+| `package.json` | Script chạy đồng thời và build hai ứng dụng |
 | `.env.example`, `apps/api/.env.example`, `apps/web/.env.example` | Ba mẫu biến môi trường |
 
 Gốc repository, `apps/api/` và `apps/web/` có `package.json` cùng
@@ -286,7 +291,7 @@ bộ `PORT` và `NEXT_PUBLIC_API_URL`. Đổi cổng frontend cần sửa đối
 trong lệnh Next.js và cập nhật `FRONTEND_URL` cho CORS.
 
 Compose chỉ khai báo service `db` cùng healthcheck và named volume
-`postgres_data`; không có apps/web/backend service hoặc network riêng được
+`postgres_data`; chưa có service cho apps/web hoặc apps/api hoặc network riêng được
 khai báo. Docker Compose tạo network mặc định. Đổi thông tin khởi tạo trong
 `.env` không tự cập nhật database đã tồn tại trong volume. Để xem trạng thái
 và log (trên cả ba hệ điều hành):
@@ -315,10 +320,13 @@ Không dùng kết quả trang Hello để suy ra các chức năng đó đã ho
 ## Lint, test và build
 
 Sau khi cài dependencies, chạy từ thư mục gốc. Các lệnh này được đối chiếu với
-`package.json` nhưng **chưa được chạy trong lần cập nhật README này**.
+`package.json` và đã chạy trong lần chuẩn hóa Buổi 1; kết quả cụ thể ở
+[biên bản kiểm chứng](docs/audits/day1-verification-2026-10-20.md).
 Trên Linux/macOS (Bash/zsh):
 
 ```bash
+node scripts/check-day1-docs.mjs
+node scripts/check-huy-docs.mjs
 npm --prefix apps/web run lint
 npm --prefix apps/api test -- --runInBand
 npm --prefix apps/api run test:e2e -- --runInBand
@@ -328,6 +336,8 @@ npm run build
 Trên Windows PowerShell, dùng `npm.cmd` để tránh lỗi Execution Policy:
 
 ```powershell
+node scripts/check-day1-docs.mjs
+node scripts/check-huy-docs.mjs
 npm.cmd --prefix apps/web run lint
 npm.cmd --prefix apps/api test -- --runInBand
 npm.cmd --prefix apps/api run test:e2e -- --runInBand
@@ -352,7 +362,7 @@ migration/seed trong repository để chạy ở giai đoạn hiện tại.
 | Cổng `3000` đã được dùng | Dừng tiến trình chiếm cổng hoặc sửa đối số `--port 3000` trong lệnh Next.js sang cổng mới; mở frontend ở cổng đó và cập nhật `FRONTEND_URL` trong `apps/api/.env`. Chỉ đổi biến môi trường không đổi cổng Next.js. |
 | Cổng `3001` hoặc `5433` đã được dùng | Nếu đổi cổng backend, đồng bộ `PORT` và `NEXT_PUBLIC_API_URL`; nếu đổi cổng PostgreSQL, đồng bộ `POSTGRES_PORT` và `DATABASE_URL`. |
 | `concurrently`, `nest` hoặc `next` không tìm thấy | Cài lại dependencies ở gốc, backend và frontend bằng ba lệnh `ci` trong hướng dẫn hệ điều hành tương ứng: `npm.cmd` trên PowerShell, `npm` trên Bash/zsh. |
-| Nút kiểm tra backend báo lỗi | Mở trực tiếp `http://localhost:3001/`; kiểm tra Terminal 2, `NEXT_PUBLIC_API_URL` và CORS `FRONTEND_URL`, rồi khởi động lại apps/web/backend. |
+| Nút kiểm tra backend báo lỗi | Mở trực tiếp `http://localhost:3001/`; kiểm tra Terminal 2, `NEXT_PUBLIC_API_URL` và CORS `FRONTEND_URL`, rồi khởi động lại apps/web và apps/api. |
 | Database chưa `healthy` | Xem `docker compose ps` và `docker compose logs --tail=100 db`; backend Hello vẫn có thể hoạt động vì chưa truy vấn DB. |
 | `npm ci` hoặc `npm.cmd ci` báo lockfile không khớp | Đối chiếu `package.json` với lockfile cùng thư mục; nhờ người cập nhật dependency sửa cả hai file. |
 
@@ -360,32 +370,33 @@ migration/seed trong repository để chạy ở giai đoạn hiện tại.
 
 | Thành viên | Phạm vi phụ trách theo kế hoạch |
 | --- | --- |
-| Hưng (leader) | Products, ERD, PrismaService, Docker và tích hợp |
-| Khoa | Auth, Users, RBAC và Inventory |
-| Huy | Cart, Promotions, Loyalty và tổng hợp kiểm thử |
-| Phát | Orders, schema/migration/seed và điều phối Figma |
-| Thắng | Checkout, Payments, Deployment Diagram và E2E |
+| Hưng (leader) | Tài liệu/kiến trúc, Products/Options/Pricing, traceability, tích hợp/PR/bàn giao |
+| Khoa | Prisma/schema/migration, Auth/JWT, Inventory/concurrency, Class và DB tests |
+| Huy | Menu/Cart/Checkout UI, Promotion/Loyalty, Activity Checkout, Playwright E2E, Daily/Burndown |
+| Phát | PO đề xuất (Pending), Checkout Use Case/Sequence, Orders/History/State Machine, A1 backlog/demo |
+| Thắng | Payment/idempotency, Docker/CI/CD/hosting, Deployment, health/NFR/rollback |
 
 Đây là **phân công**, không phải danh sách tính năng đã hoàn thành. Chi tiết
 người chủ trì và người trực tiếp thực hiện xem
 [Team Assignments](docs/TEAM_ASSIGNMENTS.md).
 
 - [Project Context](docs/PROJECT_CONTEXT.md): bối cảnh, phạm vi và hiện trạng.
-- [Project Roadmap](docs/PROJECT_ROADMAP.md): 24 bước, trạng thái tham khảo và minh chứng.
-- [Requirements Traceability](docs/REQUIREMENTS_TRACEABILITY.md): truy vết 10 Task của đề bài.
+- [Project Roadmap](docs/PROJECT_ROADMAP.md): A1/A2, gate nghiệm thu và minh chứng.
+- [Requirements Traceability](docs/REQUIREMENTS_TRACEABILITY.md): truy vết A1/A2 qua Requirements → Design → Code → Test.
 - [Architecture](docs/ARCHITECTURE.md): kiến trúc và ranh giới module.
 - [Team Assignments](docs/TEAM_ASSIGNMENTS.md): phân công chi tiết của nhóm.
 
-Tài liệu gốc Project Scope, SRS, User Stories, Acceptance Criteria, Business
-Rules, Use Case Diagram và Use Case Description chưa có trong repository; cần
-bổ sung hoặc liên kết nguồn chính thức khi nhóm cung cấp.
+Repository đã có [Scope](docs/PROJECT_SCOPE.md), [SRS](docs/SRS.md),
+[User Stories](docs/USER_STORIES.md), [AC](docs/ACCEPTANCE_CRITERIA.md),
+[BR](docs/BUSINESS_RULES.md) và [Use Cases](docs/USE_CASES.md).
+Các tài liệu còn cần review và xử lý xung đột; chưa có bằng chứng nghiệm thu.
 
-## Phần Huy — nhánh local `Huy`
+## Tài liệu thiết kế phần Huy đã tích hợp
 
-Phạm vi đang chuẩn bị: **Bước 13–14, Cart / Promotions / Loyalty**. Các file
-dưới đây là thiết kế để review, chưa phải chức năng Next.js/NestJS đã triển khai.
-Nhánh `Huy` được tạo từ main `66fb1be`; chưa commit/push hoặc mở PR. Nội dung
-và các file vốn có của nhóm được giữ nguyên; phần mới của Huy được bổ sung riêng.
+Các file Cart/Promotions/Loyalty dưới đây đã có trên main được kiểm kê ở
+`1cc2bb1`; đây là thiết kế để review, chưa phải chức năng Next.js/NestJS đã
+triển khai. Theo dõi công việc hiện hành bằng A1/A2; thông tin nhánh và các
+lần kiểm tra trước được lưu trong audit lịch sử.
 
 | Đầu ra | Mã nguồn | Ảnh |
 |---|---|---|
@@ -412,8 +423,8 @@ sơ đồ. Sơ đồ số 4 chưa có luồng tiêu điểm vì chưa có quy t�
 | Thắng / Huy / Phát | BUY_NOW chỉ cấu hình hiện tại, không đổi giỏ chính; PAID dọn đúng lượt mua. Retry/timeout không thêm món hoặc tạo đơn mới. |
 
 Các ghi chú trên là điểm cần review, không tự sửa hoặc nghiệm thu thay chủ module.
-Nhánh `Huy` giữ nguyên file của các bạn; khi upload hoặc ghép nhóm, kiểm tra diff
-để chỉ đưa phần được duyệt. Việc commit/push vẫn chờ Huy cho phép.
+Khi tích hợp thay đổi tiếp theo, kiểm tra diff và yêu cầu owner review các
+điểm nối; không suy ra phê duyệt từ việc tài liệu cũ đã merge.
 
 ### Kiểm tra phần Huy
 
@@ -430,7 +441,7 @@ SVG được sinh lại bằng script, không sửa ảnh bằng tay.
 
 [Báo cáo kiểm tra toàn bộ yêu cầu Huy](docs/audits/huy-compliance-2026-10-14.md)
 và [kết quả audit API](docs/audits/huy-runtime-results.json) được giữ làm minh
-chứng. Lint/build khung apps/web/backend và hai test Hello đã đạt; audit cho
+chứng. Lint/build của hai ứng dụng và hai test Hello đã đạt trong lần audit đó; audit cho
 thấy tám route nghiệp vụ còn 404, Cart UI/store chưa có trong repo. Không dùng
 test Hello hoặc test demo Vite cũ làm chứng cứ phần Huy đã chạy thật.
 

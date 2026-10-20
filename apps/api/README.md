@@ -2,11 +2,11 @@
 
 API NestJS 11 và TypeScript của đồ án BrewLite. Trên nhánh hiện tại, backend có
 `GET /` trả về `Hello from BrewLite backend!`; `ProductsModule` mới là module
-rỗng. Các API nghiệp vụ trong [kiến trúc](../docs/ARCHITECTURE.md) là thiết kế,
+rỗng. Các API nghiệp vụ trong [kiến trúc](../../docs/ARCHITECTURE.md) là thiết kế,
 chưa được xác nhận đã triển khai. Prisma và kết nối PostgreSQL vẫn là kế hoạch.
 
 Để chuẩn bị cả ba file môi trường, chạy PostgreSQL bằng Docker Compose và khởi
-động hai ứng dụng, xem [hướng dẫn theo hệ điều hành ở README gốc](../README.md).
+động hai ứng dụng, xem [hướng dẫn theo hệ điều hành ở README gốc](../../README.md).
 Từ thư mục `apps/api/`, có thể chạy riêng API:
 
 ```bash
@@ -30,5 +30,5 @@ npm run build
 Unit test và E2E test hiện có chỉ kiểm tra API lời chào, không chứng minh nghiệp
 vụ đặt hàng. Script `npm run lint` có `--fix` và có thể sửa file, nên kiểm tra
 diff sau khi chạy. Phân công backend xem
-[TEAM_ASSIGNMENTS.md](../docs/TEAM_ASSIGNMENTS.md), tiến độ và minh chứng xem
-[PROJECT_ROADMAP.md](../docs/PROJECT_ROADMAP.md).
+[TEAM_ASSIGNMENTS.md](../../docs/TEAM_ASSIGNMENTS.md), tiến độ và minh chứng xem
+[PROJECT_ROADMAP.md](../../docs/PROJECT_ROADMAP.md).

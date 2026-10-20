@@ -1,4 +1,3 @@
-
 # BrewLite - Codex Development Instructions
 
 ## 1. Project overview
@@ -19,6 +18,18 @@ Always inspect the actual repository before
 assuming that a feature is implemented.
 
 ## 2. Documentation and requirements
+
+Current tracking follows Assignment 1 (A1: 10 tasks) and Assignment 2
+(A2: Requirements → UML → Architecture → Sprint 1 → Sprint 2/Delivery).
+Use docs/PROJECT_ROADMAP.md and docs/REQUIREMENTS_TRACEABILITY.md.
+The archived roadmap is historical, not an acceptance standard.
+Do not accept A2 Task N before Task N-1 has acceptance evidence.
+Read docs/PROJECT_CONTEXT.md, docs/TEAM_ASSIGNMENTS.md and
+docs/ARCHITECTURE.md before editing. Check Pending Decisions in
+docs/scrum/team-working-agreement.md; unresolved contract/business rules
+ must not be silently implemented. Day 1 covers documentation only.
+Owner drafts require owner review; do not confirm roles, meetings or
+acceptance on behalf of team members.
 
 Before implementing a feature:
 1. Read relevant documentation in docs/.

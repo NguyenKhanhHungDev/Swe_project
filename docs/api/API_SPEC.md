@@ -1,10 +1,8 @@
 # BrewLite — API Specification tổng hợp
 
-**Bước 13 · Điều phối: Hưng · Ngày: 11/10/2026 · Trạng thái: REVIEW phần Hưng.**
+**DRAFT — Pending owner review.** Điều phối: Hưng. Rà Buổi 1: 20/10/2026.
 
-Tài liệu là mục lục hợp đồng và bảng phối hợp toàn hệ thống. Hiện có bản đặc tả
-Products và quy chuẩn chung; chưa có đặc tả module khác trong `docs/api/` tại lần
-kiểm tra này. Không coi toàn bộ Bước 13 là DONE hoặc coi API đã triển khai.
+Tài liệu là mục lục hợp đồng và bảng phối hợp toàn hệ thống. Hiện có Products, Cart, Promotions/Loyalty, Orders và bản Checkout/Payments chưa hoàn chỉnh. Buổi 1 bổ sung nháp Inventory/Payment; Auth/Users spec riêng còn thiếu. Tất cả là thiết kế chờ review, không phải API đã triển khai.
 
 ## 1. Kiến trúc và hiện trạng đã kiểm tra
 
@@ -40,15 +38,15 @@ link hỏng hoặc file giả cho phần các thành viên khác.
 | Products | Hưng | [Products API](products.md) | Hai GET đã đặc tả để review; chưa triển khai/nghiệm thu. |
 | Auth | Khoa | Chưa có đặc tả riêng | Khoa bổ sung `auth.md`. |
 | Users, RBAC | Khoa | Chưa có đặc tả riêng | Khoa bổ sung `users.md`; RBAC có thể ghi cùng Auth, không suy ra endpoint RBAC. |
-| Inventory | Khoa | Chưa có đặc tả riêng | Khoa bổ sung `inventory.md`; phân biệt service nội bộ và HTTP endpoint có nguồn yêu cầu. |
+| Inventory | Khoa | [Inventory draft](inventory-contract.md) | DRAFT — Pending owner review; service nội bộ, chưa tạo endpoint. |
 | Cart | Huy | [Cart](cart.md) | REVIEW: contract state/mua ngay; giỏ browser, còn điểm nối đọc số tồn và DTO Orders cần chốt. |
 | Promotions | Huy | [Promotions & Loyalty](promotions-loyalty.md) | REVIEW: validate mã và báo giá; kiểm tra lượt là đề xuất Huy khác BR-08, cần nhóm duyệt ERD. |
 | Loyalty | Huy | [Promotions & Loyalty](promotions-loyalty.md) | REVIEW: đọc/cộng/đảo điểm; lịch sử là đề xuất tùy chọn, tiêu điểm chưa có quy tắc. |
-| Orders | Phát | Chưa có đặc tả riêng | Phát bổ sung `orders.md`. |
+| Orders | Phát | [Orders](orders.md) | DRAFT; route, role, DTO và Sequence còn xung đột PD-05–09. |
 | Order cancellation đã trả tiền | Phát; Thắng/Khoa/Huy phối hợp | Chưa có đặc tả riêng | Phát xác định mục tương ứng trong `orders.md` hoặc tài liệu riêng theo Architecture 5.5; chưa chốt URL. |
-| Checkout, Payments | Thắng | Chưa có đặc tả riêng | Thắng bổ sung `payments.md`, ranh giới checkout với giỏ/đơn; không suy ra Checkout REST riêng. |
+| Checkout UI / Payments backend | Huy / Thắng | [Nguồn cũ](checkout-payments.md), [Payment draft](payment-contract.md) | DRAFT — Pending owner review; DTO/enum/idempotency chưa chốt. |
 
-PrismaService và common là thành phần kỹ thuật dùng chung, không tự tạo API public.
+PrismaService do Khoa chủ trì, common do các owner phối hợp review; đây là thành phần kỹ thuật dùng chung, không tự tạo API public.
 Khi chủ module bổ sung file thật, cập nhật link, endpoint, phiên bản, nguồn UC/BR và
 trạng thái review trong bảng này. Không gán trạng thái đã làm từ tên module scaffold.
 
@@ -62,10 +60,12 @@ trạng thái review trong bảng này. Không gán trạng thái đã làm từ
 | LOY-01 | GET | `/loyalty/me` | CUSTOMER, dữ liệu của mình | 200, 400, 401, 403, 500 | [Promotions & Loyalty](promotions-loyalty.md), mục 3 |
 | LOY-02 | GET | `/loyalty/me/transactions` | CUSTOMER, dữ liệu của mình | 200, 400, 401, 403, 500 | [Promotions & Loyalty](promotions-loyalty.md), mục 4; tùy chọn chờ duyệt phạm vi |
 
-Không liệt kê endpoint dự đoán của Auth, Cart, Inventory, Orders hay Payments.
+Các endpoint bắt buộc A1 như POST /orders, POST /payments, GET /orders/me được truy vết trong backlog; bảng trên chỉ là phần API đã đặc tả chi tiết ở vòng review cũ. Orders/Payment hiện có nháp chưa hoàn chỉnh, không suy ra endpoint đã triển khai.
 Món hết hàng/ngừng bán trả 200 ở chi tiết và khóa mua, không giả thành 404.
 
 ## 4. Căn cứ, khác biệt và quyết định
+
+Bảng D-01–D-11 dưới đây giữ lịch sử phát hiện trong vòng spec trước. Các khẳng định README/Scope/ERD chưa có ở D-11 đã lỗi thời: các file đều tồn tại và được kiểm kê Buổi 1. Quyết định hiện hành còn chờ ở [Pending Decisions](../scrum/team-working-agreement.md#pending-decisions); không coi bảng lịch sử là phê duyệt.
 
 | ID | Nguồn / phát hiện | Cách xử lý ở Bước 13 | Người cần xác nhận |
 |---|---|---|---|
@@ -127,14 +127,11 @@ Kiểm tra whitespace cho cả ba file mới đạt; diff và checksum xác nh�
 công việc có trước. Chưa chạy API, unit/integration/E2E hoặc đo NFR-01 vì chưa
 triển khai nghiệp vụ trong phạm vi này.
 
-## 7. Mức sẵn sàng cho Bước 14
+## 7. Mức sẵn sàng review UML theo A2
 
 Phần Products đủ nội dung để **review đầu vào** Sequence Diagram cho menu/chi tiết:
 request, nhánh rỗng/UUID sai/không tìm thấy/lỗi dữ liệu, giá và khả dụng đã được mô tả.
 Trước khi chốt sơ đồ, duyệt DTO, chính sách dữ liệu hỏng/topping vô hiệu hóa và giao
 diện đọc tồn với Khoa. Quyết định món ngừng bán đã được người dùng xác nhận.
 
-Toàn hệ thống **chưa đủ điều kiện chốt Bước 14**: thiếu API module khác, mapping
-trạng thái thanh toán, chi tiết idempotency và xác nhận các điểm giao ở mục 5.
-Các chủ module tiếp tục Bước 13 theo phân công; không tự vẽ Sequence Diagram,
-triển khai apps/web/backend, sửa Prisma, migration hoặc Docker trong lượt này.
+Sequence đã có trong repository nhưng còn xung đột, xem [kiểm kê sơ đồ](../diagrams/README.md). Chưa đủ điều kiện nghiệm thu A2 Task 2 trước Task 1; cần chốt requirements, mapping payment, idempotency và các điểm giao. Buổi 1 không triển khai nghiệp vụ/Prisma/CI/CD.
