@@ -1,6 +1,23 @@
 # BrewLite — Bàn giao thao tác GitHub
 
-Ngày 20/10/2026: gh auth status báo chưa đăng nhập. Push preflight bằng GIT_TERMINAL_PROMPT=0 git push --dry-run origin HEAD:refs/heads/docs/day1-assignment-alignment thất bại exit 128: could not read Username for https://github.com. Chưa push nhánh. Đã kiểm tra API public: 16 PR, 0 Issue thường trong snapshot; chưa tạo Issue/label/Board/PR mới. Không đoán username.
+**Hiện hành 21/10/2026 — chỉ kiểm tra/chuẩn bị review.** Đã có 26/26 Issue A1/A2, 26/26 OPEN/assignee/body khớp Git; xem [bảng URL thật](backlog.md). PR #17/#18/#20/#32/#33 đã merge. Không chạy lại danh sách tạo Issue/label ở phần lịch sử, không tự push/merge hoặc đổi Board trong phiên này.
+
+GitHub connector đọc được repository và Issues/PR; `gh auth status` tại máy hiện vẫn chưa đăng nhập. Hai cơ chế truy cập khác nhau: CLI chưa login không có nghĩa chưa đọc được GitHub hoặc chưa tạo Issues. Connector không có Projects API; Board/quyền/status chưa kiểm chứng, cần Hưng kiểm tra thủ công và cung cấp evidence. Không suy Board chưa tồn tại hay quyền Project từ quyền admin repository.
+
+## Việc Hưng thực hiện sau khi đọc hồ sơ
+
+1. Gửi [review request](day1-review-request.md) cho cả năm người và thu phản hồi có link/commit; agent chỉ soạn nội dung, chưa gửi tin nhắn.
+2. Kiểm tra Board hiện hữu: URL, 26 Issue items, bốn cột Status, quyền từng người/giảng viên. Đừng tạo Board thứ hai khi chưa kiểm tra Board cũ; chưa đủ quyền thì ghi người hỗ trợ và mốc xác nhận.
+3. Chốt Working Agreement/roles/merge backup và PD owner/mốc theo phản hồi; chưa chốt Sprint Backlog trước Planning thật.
+4. Sau khi được yêu cầu và các kiểm tra/nhóm review đạt, Hưng mới commit/push nhánh `docs/day1-final-review`, kiểm PR cùng head trước khi tạo PR. Chưa có PR final-review trong hồ sơ này; không tự bịa URL hoặc dùng Closes cho task nghiệp vụ.
+5. Kiểm đúng diff/commit/checks và review bởi người khác trước khi người có quyền merge. Không lấy merge PR cũ làm acceptance của task mới.
+
+## Lịch sử thao tác 20/10/2026 — không thực hiện lại
+
+Snapshot cũ: 0 Issue thường/16 PR, CLI chưa login và push dry-run exit 128 do thiếu HTTPS credentials. Các trạng thái “chưa tạo/chưa push/chờ đối chiếu” trong bản lệnh bên dưới chỉ đúng tại mốc 20/10, đã được thay bằng dữ liệu hiện hành ở trên.
+
+<details>
+<summary>Lệnh chuẩn bị cũ — lưu tham khảo, không chạy lại để tạo trùng 26 Issues</summary>
 
 ## Tạo backlog sau đăng nhập
 
@@ -72,3 +89,5 @@ gh pr create --repo NguyenKhanhHungDev/Swe_project --base main --head docs/day1-
 ```
 
 Chỉ tạo PR nếu chưa có PR tương ứng. Không tự merge. Không dùng Closes cho 26 task vì đây là nháp quản lý, chưa nghiệm thu chức năng.
+
+</details>

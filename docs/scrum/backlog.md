@@ -1,8 +1,49 @@
 # BrewLite — Product Backlog A1/A2
 
-**DRAFT — Pending owner review.** Có đúng 10 nháp A1 và 16 nháp task con A2; chưa có Issue mới được tạo. Owner triển khai nằm trong từng hồ sơ, không suy ra assignee GitHub. Phát quản lý A1; Hưng điều phối truy vết, cả nhóm chốt Sprint Backlog qua Planning thật.
+**READY FOR TEAM REVIEW — NOT YET ACCEPTED.** Kiểm tra ngày 21/10/2026 tại `origin/main@8f8ffd5`. Product Backlog có đủ **26/26 GitHub Issues**: 10 A1 + 16 task con A2, không thiếu/trùng mã; 26/26 đang OPEN, có assignee và body khớp hồ sơ Git tại mốc này. Đây là trạng thái quản lý, không phải nghiệm thu 26 task.
 
-Kiểm tra GitHub public API ngày 20/10/2026: 16 mục trả về, đều là PR; không có Issue thường/A1/A2 trong snapshot. Không có trang tiếp theo. Không dùng snapshot này thay lần kiểm tra ngay trước tạo Issue. gh auth status chưa đăng nhập; không có Board được tạo/xác minh quyền.
+Phát quản lý Product Backlog A1; Hưng điều phối A1/A2 và truy vết. **Sprint Backlog chưa được chốt**: cần Planning thật với Goal/ngày/ước lượng/task/owner; có Issue không đồng nghĩa đã đưa vào Sprint. Không tự thay trạng thái Issue/Board hoặc đóng task.
+
+## GitHub Issues hiện hành — 21/10/2026
+
+Nguồn đọc: GitHub connector + GET `repos/NguyenKhanhHungDev/Swe_project/issues?state=all&per_page=100&page=1`. API trả 47 mục (<100), gồm 26 Issue thường và 21 PR; đã loại PR khỏi phép đếm. Search Issues trả cùng 26 mã, mỗi mã một lần. Assignee dưới đây là cấu hình GitHub quan sát được, **chưa thay xác nhận nhận việc/review** của thành viên. Mọi Issue đều có 0 comment trong snapshot; chưa có evidence review từ Issue comments.
+
+| Mã / hồ sơ Git | GitHub Issue | Owner theo phân công | Assignee quan sát | Trạng thái GitHub |
+| --- | --- | --- | --- | --- |
+| [A1-01](../backlog/A1-01.md) | [#22](https://github.com/NguyenKhanhHungDev/Swe_project/issues/22) | Hưng | `NguyenKhanhHungDev` | OPEN — chưa nghiệm thu |
+| [A1-02](../backlog/A1-02.md) | [#23](https://github.com/NguyenKhanhHungDev/Swe_project/issues/23) | Hưng | `NguyenKhanhHungDev` | OPEN — chưa nghiệm thu |
+| [A1-03](../backlog/A1-03.md) | [#24](https://github.com/NguyenKhanhHungDev/Swe_project/issues/24) | Huy | `khanhhuy11022006-stack` | OPEN — chưa nghiệm thu |
+| [A1-04](../backlog/A1-04.md) | [#25](https://github.com/NguyenKhanhHungDev/Swe_project/issues/25) | Hưng | `NguyenKhanhHungDev` | OPEN — chưa nghiệm thu |
+| [A1-05](../backlog/A1-05.md) | [#26](https://github.com/NguyenKhanhHungDev/Swe_project/issues/26) | Huy | `khanhhuy11022006-stack` | OPEN — chưa nghiệm thu |
+| [A1-06](../backlog/A1-06.md) | [#27](https://github.com/NguyenKhanhHungDev/Swe_project/issues/27) | Phát | `YESNTED` | OPEN — chưa nghiệm thu |
+| [A1-07](../backlog/A1-07.md) | [#28](https://github.com/NguyenKhanhHungDev/Swe_project/issues/28) | Khoa | `dangkhoa510038-source` | OPEN — chưa nghiệm thu |
+| [A1-08](../backlog/A1-08.md) | [#29](https://github.com/NguyenKhanhHungDev/Swe_project/issues/29) | Thắng | `huuthang060306-droid` | OPEN — chưa nghiệm thu |
+| [A1-09](../backlog/A1-09.md) | [#30](https://github.com/NguyenKhanhHungDev/Swe_project/issues/30) | Phát | `YESNTED` | OPEN — chưa nghiệm thu |
+| [A1-10](../backlog/A1-10.md) | [#31](https://github.com/NguyenKhanhHungDev/Swe_project/issues/31) | Phát | `YESNTED` | OPEN — chưa nghiệm thu |
+| [A2-1.1](../backlog/A2-1.1.md) | [#34](https://github.com/NguyenKhanhHungDev/Swe_project/issues/34) | Hưng | `NguyenKhanhHungDev` | OPEN — chưa nghiệm thu |
+| [A2-1.2](../backlog/A2-1.2.md) | [#35](https://github.com/NguyenKhanhHungDev/Swe_project/issues/35) | Hưng | `NguyenKhanhHungDev` | OPEN — chưa nghiệm thu |
+| [A2-1.3](../backlog/A2-1.3.md) | [#36](https://github.com/NguyenKhanhHungDev/Swe_project/issues/36) | Phát | `YESNTED` | OPEN — chưa nghiệm thu |
+| [A2-2.1](../backlog/A2-2.1.md) | [#37](https://github.com/NguyenKhanhHungDev/Swe_project/issues/37) | Huy | `khanhhuy11022006-stack` | OPEN — chưa nghiệm thu |
+| [A2-2.2](../backlog/A2-2.2.md) | [#38](https://github.com/NguyenKhanhHungDev/Swe_project/issues/38) | Phát | `YESNTED` | OPEN — chưa nghiệm thu |
+| [A2-2.3](../backlog/A2-2.3.md) | [#39](https://github.com/NguyenKhanhHungDev/Swe_project/issues/39) | Khoa | `dangkhoa510038-source` | OPEN — chưa nghiệm thu |
+| [A2-3.1](../backlog/A2-3.1.md) | [#40](https://github.com/NguyenKhanhHungDev/Swe_project/issues/40) | Hưng | `NguyenKhanhHungDev` | OPEN — chưa nghiệm thu |
+| [A2-3.2](../backlog/A2-3.2.md) | [#41](https://github.com/NguyenKhanhHungDev/Swe_project/issues/41) | Thắng | `huuthang060306-droid` | OPEN — chưa nghiệm thu |
+| [A2-4.1](../backlog/A2-4.1.md) | [#42](https://github.com/NguyenKhanhHungDev/Swe_project/issues/42) | Hưng | `NguyenKhanhHungDev` | OPEN — chưa nghiệm thu |
+| [A2-4.2](../backlog/A2-4.2.md) | [#43](https://github.com/NguyenKhanhHungDev/Swe_project/issues/43) | Hưng | `NguyenKhanhHungDev` | OPEN — chưa nghiệm thu |
+| [A2-4.3](../backlog/A2-4.3.md) | [#44](https://github.com/NguyenKhanhHungDev/Swe_project/issues/44) | Huy | `khanhhuy11022006-stack` | OPEN — chưa nghiệm thu |
+| [A2-4.4](../backlog/A2-4.4.md) | [#45](https://github.com/NguyenKhanhHungDev/Swe_project/issues/45) | Thắng | `huuthang060306-droid` | OPEN — chưa nghiệm thu |
+| [A2-5.1](../backlog/A2-5.1.md) | [#46](https://github.com/NguyenKhanhHungDev/Swe_project/issues/46) | Phát | `YESNTED` | OPEN — chưa nghiệm thu |
+| [A2-5.2](../backlog/A2-5.2.md) | [#47](https://github.com/NguyenKhanhHungDev/Swe_project/issues/47) | Huy | `khanhhuy11022006-stack` | OPEN — chưa nghiệm thu |
+| [A2-5.3](../backlog/A2-5.3.md) | [#48](https://github.com/NguyenKhanhHungDev/Swe_project/issues/48) | Thắng | `huuthang060306-droid` | OPEN — chưa nghiệm thu |
+| [A2-5.4](../backlog/A2-5.4.md) | [#49](https://github.com/NguyenKhanhHungDev/Swe_project/issues/49) | Thắng | `huuthang060306-droid` | OPEN — chưa nghiệm thu |
+
+Các PR đã xác minh merged: [#17 monorepo](https://github.com/NguyenKhanhHungDev/Swe_project/pull/17), [#18 hồ sơ Buổi 1](https://github.com/NguyenKhanhHungDev/Swe_project/pull/18), [#20 README](https://github.com/NguyenKhanhHungDev/Swe_project/pull/20), [#32 bộ 26 backlog](https://github.com/NguyenKhanhHungDev/Swe_project/pull/32), [#33 đối chiếu A2 gốc](https://github.com/NguyenKhanhHungDev/Swe_project/pull/33). API reviews của #18/#32/#33 trả danh sách rỗng; merge không thay owner review hay acceptance. Chi tiết bằng chứng/giới hạn ở [bàn giao Buổi 1](day1-handoff.md).
+
+**Projects:** chưa xác minh được Board/Status/membership bằng công cụ hiện có: connector không có thao tác Projects và CLI chưa đăng nhập. Không kết luận Board chưa tồn tại hoặc đã có đủ 26 items; Hưng kiểm tra thủ công rồi cung cấp URL/quyền/status. Không suy quyền Projects từ quyền repository.
+
+### Lịch sử snapshot 20/10/2026
+
+Snapshot cũ: API public trả 16 PR, 0 Issue thường; CLI chưa đăng nhập. Đây là dữ liệu trước khi 26 Issues được tạo, **không phải trạng thái hiện hành**. Xem [bàn giao thao tác GitHub](github-handoff.md) để tránh tạo lại Issue đã có.
 
 ## Thứ tự đề xuất, chưa là Sprint đã chốt
 
@@ -23,7 +64,7 @@ Các thiết kế A1-10 được tính từ đầu, nhưng không chạy impleme
 
 Sprint Goal, ngày bắt đầu/kết thúc, ước lượng, danh sách được nhóm chọn: **PENDING Sprint Planning**. Mỗi task được chọn cần owner, AC, dependencies và evidence trên Issue/PR; Huy lấy dữ liệu thật để cập nhật Daily/Burndown. Không tạo số liệu hoặc lịch họp giả.
 
-Board mục tiêu: Todo → In Progress → Review → Done. Chưa tạo vì CLI chưa xác thực/quyền Project chưa kiểm chứng; dùng file này tạm theo dõi. Sau đăng nhập, kiểm tra quyền Project và cấu hình bốn cột; nếu không có quyền tiếp tục bảng Git, không báo đã có Board.
+Board mục tiêu: Todo → In Progress → Review → Done. Chưa xác minh được Board thực tế; Hưng cần cung cấp URL, quyền và ảnh/truy vấn status. Bảng Git chỉ theo dõi tạm, không thay Board khi nghiệm thu A2-4.1. Sprint Goal/ngày/task/estimate vẫn PENDING Planning, không suy từ 26 Issues OPEN.
 
 [Lệnh bàn giao GitHub và quy tắc chống tạo trùng](github-handoff.md).
 
@@ -35,7 +76,7 @@ Kiểm kê sau `git fetch origin main`: `origin/main@77e1730`; branch chỉnh s�
 
 Nguồn chính thức: A1 `BrewLite-CongNghePhanMem.pdf` VER 1.0, mục 3–12; A2 `Assignment2-BrewLite-1.pdf` — Requirements to Deployment VER 1.0, mục 1–9.1, người dùng cung cấp từ thư mục Downloads. SHA-256 A2: `ed2b85d0e8fb546dae088bc844bb8efeb7361629da48aac809b2840cc07d3938`. Không đưa PDF ngoài repository vào PR hoặc tạo link local phụ thuộc máy. Không dùng lộ trình 24 bước làm chuẩn.
 
-Thông tin “chưa tìm thấy PDF A2” trong PROJECT_CONTEXT/PROJECT_ROADMAP/REQUIREMENTS_TRACEABILITY/Working Agreement là mốc cũ, không còn là giới hạn nguồn của bản backlog này. Chỉ phần thiếu PDF/đối chiếu trong PD-12 đã được giải quyết; MoSCoW/FR-NFR/phê duyệt requirements vẫn cần evidence, **không tự đóng PD-12 hoặc đánh Done task**. Hưng cần cập nhật các tài liệu ngoài phạm vi trong PR riêng.
+Mốc đối chiếu backlog trước: đã nhận PDF A2, giải quyết phần thiếu nguồn của PD-12; MoSCoW/FR-NFR/phê duyệt vẫn PENDING. Lần final review Buổi 1 đã đồng bộ nguồn trong Context/Roadmap/Traceability/Working Agreement, không thực hiện nội dung A2 Task 1 hoặc đóng PD-12.
 
 **ĐÃ CÓ** = tồn tại, dùng lại/tham chiếu; **CẦN CHỈNH SỬA** = tồn tại nhưng cần đáp ứng task; **CẦN TẠO** = chưa tồn tại ở cả main đã fetch và working tree. Tên output mới là đề xuất cần owner review, riêng `docs/requirements/context-and-scope.md` và `docs/traceability-matrix.md` được đề nói bắt buộc; `docs/deployment.md` xuất hiện trong cấu trúc bàn giao A2 mục 9 nên được chọn làm hướng dẫn deploy chính. Các dòng lặp qua task chỉ đến cùng sản phẩm, không tạo hai bản; người thực hiện từng file ở bảng Issue, owner task là đầu mối điều phối.
 
@@ -125,9 +166,9 @@ Không chuyển/tạo các file dưới đây trong lần sửa backlog. Các đ
 
 Đã đối chiếu các nhóm sản phẩm bắt buộc trong A1 và toàn bộ mục 1–9.1 A2, bổ sung thiếu sót vào đúng Issue và bảng đầu ra. Những sản phẩm trùng yêu cầu A1/A2 dùng chung module/file/test, không triển khai lại. Tên file ví dụ của đề được phân biệt với đường dẫn bắt buộc; thư mục dự kiến được căn theo monorepo và boundary kiến trúc.
 
-**Chưa kết luận cấu trúc đã đúng hoàn toàn hoặc task đã Done:** tên đích chuyển tài liệu, runner, hợp đồng và owner review còn cần nhóm xác nhận; host/provider config và nơi nộp video (nếu chọn video) chưa chốt. Việc “thiếu đề A2” đã được giải quyết, không được tiếp tục coi đây là blocker; tạo phẩm/runtime/tests/CI/CD/production vẫn cần bằng chứng thật khi triển khai. Các tài liệu ngoài backlog còn thông tin cũ cần đồng bộ ở PR riêng.
+**Chưa kết luận cấu trúc đã đúng hoàn toàn hoặc task đã Done:** tên đích chuyển tài liệu, runner, hợp đồng và owner review còn cần nhóm xác nhận; host/provider config và nơi nộp video (nếu chọn video) chưa chốt. Việc “thiếu đề A2” đã được giải quyết, không được tiếp tục coi đây là blocker; tạo phẩm/runtime/tests/CI/CD/production vẫn cần bằng chứng thật khi triển khai. Các yêu cầu/thiết kế nghiệp vụ còn mâu thuẫn phải để owner review và đồng bộ sau; không triển khai A2 Task 1 trong lần final review Buổi 1.
 
-### Kết quả kiểm tra sau đối chiếu PDF A2
+### Lịch sử kiểm tra bộ backlog sau đối chiếu PDF A2
 
 - `python3 /tmp/check_brewlite_backlog.py` (script kiểm kê tạm ngoài repository): **PASS** — 26 Issue, 184 bước checklist, 344 dòng đầu ra ứng với 149 đường dẫn duy nhất; đủ 7 mục/Issue và 5–10 bước/task, owner task không đổi, owner/trạng thái file dùng chung nhất quán, tồn tại main/local khớp, bảng tổng hợp đủ 26 task. Chỉ 27 file Markdown được phép thay đổi.
 - `python3 /tmp/check_brewlite_a2_coverage.py` (script đối chiếu văn bản tạm ngoài repository): **PASS 16/16 A2** cho các tiêu chí đã rà từ PDF, gồm Use Case Diagram riêng, hai Products GET, CI pass/fail, Deployment đầy đủ, health/migration/seed và chuỗi CD production. Script chỉ kiểm sự hiện diện của tiêu chí trong văn bản, bổ trợ việc đọc đề/rà thủ công; không chứng minh tạo phẩm hay chức năng đạt acceptance.
