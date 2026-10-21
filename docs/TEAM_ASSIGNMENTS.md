@@ -1,6 +1,6 @@
 # BrewLite — Phân công hiện hành
 
-Cập nhật theo yêu cầu Hưng ngày 20/10/2026. Phân công dưới đây là cơ sở chuẩn bị Buổi 1; chưa thay thế xác nhận nhận bàn giao của từng người. Vai trò Scrum: PENDING.
+Phân công theo yêu cầu Hưng ngày 20/10/2026; rà hồ sơ Buổi 1 ngày 21/10/2026, không đổi owner. Phân công dưới đây là cơ sở chuẩn bị Buổi 1; chưa thay thế xác nhận nhận bàn giao của từng người. Vai trò Scrum: PENDING.
 
 | Chủ sở hữu chính | Phạm vi | Phối hợp/review | Đầu ra bàn giao | Điều kiện hoàn thành | Phụ thuộc |
 |---|---|---|---|---|---|
@@ -23,10 +23,18 @@ Cập nhật theo yêu cầu Hưng ngày 20/10/2026. Phân công dưới đây l
 
 | Người | Hồ sơ kiểm tra/chốt | Xác nhận |
 |---|---|---|
-| Hưng | Roadmap, phân công, conventions, traceability và PR tài liệu | Chờ review từ người khác |
+| Hưng | Roadmap, phân công, conventions, traceability, đối chiếu hai đề và PR tài liệu | Đã có hồ sơ; PENDING phản hồi/review khác tác giả |
 | Khoa | [Inventory contract](api/inventory-contract.md), Detailed ERD Product/Order/Inventory | PENDING |
 | Huy | [Menu notes](ui/menu-notes.md), US/AC Menu/Cart/Promotion | PENDING |
 | Phát | [Order transitions và Checkout checklist](requirements/order-state-transitions.md), A1 backlog | PENDING |
 | Thắng | [Payment contract](api/payment-contract.md), deployment checklist | PENDING |
 
 Definition of Done và các vai trò đề xuất ở [Working Agreement](scrum/team-working-agreement.md). Không suy đoán phần trăm đóng góp; không xác nhận thay thành viên. Nhánh từ main, review PR, không tự merge. Mọi thay đổi contract/schema cần chủ liên quan review trước triển khai.
+
+## Ranh giới kết thúc Buổi 1
+
+- Hưng: đã chuẩn bị kiểm kê main/GitHub, bộ 26 backlog theo hai đề, Working Agreement/PD, handoff và [review request](scrum/day1-review-request.md). “Đã chuẩn bị” không thay chữ ký/acceptance của Hưng hoặc người khác.
+- Khoa: review Inventory/ERD/transaction interface; Huy: review Menu/Cart/Products DTO/giá; Phát: review A1 priorities/Orders/state/dependencies; Thắng: review Payment/key/retry và yêu cầu vận hành sau này. Tất cả **PENDING xác nhận**, không bắt triển khai module để đóng Buổi 1.
+- Mỗi owner phản hồi APPROVED, CHANGES_REQUESTED hoặc BLOCKED kèm file/điểm cần sửa, người phối hợp và bằng chứng. Hưng thu nhận và cập nhật quyết định, không trả lời thay thành viên.
+- Prisma/schema/DB/Inventory do Khoa; Products/pricing Hưng; Orders Phát; Payment Thắng; UI/Promo/Loyalty/E2E theo phân công và Architecture hiện hành. ERD cũ còn dòng giao Phát tích hợp Prisma cần Khoa/Phát/Hưng review, không dùng nó để tự đổi phân công.
+- Task A2-1 của Buổi 2, UML, code, database, Docker/CI/CD và production không thuộc kết quả thực hiện Buổi 1. Mọi mốc thực hiện mới chỉ là kế hoạch cho tới khi có Planning và owner nhận việc.

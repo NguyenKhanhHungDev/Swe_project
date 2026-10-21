@@ -1,3 +1,5 @@
+> **LỊCH SỬ PR #18 (đã merge 20/10/2026).** Nội dung dưới giữ theo mốc chuẩn bị cũ, không mô tả trạng thái hiện hành. 26 Issues và PR #32/#33 đã được xác minh ở [backlog](backlog.md); hồ sơ hiện tại ở [handoff](day1-handoff.md). Không dùng lại body này làm PR final review.
+
 ## Phạm vi
 
 Tài liệu main vẫn quản lý theo roadmap cũ, phân công khác yêu cầu Buổi 1 và một số links bị hỏng sau chuyển monorepo. PR chuẩn hóa theo A1 (10 task)/A2 (16 task con, nghiệm thu tuần tự), phân biệt design/scaffold với code/test nghiệp vụ; không thêm implementation hoặc dependencies.

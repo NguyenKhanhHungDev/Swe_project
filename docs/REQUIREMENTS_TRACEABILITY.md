@@ -1,8 +1,8 @@
 # BrewLite — Requirements → Design → Code → Test
 
-Cập nhật 20/10/2026. A1 theo PDF local mục 8–12 đã đọc; A2 theo yêu cầu người dùng, chờ PDF gốc. Mã US là mã hiện có trong [User Stories](USER_STORIES.md); [AC](ACCEPTANCE_CRITERIA.md) dùng cùng section US, chưa tự tạo mã AC mới.
+Rà metadata Buổi 1 ngày 21/10/2026. Đã đọc A1 VER 1.0 mục 3–12 và A2 VER 1.0 mục 1–9.1 local; chưa nghiệm thu A2 Task 1. Mã US là mã hiện có trong [User Stories](USER_STORIES.md); [AC](ACCEPTANCE_CRITERIA.md) dùng cùng section US, chưa tự tạo mã AC mới.
 
-Bảng nêu source/design/code/test cụ thể để tìm evidence; dấu TODO nghĩa chưa có, không phải file giả. Link Issue/PR mới: PENDING, xem [backlog](scrum/backlog.md).
+Bảng nêu source/design/code/test cụ thể để tìm evidence; dấu TODO nghĩa chưa có, không phải file giả. Đã xác minh 26/26 Issue thật và assignee; URL từng task/PR tại [backlog hiện hành](scrum/backlog.md). Chưa có owner acceptance; không nhân bản bảng online ở ma trận này.
 
 | Requirement | Design/AC | Code hiện có hoặc cần làm | Test/evidence và nghiệm thu |
 |---|---|---|---|
@@ -39,3 +39,7 @@ Bảng nêu source/design/code/test cụ thể để tìm evidence; dấu TODO n
 | [A2-5.4](backlog/A2-5.4.md) | Deployment URL thật; HTTPS/private DB; health; README/demo; handover/rollback | Môi trường thật hoạt động, kiểm thử hậu deploy và rollback có evidence; bàn giao tài khoản an toàn, tài liệu, demo và Review/Retro thật. | Chưa nghiệm thu; BLOCKED gate Task 4/host; chưa có production |
 
 Các đường dẫn chưa tồn tại trong cột sản phẩm là kế hoạch. ERD không thay Class Diagram; Sequence cũ không chứng minh UML đã được duyệt; Hello tests không chứng minh Menu/Orders/Payment chạy. Chưa có production URL, CI/CD run hoặc phê duyệt A2 gate. Owner/reviewer/dependencies/DoD chi tiết ở mỗi hồ sơ backlog, không duy trì roadmap cạnh tranh.
+
+## Rà hồ sơ Buổi 1
+
+Bảng trên giữ trạng thái thiết kế/code/test để chủ module review; không tạo FR/NFR/MoSCoW/UC mới hoặc chuyển tài liệu trong Buổi 1. Đích bắt buộc A2 `docs/traceability-matrix.md` và các nguồn mới chỉ là kế hoạch trong A2-4.2; PR chuẩn hóa sau phải chuyển nội dung và giữ chỉ dẫn cũ, không duy trì hai ma trận. A2-4.3 cần cả GET /products và GET /products/:id ở Sprint 1. Health endpoint phải có trước nghiệm thu A2-5.2, CI có evidence pass/fail và CD có production run theo bộ Issue đã đối chiếu.

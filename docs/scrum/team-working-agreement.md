@@ -1,6 +1,6 @@
 # BrewLite — Team Working Agreement
 
-**DRAFT — Pending owner review.** Chuẩn bị 20/10/2026; chưa có biên bản nhóm phê duyệt.
+**DRAFT — Pending owner review.** Rà lại 21/10/2026; chưa có biên bản/xác nhận của cả năm thành viên. Hồ sơ đã sẵn sàng gửi review, chưa là quy tắc được nhóm phê duyệt.
 
 ## Thành viên và vai trò
 
@@ -10,7 +10,7 @@
 | Hưng | Scrum Master; người merge chính | PENDING nhóm thống nhất |
 | Khoa, Huy, Thắng | Development Team | PENDING xác nhận |
 
-Hưng và Phát vẫn phát triển các phần việc theo [phân công](../TEAM_ASSIGNMENTS.md).
+Development Team gồm các thành viên tham gia triển khai: **Hưng, Khoa, Huy, Phát, Thắng** theo [phân công](../TEAM_ASSIGNMENTS.md). Hưng/Phát vẫn viết phần mình dù được đề xuất SM/PO; vai trò đề xuất chưa được xác nhận, không lấy quyền GitHub làm bằng chứng nhóm đồng ý.
 
 ## Git và review
 
@@ -18,7 +18,7 @@ main là nguồn chuẩn; fetch rồi tạo nhánh mới từ main, bảo toàn 
 
 ## Scrum
 
-Phát quản lý Product Backlog A1; [backlog chung](backlog.md) ánh xạ A1/A2. Sprint Planning chọn Sprint Goal, việc, owner và ước lượng thật vào Sprint Backlog. Lịch, thời lượng Sprint và danh sách được chọn hiện PENDING, chưa có Sprint được xác nhận bởi hồ sơ này. Daily Scrum tối đa 15 phút; Huy tổng hợp tiến độ/Burndown từ cập nhật thật của nhóm. Sprint Review xem Increment/AC và phản hồi; Retrospective ghi cải tiến. Theo dõi bằng GitHub Issues/Board với Todo, In Progress, Review, Done. Chưa có quyền Board thì dùng backlog Git; không dựng biên bản họp, Daily hoặc Burndown giả.
+Phát quản lý Product Backlog A1; [backlog chung](backlog.md) ánh xạ A1/A2. Sprint Planning chọn Sprint Goal, việc, owner và ước lượng thật vào Sprint Backlog. Lịch, thời lượng Sprint và danh sách được chọn hiện PENDING, chưa có Sprint được xác nhận bởi hồ sơ này. Daily Scrum tối đa 15 phút; Huy tổng hợp tiến độ/Burndown từ cập nhật thật của nhóm. Sprint Review xem Increment/AC và phản hồi; Retrospective ghi cải tiến. Theo dõi bằng GitHub Issues/Board với Todo, In Progress, Review, Done. Chưa xác minh được Board/quyền thì dùng backlog Git tạm và ghi giới hạn; Board vẫn là đầu ra bắt buộc khi nghiệm thu A2-4.1; không dựng biên bản họp, Daily hoặc Burndown giả.
 
 A2 nghiệm thu theo gate Task 1 → 2 → 3 → 4 → 5. Được chuẩn bị nháp từ tài liệu đã có nhưng không nghiệm thu nhóm sau trước nhóm trước. CI/CD/production thuộc giai đoạn sau.
 
@@ -26,7 +26,7 @@ A2 nghiệm thu theo gate Task 1 → 2 → 3 → 4 → 5. Được chuẩn bị 
 
 - Đáp ứng AC của Issue và gate A2; có bằng chứng được chấp nhận.
 - Code/build/test đạt trong phạm vi liên quan; API validate đầu vào; UI có loading/error khi phù hợp.
-- Có commit/PR, người khác review và liên kết Issue/PR/test.
+- Có commit/PR, ít nhất một thành viên khác tác giả review và liên kết Issue/PR/test; merge không tự chứng minh đã có review submission hoặc acceptance.
 - Tài liệu/README/truy vết cập nhật khi thay đổi; không lộ secrets.
 - Thiết kế/nháp, build scaffold và Issue được tạo không tự đáp ứng DoD nghiệp vụ.
 
@@ -36,22 +36,28 @@ Next.js → NestJS REST/JSON → PostgreSQL; frontend không gọi DB. Prisma d�
 
 ## Pending Decisions
 
-Tất cả mục dưới đây PENDING. Bảng này là nơi theo dõi chung; chủ sở hữu ghi xác nhận/nguồn/PR khi chốt, không suy ra đồng ý từ im lặng.
+Bảng này là nguồn theo dõi quyết định duy nhất. **Mốc xử lý là điều kiện chặn theo task, không phải deadline ngày/giờ nhóm đã duyệt**; Hưng đề nghị cả nhóm xác nhận owner và mốc cụ thể trong phản hồi/Planning. Buổi 1 chỉ thu nhận người chịu trách nhiệm và hướng xử lý; nội dung requirements/UML/API được chốt ở phiên đúng phạm vi.
 
-| ID | Nội dung và bằng chứng mâu thuẫn | Người xác nhận | Điều kiện chốt |
-|---|---|---|---|
-| PD-01 | PO/SM đề xuất | Cả nhóm | Biên bản/xác nhận thật |
-| PD-02 | Người merge dự phòng Phát, quyền merge/review | Hưng/Phát | Xác minh quyền GitHub và nhóm đồng ý |
-| PD-03 | Giờ, ngày, nơi nộp bài | Nhóm/giảng viên | Thông báo chính thức |
-| PD-04 | Hosting, DB, HTTPS, phương án rollback | Thắng/nhóm | Host thực, giới hạn và chi phí được duyệt |
-| PD-05 | Yêu cầu hiện tại nói không triển khai timer; BR-16/SRS/AC/ERD/Architecture và Sequence Orders còn giữ 15 phút | Phát/Khoa/Thắng; Hưng điều phối | Xác nhận chính sách không timer, sửa đồng bộ expiresAt/schema/retry/release trước triển khai; không mặc định now+15m hoặc tạo cron |
-| PD-06 | Orders spec/Sequence dùng ADMIN, COD và GET /orders; A1 yêu cầu WALLET/CARD, GET /orders/me; kiến trúc CUSTOMER/STAFF | Phát/Thắng/Khoa/Huy | Bỏ mở rộng ngoài đề hoặc có duyệt thật; chốt route, quyền/ownership và thứ tự /me trước /:id |
-| PD-07 | Orders quantity/toppingIds khác Cart qty/toppings.quantity; checkout prod_001/size khác UUID/sizeCode; sai bảng PRODUCT.stock_qty so ERD INVENTORY | Phát/Huy/Hưng/Khoa/Thắng | Một DTO/mapping chung có review; không tự đổi contract trong Buổi 1 |
-| PD-08 | PaymentStatus PROCESSING/REFUNDED khác ERD payment_result PENDING và REFUND riêng; scope key/fingerprint/TTL chưa chốt | Thắng/Phát/Khoa | Mapping enum, unique scope, replay/in-progress/error policy và transaction boundary |
-| PD-09 | Sequence Orders xóa giỏ khi tạo đơn; xóa reservation khi complete/cancel; Orders gọi Payment gây vòng; Payment GET status lại ghi thành công | Phát/Thắng/Khoa/Huy | Giữ giỏ đến PAID (mua ngay giữ giỏ cũ), trạng thái reservation/ledger một lần, GET chỉ đọc và hướng điều phối đúng kiến trúc |
-| PD-10 | Giá đầy đủ theo size ở ERD/API nhưng AC/Architecture còn phụ thu; quota Promotion còn mâu thuẫn BR | Hưng/Huy/Phát | Duyệt thuật ngữ giá và giới hạn khuyến mãi; không cộng S vào giá đầy đủ M/L |
-| PD-11 | JWT/session/logout, NFR <500 ms và ma trận trình duyệt; link/version Figma | Khoa/Thắng/Huy/Phát | Chính sách và phép đo, URL thiết kế thật |
-| PD-12 | PDF A2 chưa tìm thấy; MoSCoW, FR/NFR IDs và phê duyệt requirements chưa đủ evidence | Hưng/cả nhóm | Đối chiếu đề gốc, bổ sung evidence rồi nghiệm thu A2-1 |
+- Buổi 1 cần chốt: vai trò, quy tắc làm việc, owner và cách review (PD-01/02 cùng phân công).
+- Trước implementation: PD-05–11 phải có owner và mốc xử lý; không lấy đề xuất làm contract đã duyệt.
+- Giai đoạn sau: PD-03 lịch nộp cần nguồn chính thức; PD-04 chốt provider trước A2-3.2 rồi CD/production tại Task 5. PD-12 đã có PDF nhưng còn requirements Buổi 2.
+
+| Mã | Vấn đề | Người chịu trách nhiệm | Mức ảnh hưởng | Trạng thái | Bước xử lý tiếp theo |
+| --- | --- | --- | --- | --- | --- |
+| PD-01 | Buổi 1 — cao: PO Phát/SM Hưng, cả năm người thuộc Development Team là đề xuất. | Cả nhóm; Hưng thu phản hồi | Điều kiện kết thúc Buổi 1 | PENDING — CHỜ XÁC NHẬN | Mỗi người phản hồi vai trò/rules; lưu bằng chứng thật trước đóng Buổi 1. |
+| PD-02 | Buổi 1 — cao: quy trình branch/PR, người merge chính/dự phòng và owner. Repository connector cho quyền admin, chưa chứng minh quyền của Phát hoặc Projects. | Hưng/Phát; cả nhóm duyệt rules | Điều kiện kết thúc Buổi 1 | PENDING — CHỜ XÁC NHẬN | Xác minh quyền từng người và Board thủ công; chốt một người khác review; phản hồi hoặc quyết định trì hoãn có owner/mốc rõ trước đóng Buổi 1. |
+| PD-03 | Điều phối — ngày/giờ/nơi nộp chính thức chưa có nguồn. A2 cho phép video hoặc demo trực tiếp. | Hưng/cả nhóm hỏi giảng viên | Kế hoạch nộp bài; chưa chặn soạn hồ sơ Buổi 1 | PENDING — CHỜ XÁC NHẬN | Nhận thông báo chính thức, lập mốc công việc ở Planning; không bịa deadline/nơi nộp. |
+| PD-04 | Giai đoạn sau — host/DB/registry/HTTPS/backup/rollback. A2-3.2 cần sơ đồ phản ánh provider nhóm chọn. | Thắng/cả nhóm; Khoa DB, Hưng kiến trúc | Trước nghiệm thu A2 Task 3; triển khai tại Task 5 | PENDING — CHỜ XÁC NHẬN | Thắng chuẩn bị lựa chọn/giới hạn/chi phí để nhóm duyệt trước A2-3.2; không deploy hoặc chọn thay nhóm trong Buổi 1. |
+| PD-05 | Trước code — cao: yêu cầu hiện hành không triển khai timer; BR-16/SRS/AC/ERD/Architecture/Sequence cũ còn 15 phút/expiresAt. | Phát/Khoa/Thắng; Hưng điều phối | Chặn implementation Orders/Inventory/Payments | PENDING — CHỜ XÁC NHẬN | Buổi 1 yêu cầu owner nhận xử lý; ở Buổi 2 xác nhận giữ/hoàn hàng/retry/cancel khi bỏ timer và danh sách sửa đồng bộ trước code. Không cron/auto-cancel, không tự đặt thời hạn mới. |
+| PD-06 | Trước code — cao: Orders/Sequence cũ ADMIN/COD/GET /orders khác A1 WALLET-CARD/GET /orders/me và kiến trúc CUSTOMER-STAFF. | Phát/Thắng/Khoa/Huy | Trước PR API Orders/Auth/Payment/History | PENDING — CHỜ XÁC NHẬN | Owner đề xuất route/quyền/ownership, /me trước /:id; chỉ giữ mở rộng khi có duyệt; không chốt contract trong Buổi 1. |
+| PD-07 | Trước code — cao: quantity/toppingIds khác qty/toppings.quantity; prod_001/size khác UUID/sizeCode; PRODUCT.stock_qty khác INVENTORY. ERD cũ còn ghi Phát tích hợp Prisma, phân công hiện hành là Khoa. | Phát/Huy/Hưng/Khoa/Thắng | Trước PR schema/DTO/Orders/Cart | PENDING — CHỜ XÁC NHẬN | Nhận mapping DTO/FK/transaction từ owner, giữ Khoa chủ schema và review chỗ ERD lỗi thời; sửa đồng bộ hồ sơ ở phiên sau, không migration Buổi 1. |
+| PD-08 | Trước code — cao: Payment enum PROCESSING/REFUNDED so ERD PENDING/REFUND; scope key/fingerprint/TTL và replay/in-progress chưa chốt. | Thắng/Phát/Khoa | Trước PR Payments/idempotency và migration constraints | PENDING — CHỜ XÁC NHẬN | Chốt bảng enum/unique/key/retry/transaction bằng review owner trước code; không tự đặt TTL. |
+| PD-09 | Trước code — cao: Sequence cũ xóa giỏ PENDING/xóa reservation, Orders↔Payment có nguy cơ vòng, GET status lại ghi thành công. | Phát/Thắng/Khoa/Huy | Trước PR tích hợp Orders–Inventory–Payment–Loyalty | PENDING — CHỜ XÁC NHẬN | Owner xác nhận hướng điều phối/transaction/ledger đúng một lần, GET chỉ đọc, giữ giỏ tới PAID và mua ngay giữ giỏ; đưa nhánh race vào kế hoạch test sau. |
+| PD-10 | Trước code — cao: giá đầy đủ size so phụ thu; quota Promotion còn khác BR. | Hưng/Huy/Phát | Trước PR pricing/Products detail/Cart/Promotion | PENDING — CHỜ XÁC NHẬN | Đối chiếu nguồn quyết định hiện có, owner duyệt thuật ngữ/công thức/quota và file cần sửa; không tự cộng giá S vào M/L hoặc thêm quota. |
+| PD-11 | Trước code/kiểm thử — JWT/session/logout, NFR <500ms, browser matrix; link/version Figma. | Khoa/Thắng/Huy/Phát | JWT trước Auth/UI; Figma trước UI; NFR/browser trước kiểm thử tương ứng | PENDING — CHỜ XÁC NHẬN | Owner đề xuất cơ chế/URL/method đo; Hưng đề nghị mốc theo Planning, không tạo token policy hoặc metrics giả. |
+| PD-12 | Nguồn đã xác minh: đã đọc A2 VER 1.0 local, backlog đối chiếu ở PR #33. FR/NFR/MoSCoW/AC/phê duyệt requirements vẫn thiếu evidence. | Hưng/cả nhóm | Phần requirements ở Buổi 2; trước nghiệm thu A2 Task 1 | PENDING — ĐÃ XÁC MINH PDF, CHỜ XÁC NHẬN requirements | Giữ kết quả nguồn; Buổi 2 triển khai review A2-1.1/1.2/1.3 theo thứ tự, không đóng PD-12 chỉ vì PDF/Issue đã có. |
+
+Cách phản hồi và hồ sơ từng người: [Yêu cầu review Buổi 1](day1-review-request.md). Phản hồi có thể APPROVED / CHANGES_REQUESTED / BLOCKED nhưng phải do thành viên đưa ra và kèm link/commit; hiện chưa ghi nhận APPROVED cho bất kỳ ai.
 
 ## Xác nhận
 
