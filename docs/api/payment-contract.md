@@ -43,3 +43,13 @@ Payment không tạo đơn mới: POST /orders là điểm tạo đơn. Thành c
 | Health/NFR | Health endpoint thực, readiness DB, phép đo API <500ms với dataset/tải công bố | PENDING; GET / Hello chưa là health DB |
 | CI/CD | Build/test bắt buộc trước deploy; môi trường đích và quyền được duyệt | PENDING; không làm trước A2 gate |
 | Dự phòng/rollback | Bản phát hành tốt gần nhất, rollback app tương thích DB, backup và demo local khi host lỗi | PENDING; không tuyên bố đã diễn tập |
+Thắng — BUỔI 1 — CẦN SỬA
+
+File: https://github.com/NguyenKhanhHungDev/Swe_project/blob/main/docs/api/payment-contract.md
+
+Mục cần sửa: Bổ sung chi tiết phương án Hosting chính (Vercel + Render + Neon) và dự phòng (Railway / Fly.io) kèm đánh giá kỹ thuật, HTTPS, giới hạn gói free và quản lý secrets theo yêu cầu Buổi 1.
+
+Lý do và cách sửa đề xuất: Đảm bảo hồ sơ trên GitHub có sẵn thông tin đối chiếu nhà cung cấp thực tế cho A2-3.2/5.3/5.4 và làm rõ các điểm chờ chốt PD-05, PD-08.
+
+Người cần cùng thống nhất: @Hưng (tổng hợp & API), @Phát (review Payment Contract & Order State), @Khoa (DB Transaction & Inventory).
+
